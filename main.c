@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:18:23 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/09/27 21:22:46 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/09/27 21:28:40 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,3 +63,4 @@ int main(int ac, char *av[], char *envp[])
     }
     return (EXIT_SUCCESS);
 }
+
