@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:18:23 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/09/27 21:43:41 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/09/27 22:22:54 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int main(int ac, char *av[], char *envp[])
         pid = fork();
         if (pid == 0)
         {
-            if (ft_strncmp(input, "ls", 6) == 0)
+            if (ft_strncmp(input, "ls", 2) == 0)
             {
                 char *ls_path[] = {"/bin/ls", NULL};
                 execve(ls_path[0], ls_path, envp);
