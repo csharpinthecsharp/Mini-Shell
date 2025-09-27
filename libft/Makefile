@@ -44,7 +44,7 @@ OBJ = $(SRC:.c=.o)
 
 
 
-CC = gcc
+CC = clang
 CFLAGS = -Wall -Wextra -Werror
 
 all: $(NAME)
