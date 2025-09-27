@@ -6,12 +6,14 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/09/27 13:37:25 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/09/27 13:49:04 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+
+#define BUFFER_SIZE 42
 
 #include <stdio.h>  
 /* STDIO.H RELATED >
