@@ -3,6 +3,7 @@ CC		= clang
 CFLAGS	= -pthread -Wall -Wextra -Werror
 
 SRCS	= main.c \
+		  utils.c \
 
 OBJS	= $(SRCS:.c=.o)
 all: $(NAME)

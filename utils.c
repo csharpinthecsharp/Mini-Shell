@@ -1,24 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/27 13:18:23 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/09/27 15:23:38 by ltrillar         ###   ########.fr       */
+/*   Created: 2025/09/27 14:11:43 by ltrillar          #+#    #+#             */
+/*   Updated: 2025/09/27 14:16:33 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int main(void)
+int getpath()
 {
-    while (1)
+    char buffer[BUFFER_SIZE];
+    if (getcwd(buffer, BUFFER_SIZE) == NULL)
     {
-        if (getpath() == 1)
-            exit(EXIT_FAILURE);
-        break;
+        printf("Error: \nSomething went wrong will "
+             "retrieving the current path.");
+        return (1);
     }
-    return (EXIT_SUCCESS);
+    printf("%s", buffer);
+    return (0);
 }

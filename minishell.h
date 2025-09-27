@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/09/27 13:49:04 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/09/27 14:58:55 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@
 * -> free | Free previously allocated memory.
 */
 
-#include <unistd.h>  
+#include <unistd.h>
+#include <sys/wait.h>
 /* UNISTD.H RELATED >
 * -> write | Write to a file descriptor.
 * -> read | Read from a file descriptor.
@@ -117,5 +118,6 @@
 * -> add_history | Add line to history.
 */
 
+int getpath();
 
 #endif
