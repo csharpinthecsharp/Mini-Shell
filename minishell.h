@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/09/27 14:58:55 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/09/27 20:57:16 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #define BUFFER_SIZE 42
 
+#include "libft/libft.h"
 #include <stdio.h>  
 /* STDIO.H RELATED >
 * -> printf | Print formatted output to stdout.
@@ -106,9 +107,8 @@
 /* ENVIRONMENT RELATED >
 * -> getenv | Get environment variable.
 */
-
-#include <readline/readline.h>  
-#include <readline/history.h>  
+#include <readline/readline.h>
+#include <readline/history.h>
 /* READLINE RELATED >
 * -> readline | Read line from terminal.
 * -> rl_clear_history | Clear history list.
@@ -118,6 +118,6 @@
 * -> add_history | Add line to history.
 */
 
-int getpath();
+char *getpath(char *buffer);
 
 #endif
