@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:18:23 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/09/27 22:22:54 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/09/28 14:51:56 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,39 +23,42 @@ int main(int ac, char *av[], char *envp[])
     char buffer[BUFFER_SIZE];
     char *path;
     char *input;
+    pid_t pid;
+    
+    printf(TEMPLATE_SETUP_SCREEN);
     
     while (1)
     {
         path = getpath(buffer);
-        
-        input = readline(path);
+
+        input = readline(TEMPLATE_PROMPT);
         free(path);
         
         // Si EOF on sors de la boucle.
+        // EOF = CTRL D.
         if (!input)
-            break;
-        
-
+        {
+            printf(TEMPLATE_GOOD_BYE);
+            exit(EXIT_SUCCESS);
+        }
         // Parent
         // └── fork()
         //      ├── Enfant → execve("ls") → remplace par /bin/ls
         //      │             ↳ si erreur → perror + exit
         //      └── Parent → wait(NULL) → attend la fin de l’enfant
-        pid_t pid;
-        pid = fork();
-        if (pid == 0)
+        if (ft_strncmp(input, "ls", 2) == 0)
         {
-            if (ft_strncmp(input, "ls", 2) == 0)
+            pid = fork();
+            if (pid == 0)
             {
                 char *ls_path[] = {"/bin/ls", NULL};
                 execve(ls_path[0], ls_path, envp);
                 perror("execve failed");
                 exit(EXIT_FAILURE);
             }
+            else
+                wait(NULL);
         }
-        else
-            wait(NULL);
-
         // Ajouter a l'historique.
         add_history(input);
         
