@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/09/28 14:48:53 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/09/28 15:02:08 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,5 +172,7 @@
 
 char *getpath(char *buffer);
 pid_t get_from_path(char *buffer, char *path);
+int check_command(char *input);
+int try_input(char *input, char *envp[]);
 
 #endif

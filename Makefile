@@ -3,7 +3,8 @@ CC		= clang
 CFLAGS	= -Wall -Wextra -Werror
 
 SRCS	= main.c \
-		  cwd_utils.c
+		  cwd_utils.c \
+		  exec_utils.c
 
 OBJS	= $(SRCS:.c=.o)
 LIBFT 	= libft/libft.a
