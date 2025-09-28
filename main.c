@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:18:23 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/09/28 15:36:09 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/09/28 15:45:24 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,19 @@ int main(int ac, char *av[], char *envp[])
         // Si la commande n'est pas a built in,
         // Et est connu de notre base, on la run.
         // Exemple [cat, ls].
+
+        // NON BUILD IN COMMAND
         try_input(input, envp);
 
-        if (ft_strncmp(input, "pwd", 2) == 0)
+        // BUILD IN COMMAND
+        if (ft_strncmp(input, "pwd", 3) == 0)
             printf("%s\n", path);
+        if (ft_strncmp(input, "exit", 4) == 0)
+        {
+            printf(TEMPLATE_GOOD_BYE);
+            exit(EXIT_SUCCESS);
+        }
+        
         // Ajouter a l'historique.
         add_history(input);
         
