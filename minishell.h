@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/09/28 15:46:18 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/09/28 20:54:22 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,13 @@
 #define TEMPLATE_PROMPT " " BOLD_BLACK BOLD_GREEN " Minishell " RESET BOLD_YELLOW " $> " RESET
 #define TEMPLATE_GOOD_BYE RESET_TERMINAL BOLD_YELLOW CAT BOLD_ROSE "[see you soon]\n" RESET
 
+#define CAT_SIZE 3
+
+typedef struct s_data
+{
+    char *input;
+    char **input_splitted;
+} t_data;
 
 #include "libft/libft.h"
 #include <stdio.h>  
@@ -171,7 +178,8 @@
 */
 
 char *getpath(char *buffer);
-int check_command(char *input);
-int try_input(char *input, char *envp[]);
+int check_command(t_data *d);
+int try_input(t_data *d, char *envp[]);
+int ft_countword(char *input);
 
 #endif

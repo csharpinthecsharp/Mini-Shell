@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:18:23 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/09/28 15:45:57 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/09/28 20:34:59 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,18 +22,19 @@ int main(int ac, char *av[], char *envp[])
     
     char buffer[BUFFER_SIZE];
     char *path;
-    char *input;
+        
+    t_data data;
+    t_data *d = &data;
     
     printf(TEMPLATE_SETUP_SCREEN);
-    
     while (1)
     {
         path = getpath(buffer);
 
-        input = readline(TEMPLATE_PROMPT);        
+        d->input = readline(TEMPLATE_PROMPT);        
         // Si EOF on sors de la boucle.
         // EOF = CTRL D.
-        if (!input)
+        if (!d->input)
         {
             printf(TEMPLATE_GOOD_BYE);
             exit(EXIT_SUCCESS);
@@ -43,21 +44,21 @@ int main(int ac, char *av[], char *envp[])
         // Exemple [cat, ls].
 
         // NON BUILD IN COMMAND
-        try_input(input, envp);
+        try_input(d, envp);
 
         // BUILD IN COMMAND
-        if (ft_strncmp(input, "pwd", 3) == 0)
+        if (ft_strncmp(d->input, "pwd", 3) == 0)
             printf("%s\n", path);
-        if (ft_strncmp(input, "exit", 4) == 0)
+        if (ft_strncmp(d->input, "exit", 4) == 0)
         {
             printf(TEMPLATE_GOOD_BYE);
             exit(EXIT_SUCCESS);
         }
         
         // Ajouter a l'historique.
-        add_history(input);
+        add_history(d->input);
         
-        free(input);
+        free(d->input);
         free(path);
     }
     return (EXIT_SUCCESS);
