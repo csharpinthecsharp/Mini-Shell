@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:18:23 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/09/28 15:31:23 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/09/28 15:36:09 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int main(int ac, char *av[], char *envp[])
         try_input(input, envp);
 
         if (ft_strncmp(input, "pwd", 2) == 0)
-            printf("%s", path);
+            printf("%s\n", path);
         // Ajouter a l'historique.
         add_history(input);
         
