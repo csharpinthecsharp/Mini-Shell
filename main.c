@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:18:23 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/09/28 20:34:59 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/09/28 23:39:14 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,16 +44,8 @@ int main(int ac, char *av[], char *envp[])
         // Exemple [cat, ls].
 
         // NON BUILD IN COMMAND
-        try_input(d, envp);
-
-        // BUILD IN COMMAND
-        if (ft_strncmp(d->input, "pwd", 3) == 0)
-            printf("%s\n", path);
-        if (ft_strncmp(d->input, "exit", 4) == 0)
-        {
-            printf(TEMPLATE_GOOD_BYE);
-            exit(EXIT_SUCCESS);
-        }
+        if (filter_input(d, envp) == 1)
+            exit(EXIT_FAILURE);
         
         // Ajouter a l'historique.
         add_history(d->input);

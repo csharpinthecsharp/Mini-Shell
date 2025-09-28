@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 20:20:39 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/09/28 20:24:10 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/09/29 00:22:56 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,4 +33,9 @@ int ft_countword(char *input)
         i++;
     }
     return (words);
+}
+
+void print_error(char *str_sub, char *str_cont)
+{
+    printf(ERROR_PREFIX "%s%s\n" RESET, str_sub, str_cont);
 }
