@@ -89,5 +89,3 @@
 
     Passer l’environnement à execve().
 
-📝 Vue d’ensemble (pseudo-code)
-c
