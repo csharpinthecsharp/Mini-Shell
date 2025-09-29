@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 14:57:15 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/09/29 13:48:10 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/09/29 14:11:07 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ int run_custom_cmd(t_data *d)
 {
     // RETURN 1 SEULEMENT SI ON VEUX TOUT EXIT
     int count = 0;
+
     while (d->input_splitted[count])
         count++;
     if (ft_strncmp(d->input_splitted[0], "pwd", 3) == 0)
@@ -73,6 +74,15 @@ int run_custom_cmd(t_data *d)
             return (0);
         }
         printf("%s\n", d->path);
+    }
+    else if (ft_strncmp(d->input_splitted[0], "exit", 4) == 0)
+    {
+        if (count == 1)
+            exit(EXIT_SUCCESS);
+        else if (count == 2 && ft_atoi(d->input_splitted[1]) > 0)
+            exit(EXIT_FAILURE);
+        else
+            print_error(d->input_splitted[0], ": too many arguments");
     }
     return (0);
 }
