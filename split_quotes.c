@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 22:21:48 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/09/29 23:02:40 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/09/29 23:18:14 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static int count_tokens(const char *s)
             while (s[i] && s[i] != quote)
                 i++;
             if (s[i])
-                i++; // skip closing quote
+                i++;
         }
         else
         {
@@ -77,7 +77,7 @@ char **ft_split_quotes(const char *s)
                 i++;
             tab[idx++] = ft_word_alloc(s, start, i);
             if (s[i])
-                i++; // skip closing quote
+                i++; 
         }
         else
         {
