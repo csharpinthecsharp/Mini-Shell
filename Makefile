@@ -6,7 +6,8 @@ SRCS	= main.c \
 		  cwd_utils.c \
 		  exec_utils.c \
 		  utils.c \
-		  handler_build.c
+		  handler_build.c \
+		  filter_utils.c
 
 OBJS	= $(SRCS:.c=.o)
 LIBFT 	= libft/libft.a

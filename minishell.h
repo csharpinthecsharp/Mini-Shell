@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/09/29 15:06:18 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/09/29 20:19:15 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,23 +25,17 @@
 #define RESET_TERMINAL "\033[2J\033[H"
 
 #define GUN \
-"\n" \
-"                       ⣴⠋⢁⡉⠉⠉⠀⣀⣀⡀⠀⢀⣐⣒⣒⣒⡂⠠⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n" \
-"                       ⡇⡀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠃⢠⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n" \
-"                       ⠁⠇⠘⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n" \
-"                       ⢸⢠⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠘⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n" \
-"                       ⠀⡜⠀⢠⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n" \
-"                       ⠀⠇⡇⠸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n" \
-"                       ⠀⢰⢠⠀⡆⠀⠀⠀⠀⠀⠀⠀⠀⣀⡀⠤⠐⢊⣁⣧⡄⣀⠀⠀⠀⠀⠀⠀⠀⠀\n" \
-"                       ⠀⠘⡈⡄⠡⡀⠀⠤⠄⠒⢂⣈⠡⣤⣲⣾⣿⣿⢿⢿⣛⠵⣯⢥⣒⠢⠄⣀⠀⠀\n" \
-"                       ⠀⠀⢃⢡⣀⠠⠄⢒⣂⡭⣰⢦⣟⡮⢽⣚⡯⣜⠸⢛⣯⡵⠞⠋⠁⠀⠀⠀⢈⠵\n" \
-"                       ⠀⠀⠈⣝⠣⡀⠪⣹⢢⠟⢫⠩⡖⡏⠽⢒⣩⣴⢾⠿⠛⠉⠢⡀⠀⢀⠤⠊⡡⠐\n" \
-"                       ⠀⠀⠀⠈⠢⡈⠢⡈⠲⡩⢝⣊⣧⡾⠜⠊⡗⠋⠀⠀⣀⠄⡊⠔⢊⠠⠒⠁⠀⠀\n" \
-"                       ⠀⠀⠀⠀⠀⠈⠢⡈⠢⡈⠉⠉⠁⠀⠀⠀⠈⠂⢐⡨⠐⣉⠄⠊⠀⠀⠀⠀⠀⠀\n" \
-"                       ⠀⠀⠀⠀⠀⠀⠀⠈⠂⢌⠒⢄⠀⠀⢀⡠⠔⢊⡡⠔⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀\n" \
-"                       ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⠠⣉⣈⡡⠔⠊⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n" \
-"\n" \
-"                              [welcome user]\n\n" 
+"                   _\n\
+                   |\\___/|                      \\\\\n\
+                   )     (    |\\_/|              ||\n\
+                  =\\     /=   )a a `,_.-\"\"\"\"\"-.  //\n\
+                    )===(    =\\Y_= /          \\//\n\
+                   /     \\     `\"`\\       /    /\n\
+                   |     |         |    \\ |   /\n\
+                  /       \\         \\   /- \\  \\\n\
+                  \\       /         || |  // /`\n\
+           _/\\_/\\_/\\_   _/_/\\_/\\_/\\_((_|\((_//\\_/\\_/\\_/\\_ \n" \
+"\n                         "BACKGROUND_YELLOW BOLD_BLACK" <[minishell_42]> \n\n" 
 
 #define ERROR_PREFIX \
 BOLD_RED"/\\___/\\\n\
@@ -75,7 +69,10 @@ typedef struct s_data
 {
     char *input;
     char **input_splitted;
+    char **input_quote;
     char *path;
+
+    int quotted_words;
 } t_data;
 
 #include "libft/libft.h"
@@ -190,5 +187,9 @@ int check_command(char **argv);
 void print_error(char *str_sub, char *str_cont);
 int run_custom_cmd(t_data *d);
 int handle_pwd(char *argv, int count, char *path);
+int handle_exit(char *argv, int count);
+int handle_echo(char **argv, int count);
+void retrieve_quoted(t_data *d, char *str);
+int count_quotes(char *str);
 
 #endif

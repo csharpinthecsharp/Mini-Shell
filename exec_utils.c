@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 14:57:15 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/09/29 15:06:47 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/09/29 20:20:09 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,23 +26,33 @@ int check_command(char **argv)
         return (1);
     else if (ft_strncmp(argv[0], "exit", len) == 0)
         return (1);
+    else if (ft_strncmp(argv[0], "echo", len) == 0)
+        return (1);
     return (0);
 }
-
-  /* else if (ft_strncmp(argv[0], "pwd", len) == 0)
-            printf("%s\n", path);
-    else if (ft_strncmp(argv[0], "exit", len) == 0)
-    {
-            printf(TEMPLATE_GOOD_BYE);
-            exit(EXIT_SUCCESS);
-    }*/
 
 int filter_input(t_data *d, char *envp[])
 {
     // RETURN 1 SEULEMENT SI ON VEUX TOUT EXIT
     if (d->input == NULL)
         return (0);
+    
+    d->quotted_words = count_quotes(d->input);
+
+    d->input_quote = malloc(sizeof(char *) * d->quotted_words + 1);
+    if (!d->input_quote)
+        return (1);
+    retrieve_quoted(d, d->input);
+    int i = 0;
+    while (d->input_quote[i])
+    {
+        printf("%s\n", d->input_quote[i]);
+        i++;
+    }
     d->input_splitted = ft_split(d->input, ' ');
+
+
+
     if (check_command(d->input_splitted) == 0)
         print_error("command not found: ", d->input_splitted[0]);
     else if (check_command(d->input_splitted) == 1)
@@ -72,15 +82,14 @@ int run_custom_cmd(t_data *d)
     }
     else if (ft_strncmp(d->input_splitted[0], "exit", 4) == 0)
     {
-        if (count == 1)
-            exit(EXIT_SUCCESS);
-        else if (count == 2 && ft_atoi(d->input_splitted[1]) > 0)
-            exit(EXIT_FAILURE);
-        else
-            print_error(d->input_splitted[0], ": too many arguments");
+        if (handle_exit(d->input_splitted[0], count) == 1)
+            return (1);
     }
-    else if (ft_strncmp(d->input_splitted[0], "echo", 4))
-        return (1);
+    else if (ft_strncmp(d->input_splitted[0], "echo", 4) == 0)
+    {
+        if (handle_echo(d->input_splitted, count) == 1)
+            return (1);
+    }
     return (0);
 }
 
