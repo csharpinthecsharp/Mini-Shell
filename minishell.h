@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/09/29 13:31:04 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/09/29 15:06:18 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,5 +189,6 @@ int filter_input(t_data *d, char *envp[]);
 int check_command(char **argv);
 void print_error(char *str_sub, char *str_cont);
 int run_custom_cmd(t_data *d);
+int handle_pwd(char *argv, int count, char *path);
 
 #endif

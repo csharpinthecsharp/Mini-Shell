@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 14:57:15 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/09/29 14:11:07 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/09/29 15:06:47 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ int check_command(char **argv)
             exit(EXIT_SUCCESS);
     }*/
 
-    
 int filter_input(t_data *d, char *envp[])
 {
     // RETURN 1 SEULEMENT SI ON VEUX TOUT EXIT
@@ -68,12 +67,8 @@ int run_custom_cmd(t_data *d)
         count++;
     if (ft_strncmp(d->input_splitted[0], "pwd", 3) == 0)
     {
-        if (count != 1)
-        {
-            print_error(d->input_splitted[0], ": too many arguments");
-            return (0);
-        }
-        printf("%s\n", d->path);
+        if (handle_pwd(d->input_splitted[0], count, d->path) == 1)
+            return (1);
     }
     else if (ft_strncmp(d->input_splitted[0], "exit", 4) == 0)
     {
@@ -84,6 +79,8 @@ int run_custom_cmd(t_data *d)
         else
             print_error(d->input_splitted[0], ": too many arguments");
     }
+    else if (ft_strncmp(d->input_splitted[0], "echo", 4))
+        return (1);
     return (0);
 }
 
