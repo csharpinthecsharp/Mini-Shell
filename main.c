@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:18:23 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/09/28 23:39:14 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/09/29 13:27:23 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ int main(int ac, char *av[], char *envp[])
     (void)av;
     
     char buffer[BUFFER_SIZE];
-    char *path;
         
     t_data data;
     t_data *d = &data;
@@ -29,7 +28,7 @@ int main(int ac, char *av[], char *envp[])
     printf(TEMPLATE_SETUP_SCREEN);
     while (1)
     {
-        path = getpath(buffer);
+        d->path = getpath(buffer);
 
         d->input = readline(TEMPLATE_PROMPT);        
         // Si EOF on sors de la boucle.
@@ -51,7 +50,7 @@ int main(int ac, char *av[], char *envp[])
         add_history(d->input);
         
         free(d->input);
-        free(path);
+        free(d->path);
     }
     return (EXIT_SUCCESS);
 }

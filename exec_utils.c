@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 14:57:15 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/09/29 00:14:59 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/09/29 13:48:10 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,21 +40,46 @@ int check_command(char **argv)
     
 int filter_input(t_data *d, char *envp[])
 {
+    // RETURN 1 SEULEMENT SI ON VEUX TOUT EXIT
     if (d->input == NULL)
         return (0);
     d->input_splitted = ft_split(d->input, ' ');
     if (check_command(d->input_splitted) == 0)
         print_error("command not found: ", d->input_splitted[0]);
     else if (check_command(d->input_splitted) == 1)
-        return (0); // FAIRE QUELQUE CHOSE
+    {
+        if (run_custom_cmd(d) == 1)
+            return (1);
+    }
     else if (check_command(d->input_splitted) == 2)
+    {
         if (run_build_cmd(d, envp) == 1)
             return (1);
+    }
+    return (0);
+}
+
+int run_custom_cmd(t_data *d)
+{
+    // RETURN 1 SEULEMENT SI ON VEUX TOUT EXIT
+    int count = 0;
+    while (d->input_splitted[count])
+        count++;
+    if (ft_strncmp(d->input_splitted[0], "pwd", 3) == 0)
+    {
+        if (count != 1)
+        {
+            print_error(d->input_splitted[0], ": too many arguments");
+            return (0);
+        }
+        printf("%s\n", d->path);
+    }
     return (0);
 }
 
 int run_build_cmd(t_data *d, char *envp[])
 {
+    // RETURN 1 SEULEMENT SI ON VEUX TOUT EXIT
     pid_t pid;
     pid = fork();
     if (pid == 0)

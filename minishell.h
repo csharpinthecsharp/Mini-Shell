@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/09/29 00:24:34 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/09/29 13:31:04 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 
 #define BUFFER_SIZE 42
 
-#define BOLD_BLACK "\e[1;90m"
+#define BOLD_BLACK "\e[1;30m"
 #define BOLD_RED "\e[1;91m"
-#define BACKGROUND_YELLOW "\e[47m"
+#define BACKGROUND_YELLOW "\e[0;103m"
 #define BOLD_YELLOW "\e[1;93m"
 #define BOLD_ROSE "\033[1;35m"
 #define BOLD_GREEN "\e[1;92m"
@@ -66,7 +66,7 @@ BOLD_RED"/\\___/\\\n\
 "⠠⢿⣿⣷⣶⣶⣶⠶⢶⡶⢶⣶⣶⣶⣶⢿⣶⣤⣄⣀⣀⠀⠀⠀⢨⠀⣿⡇\n" \
 "⠀⠀⠀⠈⠀⠐⠒⠒⠀⠀⠀⠘⠁⠈⠀⠀⠀⠀⠉⠉⢛⠉⠑⠒⠠⠤⢿⠇\n"
 #define TEMPLATE_SETUP_SCREEN RESET_TERMINAL BOLD_YELLOW GUN RESET
-#define TEMPLATE_PROMPT " " BOLD_BLACK BACKGROUND_YELLOW " Minishell " RESET BOLD_YELLOW " $> " RESET
+#define TEMPLATE_PROMPT " " BACKGROUND_YELLOW BOLD_BLACK " Minishell " RESET BOLD_YELLOW " $> " RESET
 #define TEMPLATE_GOOD_BYE RESET_TERMINAL BOLD_YELLOW DOOR "[see you soon]\n" RESET
 
 #define CAT_SIZE 3
@@ -75,6 +75,7 @@ typedef struct s_data
 {
     char *input;
     char **input_splitted;
+    char *path;
 } t_data;
 
 #include "libft/libft.h"
@@ -183,9 +184,10 @@ typedef struct s_data
 
 char *getpath(char *buffer);
 int run_build_cmd(t_data *d, char *envp[]);
-int ft_countword(char *input);
+int ft_countword(char **spli_args);
 int filter_input(t_data *d, char *envp[]);
 int check_command(char **argv);
 void print_error(char *str_sub, char *str_cont);
+int run_custom_cmd(t_data *d);
 
 #endif
