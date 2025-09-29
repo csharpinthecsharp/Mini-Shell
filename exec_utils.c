@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 14:57:15 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/09/29 20:20:09 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/09/29 22:44:01 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,23 +36,8 @@ int filter_input(t_data *d, char *envp[])
     // RETURN 1 SEULEMENT SI ON VEUX TOUT EXIT
     if (d->input == NULL)
         return (0);
+    filter_quote(d);
     
-    d->quotted_words = count_quotes(d->input);
-
-    d->input_quote = malloc(sizeof(char *) * d->quotted_words + 1);
-    if (!d->input_quote)
-        return (1);
-    retrieve_quoted(d, d->input);
-    int i = 0;
-    while (d->input_quote[i])
-    {
-        printf("%s\n", d->input_quote[i]);
-        i++;
-    }
-    d->input_splitted = ft_split(d->input, ' ');
-
-
-
     if (check_command(d->input_splitted) == 0)
         print_error("command not found: ", d->input_splitted[0]);
     else if (check_command(d->input_splitted) == 1)

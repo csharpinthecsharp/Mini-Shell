@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/09/29 20:19:15 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/09/29 23:15:54 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,15 @@
 
 #define BUFFER_SIZE 42
 
-#define BOLD_BLACK "\e[1;30m"
-#define BOLD_RED "\e[1;91m"
-#define BACKGROUND_YELLOW "\e[0;103m"
-#define BOLD_YELLOW "\e[1;93m"
-#define BOLD_ROSE "\033[1;35m"
-#define BOLD_GREEN "\e[1;92m"
-#define RESET "\e[0m"
-#define RESET_TERMINAL "\033[2J\033[H"
+#define BOLD_BLACK      "\001\e[1;30m\002"
+#define BOLD_RED        "\001\e[1;91m\002"
+#define BACKGROUND_YELLOW "\001\e[0;103m\002"
+#define BOLD_YELLOW     "\001\e[1;93m\002"
+#define BOLD_ROSE       "\001\033[1;35m\002"
+#define BOLD_GREEN      "\001\e[1;92m\002"
+#define RESET           "\001\e[0m\002"
+#define RESET_TERMINAL  "\033[2J\033[H"
+
 
 #define GUN \
 "                   _\n\
@@ -71,7 +72,6 @@ typedef struct s_data
     char **input_splitted;
     char **input_quote;
     char *path;
-
     int quotted_words;
 } t_data;
 
@@ -189,7 +189,8 @@ int run_custom_cmd(t_data *d);
 int handle_pwd(char *argv, int count, char *path);
 int handle_exit(char *argv, int count);
 int handle_echo(char **argv, int count);
-void retrieve_quoted(t_data *d, char *str);
 int count_quotes(char *str);
+int filter_quote(t_data *d);
+char	**ft_split_quotes(const char *s);
 
 #endif

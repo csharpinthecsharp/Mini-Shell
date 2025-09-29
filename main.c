@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:18:23 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/09/29 19:57:04 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/09/29 23:12:16 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,12 @@ int main(int ac, char *av[], char *envp[])
         // Si la commande n'est pas a built in,
         // Et est connu de notre base, on la run.
         // Exemple [cat, ls].
-
         // NON BUILD IN COMMAND
         if (filter_input(d, envp) == 1)
             exit(EXIT_FAILURE);
-        
         // Ajouter a l'historique.
         add_history(d->input);
+        rl_on_new_line();
         
         free(d->input);
         free(d->path);
