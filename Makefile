@@ -3,7 +3,6 @@ CC		= clang
 CFLAGS	= -Wall -Wextra -Werror
 
 SRCS	= main.c \
-		  cwd_utils.c \
 		  exec_utils.c \
 		  utils.c \
 		  handler_build.c \
