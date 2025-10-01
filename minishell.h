@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/09/29 23:45:26 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/02 00:45:33 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,6 +191,5 @@ int handle_exit(char *argv, int count);
 int handle_echo(char **argv, int count);
 int count_quotes(char *str);
 int filter_quote(t_data *d);
-char	**ft_split_quotes(const char *s);
 
 #endif
