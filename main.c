@@ -6,13 +6,13 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:18:23 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/09/29 23:12:16 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/02 13:12:03 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// REPL 
+// REPL
 // R = READ | E = EVALUATE | P = EXECUTE | L = LOOP.
 int main(int ac, char *av[], char *envp[])
 {
@@ -43,6 +43,8 @@ int main(int ac, char *av[], char *envp[])
         // Exemple [cat, ls].
         // NON BUILD IN COMMAND
         if (filter_input(d, envp) == 1)
+            exit(EXIT_FAILURE);
+        else
             exit(EXIT_FAILURE);
         // Ajouter a l'historique.
         add_history(d->input);

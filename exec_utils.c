@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 14:57:15 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/09/30 13:08:47 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/02 13:14:23 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,15 @@ int filter_input(t_data *d, char *envp[])
     // RETURN 1 SEULEMENT SI ON VEUX TOUT EXIT
     if (d->input == NULL)
         return (0);
+
+
     if (filter_quote(d) == 1)
         return 0;
+    else 
+        return (0);
+
+
+        
     
     if (check_command(d->input_splitted) == 0)
         print_error("command not found: ", d->input_splitted[0]);

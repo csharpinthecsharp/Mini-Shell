@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/02 00:45:33 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/02 12:43:00 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,7 +189,7 @@ int run_custom_cmd(t_data *d);
 int handle_pwd(char *argv, int count, char *path);
 int handle_exit(char *argv, int count);
 int handle_echo(char **argv, int count);
-int count_quotes(char *str);
 int filter_quote(t_data *d);
+int zzz(char *input);
 
 #endif
