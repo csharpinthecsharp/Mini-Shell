@@ -2,13 +2,13 @@ NAME	= minishell
 CC		= clang
 CFLAGS	= -Wall -Wextra -Werror
 
-SRCS	= main.c \
-		  exec_utils.c \
-		  utils.c \
-		  handler_build.c \
-		  tokenisation.c \
-		  pre_tokenisation.c \
-		  init.c 
+SRCS	= src/main.c \
+		  src/exec_utils.c \
+		  src/utils.c \
+		  src/handler_build.c \
+		  src/tokenisation.c \
+		  src/pre_tokenisation.c \
+		  src/init.c 
 
 OBJS	= $(SRCS:.c=.o)
 LIBFT 	= libft/libft.a

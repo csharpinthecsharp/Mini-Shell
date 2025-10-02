@@ -6,11 +6,12 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:18:23 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/02 15:57:37 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/02 16:26:14 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
+#include "../include/template.h"
 
 // REPL
 // R = READ | E = EVALUATE | P = EXECUTE | L = LOOP.

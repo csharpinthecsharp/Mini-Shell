@@ -6,11 +6,12 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 20:20:39 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/09/29 23:46:28 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/02 16:24:44 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
+#include "../include/template.h"
 
 int ft_countword(char **spli_args)
 {

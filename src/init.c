@@ -6,11 +6,11 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 15:35:24 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/02 15:57:17 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/02 16:24:27 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
 int update_data(t_data *d)
 {
