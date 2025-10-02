@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 00:34:09 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/02 15:53:27 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/02 15:57:13 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,6 @@ int zzz(t_data *d)
         return (1);
     
     // SI IL N'Y A PAS DE QUOTES
-
     if (d->c_quote > 1)
     {
         // STATE 1 = QUOTES 

@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/02 15:49:16 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/02 15:57:07 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,10 @@ int filter_input(t_data *d, char *envp[])
     if (zzz(d) == 1)
         print_error("Error: ", "Open quote");
 
+
+
+
+
     d->input_splitted = split(d);
     int i = 0;
     while (d->input_splitted[i])
@@ -37,6 +41,7 @@ int filter_input(t_data *d, char *envp[])
         i++;
     }
     return (0);
+    
 
         
     
