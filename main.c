@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:18:23 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/02 13:12:03 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/02 15:38:01 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,9 @@ int main(int ac, char *av[], char *envp[])
     printf(TEMPLATE_SETUP_SCREEN);
     while (1)
     {
+        // RESET VALEUR POUR LE NOUVEAU INPUT
+        update_data(d);
+        
         d->path = getpath(buffer);
 
         d->input = readline(TEMPLATE_PROMPT);        

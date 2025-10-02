@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   split.c                                            :+:      :+:    :+:   */
+/*   pre_tokenisation.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 00:34:09 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/02 13:36:59 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/02 15:53:27 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,35 +94,32 @@ static int count_arg(char *input, int state, char arg)
 
 // RETURN 1 = OPEN QUOTE
 // RETURN 2 = NO QUOTES
-int zzz(char *input)
+int zzz(t_data *d)
 {
-    int pipe_count = 0;
-    int quote_count = 0;
-    int env_var_count = 0;
-    int big_quote_count = 0;
-    
-    quote_count = count_quotes(input);
+    d->c_quote = count_quotes(d->input);
     // SI LE NOMBRE EST IMPAIR
-    if (quote_count % 2 != 0)
+    if (d->c_quote % 2 != 0)
         return (1);
+    
     // SI IL N'Y A PAS DE QUOTES
 
-    if (quote_count > 1)
+    if (d->c_quote > 1)
     {
         // STATE 1 = QUOTES 
-        pipe_count = count_arg(input, QUOTE_TRUE, PIPE);
-        big_quote_count = count_arg(input, QUOTE_TRUE, BIG_QUOTE);
-        env_var_count = count_arg(input, QUOTE_TRUE, ENV_VAR);
+        d->c_pipe = count_arg(d->input, QUOTE_TRUE, PIPE);
+        d->c_big_quote = count_arg(d->input, QUOTE_TRUE, BIG_QUOTE);
+        if (d->c_big_quote % 2 != 0)
+            return (1);
+        d->c_env_var = count_arg(d->input, QUOTE_TRUE, ENV_VAR);
     }
     else
     {
         // STATE 0 = NO QUOTES
-        pipe_count = count_arg(input, QUOTE_FALSE, PIPE);
-        big_quote_count = count_arg(input, QUOTE_TRUE, BIG_QUOTE);
-        env_var_count = count_arg(input, QUOTE_FALSE, ENV_VAR);
+        d->c_pipe = count_arg(d->input, QUOTE_FALSE, PIPE);
+        d->c_big_quote = count_arg(d->input, QUOTE_FALSE, BIG_QUOTE);
+        if (d->c_big_quote % 2 != 0)
+            return (1);
+        d->c_env_var = count_arg(d->input, QUOTE_FALSE, ENV_VAR);
     }
-    
-    printf("Pipe Count: %d | Quote Count: %d | Env Var: %d | B quote: %d\n", pipe_count, quote_count, env_var_count, big_quote_count);
-
     return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/02 12:43:00 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/02 15:40:50 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,9 +70,11 @@ typedef struct s_data
 {
     char *input;
     char **input_splitted;
-    char **input_quote;
     char *path;
-    int quotted_words;
+    int c_quote;
+    int c_big_quote;
+    int c_pipe;
+    int c_env_var;
 } t_data;
 
 #include "libft/libft.h"
@@ -189,7 +191,7 @@ int run_custom_cmd(t_data *d);
 int handle_pwd(char *argv, int count, char *path);
 int handle_exit(char *argv, int count);
 int handle_echo(char **argv, int count);
-int filter_quote(t_data *d);
-int zzz(char *input);
+int zzz(t_data *d);
+int update_data(t_data *d);
 
 #endif
