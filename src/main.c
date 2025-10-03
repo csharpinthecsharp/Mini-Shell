@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:18:23 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/04 01:04:32 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/04 01:42:19 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ int main(int ac, char *av[], char *envp[])
         
     t_data data;
     t_data *d = &data;
+    // CTRL C = NEWLINE
     signal(SIGINT, handler);
     
     printf(TEMPLATE_SETUP_SCREEN);

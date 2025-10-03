@@ -6,10 +6,28 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/04 00:30:33 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/04 01:42:57 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+/*Pour chaques lignes de commandes envoyée à votre programme, plein de choses seront faite mais la plus important des choses à faire est de se créer une liste chainée de token pour chaques éléments de la ligne de commande.
+La liste chainée aura une str et un int pour chaque maillon, la str sera le "mot" et l'int le token. Prenons l'exemple de la pire ligne de commande possible : cat|ls (on remarquera qu'il n'y a pas d'espace et c'est normal)
+
+    le premier token aura comme str "cat" avec CMD comme type (6).
+    le deuxieme token aura comme str "|" avec PIPE comme type (5).
+    le dernier token aura comme str "ls" avec CMD comme type (6).
+
+(se referer à minishell.h)
+
+Les règles sont simple :
+
+    Si on croise une redirection (<, >, << ou >>) alors le token sera soit INPUT (1), soit TRUNC (3), soit HEREDOC (2) ou soit APPEND (4) respectivement.
+    Le premier token sera CMD (6) si pas de redirection.
+    Les tokens après un CMD ou une redirection seront ARG (7).
+    Si "|" est la str avec il aura le type PIPE (5).
+    Après un pipe le prochain token sera soit une redirection soit CMD.
+
+Les tokens ne sont pas la première étape du parsing mais ils sont la clé d'un minishell simple à faire.*/
 #include "../include/minishell.h"
 
 static int ft_isspace(char arg)
@@ -121,7 +139,7 @@ int filter_input(t_data *d, char *envp[])
 {
     // RETURN 1 SEULEMENT SI ON VEUX TOUT EXIT
     if (d->input == NULL)
-        return (0);
+        return (1);
 
     if (count_quotes(d->input) % 2 != 0)
     {
