@@ -6,35 +6,11 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/03 04:13:16 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/03 17:08:12 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-int locate(char *s, char arg, int *arg_storage)
-{
-	int i = 0;
-    int i_arg = 0;
-	int len = ft_strlen(s);
-
-    arg_storage = malloc(sizeof(int) * len + 1);
-    if (!arg_storage)
-        return (1);
-        
-    while (s[i])
-    {
-        if (s[i] == arg)
-        {
-            arg_storage[i_arg] = i;
-            printf("%c : , %d\n",arg, i);
-            i_arg++;
-        }
-        i++;
-    }
-    s[i] = '\0';
-    return (0);
-}
 
 static int ft_isspace(char arg)
 {
@@ -43,12 +19,8 @@ static int ft_isspace(char arg)
     return (0);
 }
 
-static char *get_content(char *s, int start, int end)
-{
-    
-}
 
-static char *get_command(char *s)
+static char *get_first_arg(char *s)
 {
     int i = 0;
     int len = ft_strlen(s);
@@ -73,24 +45,13 @@ static char *get_command(char *s)
     //argv[1] = NULL;
 
     return argv;
-}
+}   
 
-static char **split_utils(char *s, t_data *d)
-{
-    char *cmd = get_command(s);
-    char *content;
-}
 
 static char **split(t_data *d)
 {
-    if (locate_init(d) == 1)
-        return (NULL);
-    
-    if (d->c_quote == 0 && d->c_big_quote == 0
-        && d->c_env_var == 0 && d->c_pipe == 0)
-        return (ft_split(d->input, ' '));
-    else
-        return (split_utils(d->input, d));
+    char *cmd = get_first_arg(d->input);
+    printf("%s", cmd);
     return (NULL);
 }
 
@@ -100,7 +61,7 @@ int filter_input(t_data *d, char *envp[])
     if (d->input == NULL)
         return (0);
 
-    if (zzz(d) == 1)
+    if (count_quotes(d->input) % 2 != 0)
         print_error("Error: ", "Open quote");
 
 

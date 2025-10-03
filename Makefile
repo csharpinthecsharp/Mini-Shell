@@ -7,7 +7,7 @@ SRCS	= src/main.c \
 		  src/utils.c \
 		  src/handler_build.c \
 		  src/tokenisation.c \
-		  src/pre_tokenisation.c \
+		  src/token_utils.c \
 		  src/init.c 
 
 OBJS	= $(SRCS:.c=.o)

@@ -1,25 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   token_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/02 15:35:24 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/03 17:02:12 by ltrillar         ###   ########.fr       */
+/*   Created: 2025/10/02 00:34:09 by ltrillar          #+#    #+#             */
+/*   Updated: 2025/10/03 17:01:29 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-int update_data(t_data *d)
+int count_quotes(char *input)
 {
-    d->c_big_quote = 0;
-    d->c_env_var = 0;
-    d->c_pipe = 0;
-    d->c_quote = 0;
-    d->input = NULL;
-    d->input_splitted = NULL;
-    d->path = NULL;
-    return (0);
+    int i = 0;
+    int count = 0;
+    while (input[i])
+    {
+        if (input[i] == QUOTE)
+            count++;
+        i++;
+    }
+    return (count);
 }
+
