@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/03 17:01:50 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/03 17:10:34 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ typedef struct s_data
 {
     char *input;            // Raw user input
     char **input_splitted;  // Tokenized input
+    char ***commands;
     char *path;             // Current working path
     int c_quote;            // Single quote count
     int c_big_quote;        // Double quote count

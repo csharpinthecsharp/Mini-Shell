@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/03 17:08:12 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/03 17:12:15 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,9 @@ static char **split(t_data *d)
     return (NULL);
 }
 
+// JE VEUX ***COMMANDS, qui contient des **INPUT_SPLITTED et *INPUT
+// SO WHILE (COMMANDS[i])
+    // run(commands[i]) link to commands[i] if | < > tu captes le delire
 int filter_input(t_data *d, char *envp[])
 {
     // RETURN 1 SEULEMENT SI ON VEUX TOUT EXIT
