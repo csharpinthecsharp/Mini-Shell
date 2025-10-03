@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/04 01:42:57 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/04 01:45:13 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ int filter_input(t_data *d, char *envp[])
     if (d->input == NULL)
         return (1);
 
-    if (count_quotes(d->input) % 2 != 0)
+    if (count_quotes(d->input) % 2 != 0 || count_big_quotes(d->input) % 2 != 0)
     {
         print_error("Open quote not allowed: ", d->input);
         return (1);
