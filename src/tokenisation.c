@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/03 17:29:26 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/03 18:10:44 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,20 +45,55 @@ static char *get_first_arg(char *s)
     //argv[1] = NULL;
 
     return argv;
-}   
+}
 
-static int end_of_cmd(char c)
+static char **get_args(char *s, int start)
 {
-    if ((c == PIPE) || c == ('\0'))
-        return (1);
-    return (0);
+    char **argv = malloc(sizeof(char *) * ft_strlen(s));
+    if (!argv)
+        return (NULL);
+    int i = start;
+    int k = 0;
+    while (ft_isspace(s[i]))
+        i++;
+    while (s[i])
+    {
+        int world_len = 0;
+        while (s[i + world_len] && !ft_isspace(s[i + world_len]))
+            world_len++;
+        argv[k] = malloc(sizeof(char) * (world_len + 1));
+        if (!argv[k])
+            return (NULL);
+            
+        int j = 0;
+        while (j < world_len)
+        {
+            argv[k][j] = s[i++];
+            j++;
+        }
+        argv[k][world_len] = '\0';
+        k++;
+        while (ft_isspace(s[i]))
+            i++;
+    }
+    argv[k] = NULL;
+    return (argv);
 }
 
 static char **split(t_data *d)
 {
-    d->input_splitted[0] = get_first_arg(d->input);
-    printf("%s", d->input_splitted[0]);
-    return (d->input_splitted);
+    char *f_arg = get_first_arg(d->input);
+    if (!f_arg)
+        return (NULL);
+        
+    int len_f_arg = ft_strlen(f_arg);
+    char **argv = get_args(d->input, len_f_arg);  
+    if (!argv)
+        return (NULL);
+        
+    printf("first arg: %s\n", f_arg);
+    free(f_arg);
+    return (argv);
 }
 
 // JE VEUX ***COMMANDS, qui contient des **INPUT_SPLITTED et *INPUT
