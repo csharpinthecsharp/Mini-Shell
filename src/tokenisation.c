@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/03 03:32:07 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/03 04:13:16 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,22 +38,47 @@ int locate(char *s, char arg, int *arg_storage)
 
 static int ft_isspace(char arg)
 {
-    if (arg == ' ' || '\t')
+    if (arg == ' ' || arg == '\t')
         return (1);
     return (0);
 }
-static char **split_utils(char *s, t_data *d)
+
+static char *get_content(char *s, int start, int end)
 {
-    int y= 0;
+    
+}
+
+static char *get_command(char *s)
+{
     int i = 0;
     int len = ft_strlen(s);
-    
-    char **argv = malloc(sizeof(char *) * len + 1);
+
+    //char **argv = malloc(sizeof(char *) * len + 1);
+    //if (!argv)
+        //return NULL;
+
+    //argv[0] = malloc(sizeof(char) * (len + 1));
+    char *argv = malloc(sizeof(char) * (len + 1));
     if (!argv)
-        return (NULL);
-    while (!ft_isspace(s[i]))
+        return NULL;
+
+    while (ft_isspace(s[i]))
         i++;
-    
+
+    int j = 0;
+    while (s[i] && !ft_isspace(s[i]))
+        //argv[0][j++] = s[i++];
+        argv[j++] = s[i++];
+    argv[j] = '\0';
+    //argv[1] = NULL;
+
+    return argv;
+}
+
+static char **split_utils(char *s, t_data *d)
+{
+    char *cmd = get_command(s);
+    char *content;
 }
 
 static char **split(t_data *d)
@@ -82,6 +107,14 @@ int filter_input(t_data *d, char *envp[])
     d->input_splitted = split(d);
     if (d->input_splitted == NULL)
         return (1);
+    
+    int i = 0;
+    while (d->input_splitted[i])
+    {
+        printf("%s", d->input_splitted[i]);
+        printf(" ");
+        i++;
+    }
     return (0);
     
 
