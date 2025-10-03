@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/03 17:12:15 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/03 17:29:26 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,18 @@ static char *get_first_arg(char *s)
     return argv;
 }   
 
+static int end_of_cmd(char c)
+{
+    if ((c == PIPE) || c == ('\0'))
+        return (1);
+    return (0);
+}
 
 static char **split(t_data *d)
 {
-    char *cmd = get_first_arg(d->input);
-    printf("%s", cmd);
-    return (NULL);
+    d->input_splitted[0] = get_first_arg(d->input);
+    printf("%s", d->input_splitted[0]);
+    return (d->input_splitted);
 }
 
 // JE VEUX ***COMMANDS, qui contient des **INPUT_SPLITTED et *INPUT
