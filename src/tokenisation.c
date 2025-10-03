@@ -6,17 +6,66 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/03 01:06:30 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/03 03:32:07 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
+int locate(char *s, char arg, int *arg_storage)
+{
+	int i = 0;
+    int i_arg = 0;
+	int len = ft_strlen(s);
+
+    arg_storage = malloc(sizeof(int) * len + 1);
+    if (!arg_storage)
+        return (1);
+        
+    while (s[i])
+    {
+        if (s[i] == arg)
+        {
+            arg_storage[i_arg] = i;
+            printf("%c : , %d\n",arg, i);
+            i_arg++;
+        }
+        i++;
+    }
+    s[i] = '\0';
+    return (0);
+}
+
+static int ft_isspace(char arg)
+{
+    if (arg == ' ' || '\t')
+        return (1);
+    return (0);
+}
+static char **split_utils(char *s, t_data *d)
+{
+    int y= 0;
+    int i = 0;
+    int len = ft_strlen(s);
+    
+    char **argv = malloc(sizeof(char *) * len + 1);
+    if (!argv)
+        return (NULL);
+    while (!ft_isspace(s[i]))
+        i++;
+    
+}
+
 static char **split(t_data *d)
 {
+    if (locate_init(d) == 1)
+        return (NULL);
+    
     if (d->c_quote == 0 && d->c_big_quote == 0
         && d->c_env_var == 0 && d->c_pipe == 0)
         return (ft_split(d->input, ' '));
+    else
+        return (split_utils(d->input, d));
     return (NULL);
 }
 
@@ -30,16 +79,9 @@ int filter_input(t_data *d, char *envp[])
         print_error("Error: ", "Open quote");
 
 
-
-
-
     d->input_splitted = split(d);
-    int i = 0;
-    while (d->input_splitted[i])
-    {
-        printf("%s\n", d->input_splitted[i]);
-        i++;
-    }
+    if (d->input_splitted == NULL)
+        return (1);
     return (0);
     
 

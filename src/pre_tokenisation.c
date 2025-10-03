@@ -6,18 +6,11 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 00:34:09 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/02 16:24:37 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/03 02:54:19 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-#define QUOTE_TRUE 1
-#define QUOTE_FALSE 0
-#define PIPE '|'
-#define QUOTE '\''
-#define BIG_QUOTE '\"'
-#define ENV_VAR '$'
 
 static int is_in_arg(char *input, int pos, char arg)
 {

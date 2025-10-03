@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/02 16:35:19 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/03 02:59:30 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,12 @@
 /* ========================== */
 # define BUFFER_SIZE 42
 # define CAT_SIZE    3
+#define QUOTE_TRUE 1
+#define QUOTE_FALSE 0
+#define PIPE '|'
+#define QUOTE '\''
+#define BIG_QUOTE '\"'
+#define ENV_VAR '$'
 
 /* ========================== */
 /*        DEPENDENCIES        */
@@ -50,6 +56,10 @@ typedef struct s_data
     int c_big_quote;        // Double quote count
     int c_pipe;             // Pipe count
     int c_env_var;          // Env var count
+    int *s_quote;
+    int *s_pipe;
+    int *s_big_quote;
+    int *s_env_var;
 }   t_data;
 
 /* ========================== */
@@ -72,5 +82,7 @@ void    print_error(char *str_sub, char *str_cont);
 int     run_custom_cmd(t_data *d);
 int     zzz(t_data *d);
 int     update_data(t_data *d);
+int     locate_init(t_data *d);
+int     locate(char *s, char arg, int *arg_storage);
 
 #endif /* MINISHELL_H */
