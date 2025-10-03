@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 16:20:24 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/04 00:20:26 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/04 00:57:36 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@
 # define BOLD_ROSE         "\001\033[1;35m\002"
 # define BOLD_GREEN        "\001\e[1;92m\002"
 # define RESET             "\001\e[0m\002"
-# define RESET_TERMINAL    "\033[2J\033[H"
-
 /* ========================== */
 /*        ASCII ART           */
 /* ========================== */
@@ -39,7 +37,7 @@
 "                  /       \\         \\   /- \\  \\\n"\
 "                  \\       /         || |  // /`\n"\
 "           _/\\_/\\_/\\_   _/_/\\_/\\_/\\_((_|\((_//\\_/\\_/\\_/\\_ \n"\
-"\n                         "BACKGROUND_YELLOW BOLD_BLACK" <[minishell_42]> \n\n"
+"\n                         "BACKGROUND_YELLOW BOLD_BLACK" <[minishell_42]> " RESET" \n\n"
 
 # define ERROR_PREFIX \
 BOLD_RED \
@@ -47,28 +45,10 @@ BOLD_RED \
 "(  ̳• · • ̳)\n"\
 "/    づ▄︻デ══━一 "
 
-# define DOOR \
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⡀⠀⠀⠀⢀⣀⡠⠤⠴⠚⣿⠃\n"\
-"⠀⠸⣿⡭⣭⣿⣽⣿⣿⣿⣿⣿⣿⣿⣽⣿⡿⠓⠚⠉⣉⣀⣤⡤⣴⠀⣿⠀\n"\
-"⠀⠀⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⢰⠞⢩⠀⢻⡏⠀⡏⠀⣿⠄\n"\
-"⠀⢠⣟⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⢸⠀⢸⠀⢸⡇⠀⠃⠀⣿⠂\n"\
-"⠀⢘⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⢸⠀⢸⠀⢸⡇⠀⡇⠀⣿⡇\n"\
-"⠀⠈⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⢸⠀⢸⠀⢸⡇⠀⣷⠀⣿⡇\n"\
-"⠀⣠⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⢸⠀⢸⠀⢸⡇⠀⣿⣼⣿⡇\n"\
-"⠀⡃⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠘⠛⠛⠒⠛⠓⠛⠛⣿⣿⡇\n"\
-"⠀⠀⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⢰⠦⢠⠀⢤⣤⣤⣄⠋⣿⡇\n"\
-"⠀⠀⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⢸⠀⢸⠀⢸⡇⠈⣿⠀⣿⡇\n"\
-"⠀⢸⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⢸⠀⢸⠀⢸⡇⠀⣿⠀⣿⡇\n"\
-"⠀⠀⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⢸⣄⢸⠠⣼⡇⠀⣿⠀⣿⡇\n"\
-"⠀⣸⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠉⠉⠀⠛⠚⠯⠿⠀⣿⡇\n"\
-"⠠⢿⣿⣷⣶⣶⣶⠶⢶⡶⢶⣶⣶⣶⣶⢿⣶⣤⣄⣀⣀⠀⠀⠀⢨⠀⣿⡇\n"\
-"⠀⠀⠀⠈⠀⠐⠒⠒⠀⠀⠀⠘⁁⠈⠀⠀⠀⠀⠉⠉⢛⠉⠑⠒⠠⠤⢿⠇\n"
-
 /* ========================== */
 /*        PROMPTS & UI        */
 /* ========================== */
-# define TEMPLATE_SETUP_SCREEN RESET_TERMINAL BOLD_YELLOW GUN RESET
+# define TEMPLATE_SETUP_SCREEN BOLD_YELLOW GUN RESET
 # define TEMPLATE_PROMPT       " " BACKGROUND_YELLOW BOLD_BLACK " Minishell " RESET BOLD_YELLOW " $> " RESET
-# define TEMPLATE_GOOD_BYE     RESET_TERMINAL BOLD_YELLOW DOOR "[see you soon]\n" RESET
 
 #endif /* TEMPLATE_H */

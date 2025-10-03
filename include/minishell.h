@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/03 17:10:34 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/04 00:46:22 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,7 @@ int     filter_input(t_data *d, char *envp[]);
 int     check_command(char **argv);
 void    print_error(char *str_sub, char *str_cont);
 int     run_custom_cmd(t_data *d);
-int     zzz(t_data *d);
 int     update_data(t_data *d);
-int     locate_init(t_data *d);
 int     count_quotes(char *input);
 
 #endif /* MINISHELL_H */
