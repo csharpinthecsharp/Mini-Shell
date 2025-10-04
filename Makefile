@@ -9,9 +9,9 @@ SRCS	= src/main.c \
 		  src/utils/token_utils.c \
 		  src/utils/init.c \
 		  src/exec_built/handler_built.c \
-		  src/exec_built/run_built.c \
+		  src/exec_built/find_built.c \
 		  src/exec_bin/run_bin.c \
-		  src/exec_built/execution.c
+		  src/exec_bin/prerun_bin.c
 
 OBJS	= $(SRCS:.c=.o)
 LIBFT 	= libft/libft.a

@@ -1,43 +1,96 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   run_bin.c                                          :+:      :+:    :+:   */
+/*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/05 00:07:31 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/05 00:14:42 by ltrillar         ###   ########.fr       */
+/*   Created: 2025/10/04 13:52:18 by ltrillar          #+#    #+#             */
+/*   Updated: 2025/10/05 00:28:48 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int run_custom_cmd(t_data *d)
+#define N_proc 2
+#define N_desc 2
+void pipe_the_pipe(char ***commands, char **envp, int N_pipe)
 {
-    // RETURN 1 SEULEMENT SI ON VEUX TOUT EXIT
-    int count = 0;
+    int **var_pipe = malloc(sizeof(int *) * N_pipe);
+    if (!var_pipe)
+    {
+        perror("malloc failed");
+        exit(EXIT_FAILURE);
+    }
 
-    while (d->input_splitted[count])
-        count++;
-    if (ft_strncmp(d->input_splitted[0], "pwd", 3) == 0)
+    for (int i = 0; i < N_pipe; i++)
     {
-        if (handle_pwd(d->input_splitted[0], count, d->path) == 1)
-            return (1);
+        var_pipe[i] = malloc(sizeof(int) * N_desc);
+        if (!var_pipe[i])
+        {
+            perror("malloc failed");
+            exit(EXIT_FAILURE);
+        }
+        if (pipe(var_pipe[i]) == -1)
+        {
+            perror("pipe failed");
+            exit(EXIT_FAILURE);
+        }
     }
-    else if (ft_strncmp(d->input_splitted[0], "exit", 4) == 0)
+
+    for (int i = 0; i <= N_pipe; i++)
     {
-        if (handle_exit(d->input_splitted[0], count) == 1)
-            return (1);
+        pid_t pid = fork();
+        if (pid == -1)
+        {
+            perror("fork failed");
+            exit(EXIT_FAILURE);
+        }
+
+        if (pid == 0)
+        {
+            // Redirection STDIN
+            if (i > 0)
+                dup2(var_pipe[i - 1][0], STDIN_FILENO);
+
+            // Redirection STDOUT
+            if (i < N_pipe)
+                dup2(var_pipe[i][1], STDOUT_FILENO);
+
+            // Fermer tous les descripteurs inutiles
+            for (int j = 0; j < N_pipe; j++)
+            {
+                close(var_pipe[j][0]);
+                close(var_pipe[j][1]);
+            }
+
+            execve(commands[i][0], commands[i], envp);
+            perror("execve failed");
+            exit(EXIT_FAILURE);
+        }
     }
-    else if (ft_strncmp(d->input_splitted[0], "echo", 4) == 0)
+
+    // Fermer les descripteurs dans le parent
+    for (int i = 0; i < N_pipe; i++)
     {
-        if (handle_echo(d->input_splitted, count) == 1)
-            return (1);
+        close(var_pipe[i][0]);
+        close(var_pipe[i][1]);
+        free(var_pipe[i]);
     }
-    else if (ft_strncmp(d->input_splitted[0], "cd", 2) == 0)
-    {
-        if (handle_cd(d->input_splitted, count, d) == 1)
-            return (1);
-    }
-    return (0);
+    free(var_pipe);
+
+    // Attendre tous les enfants
+    for (int i = 0; i <= N_pipe; i++)
+        wait(NULL);
+
+    //pipe[0] = read;
+    //pipe[1] = write;
+
+    // CREER N PIPES POUR N COMMANDES
+    // CREER N PROCESSUS AVEC FORK()
+    // REDIRIGER LES ENTREES/SORTIES AVEC DUP2()
+        // chaque commandes lit depuis le pipe precedents et,
+        // ecrit dans le pipe suivant.
+    // FERMER LES DESCRIPTEURS INUTILES DANS CHAQUE PROCESSUS
+    // EXECVP
 }
