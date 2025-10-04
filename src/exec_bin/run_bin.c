@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execution.c                                        :+:      :+:    :+:   */
+/*   run_bin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 13:52:18 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/05 00:28:48 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/05 00:36:38 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ void pipe_the_pipe(char ***commands, char **envp, int N_pipe)
         perror("malloc failed");
         exit(EXIT_FAILURE);
     }
-
-    for (int i = 0; i < N_pipe; i++)
+    int i = 0;
+    while (i < N_pipe)
     {
         var_pipe[i] = malloc(sizeof(int) * N_desc);
         if (!var_pipe[i])
@@ -36,9 +36,11 @@ void pipe_the_pipe(char ***commands, char **envp, int N_pipe)
             perror("pipe failed");
             exit(EXIT_FAILURE);
         }
+        i++;
     }
 
-    for (int i = 0; i <= N_pipe; i++)
+    i = 0;
+    while (i <= N_pipe)
     {
         pid_t pid = fork();
         if (pid == -1)
@@ -57,31 +59,40 @@ void pipe_the_pipe(char ***commands, char **envp, int N_pipe)
             if (i < N_pipe)
                 dup2(var_pipe[i][1], STDOUT_FILENO);
 
-            // Fermer tous les descripteurs inutiles
-            for (int j = 0; j < N_pipe; j++)
+            // Fermer tous les descripteurs inutiles*
+            int j = 0;
+            while (j < N_pipe)
             {
                 close(var_pipe[j][0]);
                 close(var_pipe[j][1]);
+                j++;
             }
 
             execve(commands[i][0], commands[i], envp);
             perror("execve failed");
             exit(EXIT_FAILURE);
         }
+        i++;
     }
 
     // Fermer les descripteurs dans le parent
-    for (int i = 0; i < N_pipe; i++)
+    i = 0;
+    while (i < N_pipe)
     {
         close(var_pipe[i][0]);
         close(var_pipe[i][1]);
         free(var_pipe[i]);
+        i++;
     }
     free(var_pipe);
 
     // Attendre tous les enfants
-    for (int i = 0; i <= N_pipe; i++)
+    i = 0;
+    while (i <= N_pipe)
+    {
         wait(NULL);
+        i++;
+    }
 
     //pipe[0] = read;
     //pipe[1] = write;

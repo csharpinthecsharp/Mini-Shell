@@ -3,7 +3,7 @@ CC		= clang
 CFLAGS	= -Wall -Wextra -Werror
 
 SRCS	= src/main.c \
-		  src/utils/select_run.c \
+		  src/parse/select_run.c \
 		  src/utils/utils_trash.c \
 		  src/parse/tokenisation.c \
 		  src/utils/token_utils.c \
