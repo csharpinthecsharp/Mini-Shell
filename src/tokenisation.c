@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/04 17:44:51 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/04 21:50:18 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,12 @@ static int get_arg_length(char *s, int *i, int *quoted, char *quote_char)
         (*i)++;
     }
     start_i = *i;
+    if (!*quoted && (s[*i] == '|' || s[*i] == '<' || s[*i] == '>'))
+    {
+        (*i)++;
+        return 1; // le caractère est un token à part
+    }
+
     // Lire jusqu’à la fin du guillemet ou jusqu’à un espace
     if (*quoted)
     {
@@ -122,53 +128,48 @@ static char **get_args(char *s)
     argv[k] = NULL;
     return argv;
 }
+#define commands_count 10
 
-static int is_there_a_pipe(char **argv)
+char ***split_commands(char **argv)
 {
-    int i = 0;
-    int count = 0;
+    char ***cmds = malloc(sizeof(char **) * (commands_count + 1));
+    if (!cmds)
+        return NULL;
+
+    int i = 0, cmds_i = 0, arg_i = 0;
+    cmds[cmds_i] = malloc(sizeof(char *) * (commands_count + 1));
+    if (!cmds[cmds_i])
+        return NULL;
+
     while (argv[i])
     {
-        if (argv[i][0] == PIPE)
-            count++;
-        i++;
-    }
-    return (count);
-}
-
-static char ***split_pipe(char **argv, t_data *d)
-{
-    int i = 0;
-    int pipe_count = is_there_a_pipe(argv);
-    d->commands = malloc(sizeof(char **) * BUFFER_SIZE);
-    if (!d->commands)
-        return (NULL);
-
-    while (pipe_count > 0)
-    {
-        if (argv[i][0] == PIPE)
+        if (argv[i][0] == PIPE && argv[i][1] == '\0') // pipe isolé
         {
-            // ***commands = argv[] + argv [];
-            // until NULL -> EOF || PIPE;
-            pipe_count--;
+            cmds[cmds_i][arg_i] = NULL; // terminer la commande
+            cmds_i++;
+            arg_i = 0;
+            cmds[cmds_i] = malloc(sizeof(char *) * (commands_count + 1));
+            if (!cmds[cmds_i])
+                return NULL;
+        }
+        else
+        {
+            cmds[cmds_i][arg_i] = argv[i];
+            arg_i++;
         }
         i++;
     }
-    return (d->commands);
+    cmds[cmds_i][arg_i] = NULL; // terminer la dernière commande
+    cmds[cmds_i + 1] = NULL;    // terminer le tableau de commandes
+    return cmds;
 }
+
 
 static char **split(t_data *d)
 {
     char **argv = get_args(d->input);
     if (!argv)
         return (NULL);
-
-    if (is_there_a_pipe(argv) > 0)
-    {
-        d->commands = split_pipe(argv, d);
-        if (d->commands == NULL)
-            return (NULL);
-    }
     return (argv);
 }
 

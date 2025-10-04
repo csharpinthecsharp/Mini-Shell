@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 00:34:09 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/04 01:44:10 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/04 21:21:30 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,3 +38,20 @@ int count_big_quotes(char *input)
     return (count);
 }
 
+int pipe_count(char **argv)
+{
+    int i = 0;
+    int count = 0;
+    while (argv[i])
+    {
+        int j = 0;
+        while (argv[i][j])
+        {
+            if (argv[i][j] == PIPE)
+                count++;
+            j++;
+        }
+        i++;
+    }
+    return (count);
+}

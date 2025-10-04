@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/04 17:15:44 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/04 21:51:12 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef struct s_data
     char **input_splitted;  // Tokenized input
     char ***commands;
     char *path;             // Current working path
+    char **envp;
 }   t_data;
 
 /* ========================== */
@@ -76,5 +77,8 @@ int     run_custom_cmd(t_data *d);
 int     update_data(t_data *d);
 int     count_quotes(char *input);
 int     count_big_quotes(char *input);
+void    pipe_the_pipe(char ***commands, char **envp, int N_pipe);
+int     pipe_count(char **argv);
+char    ***split_commands(char **argv);
 
 #endif /* MINISHELL_H */

@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 14:57:15 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/03 02:54:23 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/04 21:52:33 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,6 @@ int run_custom_cmd(t_data *d)
 
 int run_build_cmd(t_data *d, char *envp[])
 {
-    // RETURN 1 SEULEMENT SI ON VEUX TOUT EXIT
-    pid_t pid;
-    pid = fork();
-    if (pid == 0)
-    {
         int count = 0;
         while (d->input_splitted[count])
             count++;
@@ -78,13 +73,13 @@ int run_build_cmd(t_data *d, char *envp[])
             i++;
         }
         argv[i] = NULL;
-            
-        execve(argv[0], argv, envp);
-        perror("execve failed");
-        free(argv);
-        exit(EXIT_FAILURE);
-    }
-    else
-        wait(NULL);
-    return (0);
+
+        
+        d->commands = split_commands(argv);
+        if (d->commands == NULL)
+            return (1);
+    
+        pipe_the_pipe(d->commands, envp, pipe_count(d->input_splitted));
+    
+        return (0);
 }
