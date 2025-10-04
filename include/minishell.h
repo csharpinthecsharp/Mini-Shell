@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/05 00:03:53 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/05 01:01:00 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,5 +81,6 @@ void    pipe_the_pipe(char ***commands, char **envp, int N_pipe);
 int     pipe_count(char **argv);
 char    ***split_commands(char **argv);
 int     handle_cd(char **argv, int count, t_data *d);
+char    *get_promptpath(char *buffer);
 
 #endif /* MINISHELL_H */

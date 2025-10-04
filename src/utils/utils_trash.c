@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 20:20:39 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/05 00:12:14 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/05 01:15:40 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,33 @@ char *getpath(char *buffer)
     // On duplique buffer avant de l'envoyer,
     // Il faut lui alouer la mémoire.
     return (ft_strdup(buffer));
+}
+
+char *get_promptpath(char *buffer)
+{
+    if (!getcwd(buffer, BUFFER_SIZE))
+        return (NULL);
+    char tmp[BUFFER_SIZE];
+    int i = 0;
+    while (buffer[i])
+        i++;
+    buffer[i] = '\0';
+    
+    while (i--)
+    {
+        if (buffer[i - 1] == '/')
+            break;
+    }
+    
+    int j = 0;
+    while (buffer[i])
+        tmp[j++] = buffer[i++];
+        
+    tmp[j] = '\0';
+    
+    char *t = ft_strdup(ft_strjoin(TEMPLATE_PROMPT, tmp));
+    char *t2 = ft_strdup(ft_strjoin(t, TEMPLATE_PROMPT_END));
+    return (ft_strdup(t2));
 }
 
 void print_error(char *str_sub, char *str_cont)

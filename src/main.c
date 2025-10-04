@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:18:23 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/04 21:03:03 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/05 01:14:43 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int main(int ac, char *av[], char *envp[])
         
         d->path = getpath(buffer);
 
-        d->input = readline(TEMPLATE_PROMPT); 
+        d->input = readline(get_promptpath(buffer)); 
         // Si EOF on sors de la boucle.
         // EOF = CTRL D.
         if (!d->input)
