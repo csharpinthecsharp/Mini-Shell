@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/04 17:38:51 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/04 17:44:51 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,8 @@ static char ***split_pipe(char **argv, t_data *d)
     {
         if (argv[i][0] == PIPE)
         {
+            // ***commands = argv[] + argv [];
+            // until NULL -> EOF || PIPE;
             pipe_count--;
         }
         i++;
