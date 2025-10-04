@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 14:57:15 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/04 21:52:33 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/04 23:02:24 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ int check_command(char **argv)
     if (ft_strncmp(argv[0], "ls", len) == 0)
         return (2);
     else if (ft_strncmp(argv[0], "cat", len) == 0)
+        return (2);
+    else if (ft_strncmp(argv[0], "grep", len) == 0)
         return (2);
     else if (ft_strncmp(argv[0], "pwd", len) == 0)
         return (1);
@@ -58,26 +60,24 @@ int run_custom_cmd(t_data *d)
 
 int run_build_cmd(t_data *d, char *envp[])
 {
-        int count = 0;
-        while (d->input_splitted[count])
-            count++;
-        char **argv = malloc(sizeof(char *) * count + 2);
-        if (!argv)
-            return (1);
-        argv[0] = ft_strjoin("/bin/", d->input_splitted[0]);
 
-        int i = 1;
-        while (i < count)
-        {
-            argv[i] = d->input_splitted[i];
-            i++;
-        }
-        argv[i] = NULL;
-
-        
-        d->commands = split_commands(argv);
+        d->commands = split_commands(d->input_splitted);
         if (d->commands == NULL)
             return (1);
+        
+        int cmds = 0;
+        int count = 0;
+        while (d->commands[cmds])
+        {
+            while (d->commands[cmds][count])
+                count++;
+            char *argv = malloc(sizeof(char *) * count + 2);
+            if (!argv)
+                return (1);
+            argv = ft_strjoin("/bin/", d->commands[cmds][0]);
+            d->commands[cmds][0] = argv;
+            cmds++;
+        }
     
         pipe_the_pipe(d->commands, envp, pipe_count(d->input_splitted));
     
