@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 14:57:15 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/04 23:02:24 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/04 23:23:05 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,16 @@ int check_command(char **argv)
     // return 1 = on a trouvé une commande qu'il faut build.
     // return 2 = pas besoin de la build, juste execve.
     int len = ft_strlen(argv[0]);
-    if (ft_strncmp(argv[0], "ls", len) == 0)
-        return (2);
-    else if (ft_strncmp(argv[0], "cat", len) == 0)
-        return (2);
-    else if (ft_strncmp(argv[0], "grep", len) == 0)
-        return (2);
-    else if (ft_strncmp(argv[0], "pwd", len) == 0)
+    if (ft_strncmp(argv[0], "pwd", len) == 0)
         return (1);
     else if (ft_strncmp(argv[0], "exit", len) == 0)
         return (1);
     else if (ft_strncmp(argv[0], "echo", len) == 0)
         return (1);
+    else if (ft_strncmp(argv[0], "cd", len) == 0)
+        return (1);
+    else
+        return (2);
     return (0);
 }
 
@@ -55,12 +53,16 @@ int run_custom_cmd(t_data *d)
         if (handle_echo(d->input_splitted, count) == 1)
             return (1);
     }
+    else if (ft_strncmp(d->input_splitted[0], "cd", 2) == 0)
+    {
+        if (handle_cd(d->input_splitted, count, d) == 1)
+            return (1);
+    }
     return (0);
 }
 
 int run_build_cmd(t_data *d, char *envp[])
 {
-
         d->commands = split_commands(d->input_splitted);
         if (d->commands == NULL)
             return (1);

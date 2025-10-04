@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/04 21:51:12 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/04 23:22:53 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,5 +80,6 @@ int     count_big_quotes(char *input);
 void    pipe_the_pipe(char ***commands, char **envp, int N_pipe);
 int     pipe_count(char **argv);
 char    ***split_commands(char **argv);
+int     handle_cd(char **argv, int count, t_data *d);
 
 #endif /* MINISHELL_H */
