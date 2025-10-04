@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/04 01:45:13 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/04 14:24:45 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ static int ft_isspace(char arg)
         return (1);
     return (0);
 }
-
 
 static int get_arg_length(char *s, int *i, int *quoted, char *quote_char)
 {
