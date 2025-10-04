@@ -9,7 +9,6 @@ SRCS	= src/main.c \
 		  src/tokenisation.c \
 		  src/token_utils.c \
 		  src/init.c \
-		  src/pipe.c
 
 OBJS	= $(SRCS:.c=.o)
 LIBFT 	= libft/libft.a

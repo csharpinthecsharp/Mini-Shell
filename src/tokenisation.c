@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/04 14:24:45 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/04 16:18:51 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,13 +123,60 @@ static char **get_args(char *s)
     return argv;
 }
 
+static int is_there_a_pipe(char **argv)
+{
+    int i = 0;
+    int count = 0;
+    while (argv[i])
+    {
+        if (argv[i][0] == PIPE)
+            count++;
+        i++;
+    }
+    return (count);
+}
+
 static char **split(t_data *d)
 {
-    char **argv = get_args(d->input);  
+    char **argv = get_args(d->input);
     if (!argv)
         return (NULL);
+
+    if (is_there_a_pipe(argv) > 0)
+    {
+        d->commands = split_pipe(argv, d);
+        if (d->commands == NULL)
+            return (NULL);
+    }
     return (argv);
 }
+
+static char ***split_pipe(char **argv, t_data *d)
+{
+    int i = 0;
+    int j = 0;
+    int pipe_count = is_there_a_pipe(argv);
+    d->commands = malloc(sizeof(char **) * BUFFER_SIZE);
+    if (!d->commands)
+        return (NULL);
+    
+    while (pipecount > 0)
+    {
+        if (argv[i][0] == PIPE)
+        {
+            int tmp = i;
+            i = 0;
+            while (i < tmp)
+            {
+                commands[j] = argv[i++];
+            }
+        }
+        pipecount--;
+    }
+
+}
+
+
 
 // JE VEUX ***COMMANDS, qui contient des **INPUT_SPLITTED et *INPUT
 // SO WHILE (COMMANDS[i])

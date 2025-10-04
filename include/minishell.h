@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/04 01:44:59 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/04 15:53:54 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,14 +53,6 @@ typedef struct s_data
     char **input_splitted;  // Tokenized input
     char ***commands;
     char *path;             // Current working path
-    int c_quote;            // Single quote count
-    int c_big_quote;        // Double quote count
-    int c_pipe;             // Pipe count
-    int c_env_var;          // Env var count
-    int *s_quote;
-    int *s_pipe;
-    int *s_big_quote;
-    int *s_env_var;
 }   t_data;
 
 /* ========================== */

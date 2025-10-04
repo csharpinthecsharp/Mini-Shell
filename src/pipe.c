@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 13:52:18 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/04 14:50:52 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/04 15:25:25 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,11 @@
 #define N_pipe
 #define N_proc
 #define N_desc 2
-void pipe_the_pipe()
+void pipe_the_pipe(char **commands)
 {
     int *pipe = malloc(sizeof(int) * N_desc * N_pipe);
     if (!pipe)
         return ;
-    
 
     pipe[N_pipe][2];
 
@@ -29,6 +28,22 @@ void pipe_the_pipe()
     {
         pid_t pid = fork();
         if (pid == 0)
+        {
+            // STDIN si ce n'est pas la premiere commande.
+            if (i > 0)
+                dup2(pipe[i - 1][0], STDIN_FILENO);
+            // STDOUT si ce n'est pas la derniere commande.
+            if (i < N_pipe - 1)
+                dup2(pipe[i][1], STDOUT_FILENO);
+            // on close
+            int j = 0;
+            while (j < N_pipe - 1)
+            {
+                close(pipe[j][0]);
+                close(pipe[j][1]);
+                j++;
+            }
+        }
         else
             wait(NULL);
     }
