@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   handler_build.c                                    :+:      :+:    :+:   */
+/*   handler_built.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 14:17:48 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/04 23:29:41 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/05 00:12:04 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
 int handle_pwd(char *argv, int count, char *path)
 {
@@ -59,7 +59,7 @@ int handle_cd(char **argv, int count, t_data *d)
     {
         if (chdir(PATH) != 0)
         {
-            print_error("Error: ", "cannot go there.");
+            print_error("Error: ", strerror(errno));
             return (1);
         }
     }
@@ -69,7 +69,7 @@ int handle_cd(char **argv, int count, t_data *d)
         char *test = strdup(ft_strjoin(oui, argv[1]));
         if (chdir(test) != 0)
         {
-            print_error("Error: ", "cannot go there.");
+            print_error("Error: ", strerror(errno));
             return (1);
         }
     }

@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/04 21:50:18 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/05 00:25:39 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ Les règles sont simple :
     Après un pipe le prochain token sera soit une redirection soit CMD.
 
 Les tokens ne sont pas la première étape du parsing mais ils sont la clé d'un minishell simple à faire.*/
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
 static int ft_isspace(char arg)
 {
@@ -173,6 +173,14 @@ static char **split(t_data *d)
     return (argv);
 }
 
+static int is_valid_bin(char *str)
+{
+    char *bin = ft_strdup(ft_strjoin("/bin/", str));
+    int fd = open(bin, O_RDONLY);
+    if (fd < 0)
+        return (0);
+    return (1);
+}
 // JE VEUX ***COMMANDS, qui contient des **INPUT_SPLITTED et *INPUT
 // SO WHILE (COMMANDS[i])
     // run(commands[i]) link to commands[i] if | < > tu captes le delire
@@ -191,17 +199,21 @@ int filter_input(t_data *d, char *envp[])
     if (d->input_splitted == NULL)
         return (1);
      
-    if (check_command(d->input_splitted) == 0)
-        print_error("Command not found: ", d->input_splitted[0]);
+        //print_error("Command not found: ", d->input_splitted[0]);
     else if (check_command(d->input_splitted) == 1)
     {
         if (run_custom_cmd(d) == 1)
             return (1);
     }
-    else if (check_command(d->input_splitted) == 2)
+    else if (check_command(d->input_splitted) == 0)
     {
-        if (run_build_cmd(d, envp) == 1)
-            return (1);
+        if (is_valid_bin(d->input_splitted[0]) == 1)
+        {
+            if (run_build_cmd(d, envp) == 1)
+                return (1);
+        }
+        else
+            print_error("command not found: ", d->input_splitted[0]);
     }
     return (0);
 }

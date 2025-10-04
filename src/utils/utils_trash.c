@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   utils_trash.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 20:20:39 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/03 02:54:17 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/05 00:12:14 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
-#include "../include/template.h"
+#include "../../include/minishell.h"
+#include "../../include/template.h"
 
 int ft_countword(char **spli_args)
 {

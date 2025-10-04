@@ -6,11 +6,11 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 00:34:09 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/04 21:21:30 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/05 00:12:40 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
 int count_quotes(char *input)
 {
