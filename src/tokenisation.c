@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/04 16:18:51 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/04 16:44:16 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,28 @@ static int is_there_a_pipe(char **argv)
     }
     return (count);
 }
+static char ***split_pipe(char **argv, t_data *d)
+{
+    int i = 0;
+    int j = 0;
+    int pipe_count = is_there_a_pipe(argv);
+    d->commands = malloc(sizeof(char **) * BUFFER_SIZE);
+    if (!d->commands)
+        return (NULL);
+    
+    while (pipe_count > 0)
+    {
+        if (argv[i][0] == PIPE)
+        {
+            int tmp = i;
+            i = 0;
+            while (i < tmp)
+                d->commands[j] = &argv[i++];
+        }
+        pipe_count--;
+    }
+    return (d->commands);
+}
 
 static char **split(t_data *d)
 {
@@ -147,36 +169,16 @@ static char **split(t_data *d)
         d->commands = split_pipe(argv, d);
         if (d->commands == NULL)
             return (NULL);
+        
+        int i = 0;
+        while (d->commands[i])
+        {
+            printf("%s", *d->commands[i]);
+            i++;
+        }
     }
     return (argv);
 }
-
-static char ***split_pipe(char **argv, t_data *d)
-{
-    int i = 0;
-    int j = 0;
-    int pipe_count = is_there_a_pipe(argv);
-    d->commands = malloc(sizeof(char **) * BUFFER_SIZE);
-    if (!d->commands)
-        return (NULL);
-    
-    while (pipecount > 0)
-    {
-        if (argv[i][0] == PIPE)
-        {
-            int tmp = i;
-            i = 0;
-            while (i < tmp)
-            {
-                commands[j] = argv[i++];
-            }
-        }
-        pipecount--;
-    }
-
-}
-
-
 
 // JE VEUX ***COMMANDS, qui contient des **INPUT_SPLITTED et *INPUT
 // SO WHILE (COMMANDS[i])
