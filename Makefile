@@ -17,7 +17,7 @@ SRCS	= src/main.c \
 
 OBJS	= $(SRCS:.c=.o)
 LIBFT 	= libft/libft.a
-all: before $(NAME) banner run
+all: before $(NAME) banner
 
 $(LIBFT):
 	make -C libft
@@ -38,8 +38,7 @@ banner:
 	@echo "\033[1;33m░      ░    ▒ ░   ░   ░ ░  ▒ ░░  ░  ░   ░  ░░ ░   ░     ░ ░     ░ ░\033[0m"
 	@echo "\033[1;33m       ░    ░           ░  ░        ░   ░  ░  ░   ░  ░    ░  ░    ░  ░\033[0m"
 	@echo ""
-run:
-	./minishell
+
 clean:
 	rm -f $(OBJS)
 	make -C libft clean

@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/05 00:25:39 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/05 15:52:23 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,41 @@ static int ft_isspace(char arg)
     if (arg == ' ' || arg == '\t')
         return (1);
     return (0);
+}
+static char *replace_envvar(char *s, t_data *d)
+{
+    int i = 0;
+    int j = 0;
+    char *envvar = ft_itoa(d->exit_status);
+    if (envvar == NULL)
+    {
+        perror("failed to allocate envvar");
+        free(envvar);
+        return (NULL);
+    }
+    char *arg = malloc(sizeof(char) * ft_strlen(s) + ft_strlen(envvar) + 1);
+    if (!arg)
+    {
+        perror("failed to allocate");
+        free(envvar);
+        return (NULL);
+    }
+
+    while (s[i])
+    {
+        if (s[i] == '$' && s[i + 1] == '?')
+        {
+            int k = 0;
+            while (envvar[k])
+                arg[j++] = envvar[k++];
+            i += 2;
+        }
+        else
+            arg[j++] = s[i++];
+    }
+    arg[j] = '\0';
+    free(envvar);
+    return (arg);
 }
 
 static int get_arg_length(char *s, int *i, int *quoted, char *quote_char)
@@ -109,7 +144,7 @@ static char *get_one_arg(char *s, int *i)
 ** Découpe la chaîne en arguments.
 ** Retourne un tableau de chaînes terminé par NULL.
 */
-static char **get_args(char *s)
+static char **get_args(char *s, t_data *d)
 {
     int i = 0;
     int k = 0;
@@ -120,7 +155,11 @@ static char **get_args(char *s)
 
     while (s[i])
     {
-        char *arg = get_one_arg(s, &i);
+        char *raw_arg = get_one_arg(s, &i);
+        if (!raw_arg)
+            break;
+        char *arg = replace_envvar(raw_arg, d);
+        free(raw_arg);
         if (!arg)
             break;
         argv[k++] = arg;
@@ -167,7 +206,7 @@ char ***split_commands(char **argv)
 
 static char **split(t_data *d)
 {
-    char **argv = get_args(d->input);
+    char **argv = get_args(d->input, d);
     if (!argv)
         return (NULL);
     return (argv);

@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/05 02:14:19 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/05 16:40:54 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ typedef struct s_data
     char ***commands;
     char *path;             // Current working path
     char **envp;
+    unsigned int exit_status;
 }   t_data;
 
 /* ========================== */
@@ -67,6 +68,8 @@ int     run_build_cmd(t_data *d, char *envp[]);
 int     handle_pwd(char *argv, int count, char *path);
 int     handle_exit(char **argv, int count);
 int     handle_echo(char **argv, int count);
+int     handle_export(char **argv, int count, t_data *d);
+int     handle_cd(char **argv, int count, t_data *d);
 
 // Utils
 int     ft_countword(char **spli_args);
@@ -80,7 +83,6 @@ int     count_big_quotes(char *input);
 void    pipe_the_pipe(char ***commands, char **envp, int N_pipe);
 int     pipe_count(char **argv);
 char    ***split_commands(char **argv);
-int     handle_cd(char **argv, int count, t_data *d);
 char    *get_promptpath(char *buffer);
 
 #endif /* MINISHELL_H */
