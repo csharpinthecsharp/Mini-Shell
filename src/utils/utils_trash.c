@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 20:20:39 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/05 01:15:40 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/05 20:38:14 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,29 @@ char *get_promptpath(char *buffer)
 void print_error(char *str_sub, char *str_cont)
 {
     printf(ERROR_PREFIX "%s%s\n" RESET, str_sub, str_cont);
+}
+
+int ft_isspace(char arg)
+{
+    if (arg == ' ' || arg == '\t')
+        return (1);
+    return (0);
+}
+
+int pipe_count(char **argv)
+{
+    int i = 0;
+    int count = 0;
+    while (argv[i])
+    {
+        int j = 0;
+        while (argv[i][j])
+        {
+            if (argv[i][j] == PIPE)
+                count++;
+            j++;
+        }
+        i++;
+    }
+    return (count);
 }

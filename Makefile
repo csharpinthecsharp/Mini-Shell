@@ -5,15 +5,16 @@ CC		= clang
 CFLAGS	= -Wall -Wextra -Werror
 
 SRCS	= src/main.c \
-		  src/parse/select_run.c \
+		  src/parse/select_exec.c \
 		  src/utils/utils_trash.c \
-		  src/parse/tokenisation.c \
-		  src/utils/token_utils.c \
+		  src/parse/parsing.c \
+		  src/parse/parsing_utils.c \
 		  src/utils/init.c \
 		  src/exec_built/find_built.c \
 		  src/exec_built/handler_built.c \
 		  src/exec_bin/run_bin.c \
-		  src/exec_bin/prerun_bin.c
+		  src/exec_bin/prerun_bin.c \
+		  src/parse/handle_input.c
 
 OBJS	= $(SRCS:.c=.o)
 LIBFT 	= libft/libft.a

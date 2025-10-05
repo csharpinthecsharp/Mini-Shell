@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 14:17:48 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/05 16:37:44 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/05 20:37:55 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,10 @@ int handle_exit(char **argv, int count)
 int handle_echo(char **argv, int count)
 {
     if (count < 2)
+    {
         printf("\n");
+        return (0);
+    }
     else
     {
         int i = 1;
@@ -63,7 +66,6 @@ int handle_cd(char **argv, int count, t_data *d)
         if (chdir(PATH) != 0)
         {
             print_error("Error: ", strerror(errno));
-            return (1);
         }
     }
     else
@@ -73,7 +75,6 @@ int handle_cd(char **argv, int count, t_data *d)
         if (chdir(test) != 0)
         {
             print_error("Error: ", strerror(errno));
-            return (1);
         }
     }
     return (0);

@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 13:52:18 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/05 02:07:38 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/05 20:39:05 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,3 +105,4 @@ void pipe_the_pipe(char ***commands, char **envp, int N_pipe)
     // FERMER LES DESCRIPTEURS INUTILES DANS CHAQUE PROCESSUS
     // EXECVP
 }
+

@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/05 00:07:31 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/05 16:34:06 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/05 20:37:52 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,12 @@ int run_custom_cmd(t_data *d)
     else if (ft_strncmp(d->input_splitted[0], "exit", 4) == 0)
     {
         if (handle_exit(d->input_splitted, count) == 1)
+        {
+            d->exit_status = 1;
             return (1);
+        }
+        else
+            d->exit_status = 0;
     }
     else if (ft_strncmp(d->input_splitted[0], "echo", 4) == 0)
     {
@@ -42,12 +47,22 @@ int run_custom_cmd(t_data *d)
     else if (ft_strncmp(d->input_splitted[0], "cd", 2) == 0)
     {
         if (handle_cd(d->input_splitted, count, d) == 1)
+        {
+            d->exit_status = 1;
             return (1);
+        }
+        else
+            d->exit_status = 0;
     }
     else if (ft_strncmp(d->input_splitted[0], "export", 6) == 0)
     {
         if (handle_export(d->input_splitted, count, d) == 1)
+        {
+            d->exit_status = 1;
             return (1);
+        }
+        else
+            d->exit_status = 0;
     }
     return (0);
 }

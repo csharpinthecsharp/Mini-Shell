@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:18:23 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/05 01:14:43 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/05 20:15:42 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int main(int ac, char *av[], char *envp[])
         // Et est connu de notre base, on la run.
         // Exemple [cat, ls].
         // NON BUILD IN COMMAND
-        if (filter_input(d, envp) == 1)
+        if (filter_input(d) == 1)
             exit(EXIT_FAILURE);
              
         free(d->input);
