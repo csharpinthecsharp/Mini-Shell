@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 14:17:48 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/05 00:12:04 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/05 02:17:47 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,16 @@ int handle_pwd(char *argv, int count, char *path)
     return (0);
 }
 
-int handle_exit(char *argv, int count)
+int handle_exit(char **argv, int count)
 {
     if (count == 1)
         exit(EXIT_SUCCESS);
-    else if (count == 2 && ft_atoi(argv) > 0)
-        exit(EXIT_FAILURE);
+    else if (count == 2)
+    {
+        exit(atoi(argv[1]));
+    }
     else
-        print_error(argv, ": too many arguments");
+        print_error(argv[0], ": too many arguments");
     return (0);
 }
 

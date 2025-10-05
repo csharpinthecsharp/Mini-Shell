@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/05 01:01:00 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/05 02:14:19 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ char    *getpath(char *buffer);
 // Builtins
 int     run_build_cmd(t_data *d, char *envp[]);
 int     handle_pwd(char *argv, int count, char *path);
-int     handle_exit(char *argv, int count);
+int     handle_exit(char **argv, int count);
 int     handle_echo(char **argv, int count);
 
 // Utils

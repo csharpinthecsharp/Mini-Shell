@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   run_bin.c                                          :+:      :+:    :+:   */
+/*   find_built.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/05 00:07:31 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/05 00:14:42 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/05 02:14:08 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int run_custom_cmd(t_data *d)
     }
     else if (ft_strncmp(d->input_splitted[0], "exit", 4) == 0)
     {
-        if (handle_exit(d->input_splitted[0], count) == 1)
+        if (handle_exit(d->input_splitted, count) == 1)
             return (1);
     }
     else if (ft_strncmp(d->input_splitted[0], "echo", 4) == 0)
