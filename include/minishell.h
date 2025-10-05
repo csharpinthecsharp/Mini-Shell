@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/06 00:05:04 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/06 01:28:25 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int select_type(t_data *d);
 int     ft_countword(char **spli_args);
 int     filter_input(t_data *d);
 int     check_command(char **argv);
-void    print_error(char *str_sub, char *str_cont);
+void print_error(const char *str, const char *arg);
 int     run_custom_cmd(t_data *d);
 int     update_data(t_data *d);
 void    pipe_the_pipe(char ***commands, char **envp, int N_pipe);

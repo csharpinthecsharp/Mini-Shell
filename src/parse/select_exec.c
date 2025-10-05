@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 14:57:15 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/05 20:38:09 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/06 01:28:09 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int select_type(t_data *d)
                 return (FAILED);
         }
         else
-            print_error("command not found: ", d->input_splitted[0]);
+            print_error("command not found", d->input_splitted[0]);
     }
     return (0);
 }

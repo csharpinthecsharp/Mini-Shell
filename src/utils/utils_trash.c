@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 20:20:39 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/05 20:38:14 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/06 01:31:05 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,15 @@ char *get_promptpath(char *buffer)
     return (ft_strdup(t2));
 }
 
-void print_error(char *str_sub, char *str_cont)
+void print_error(const char *str, const char *arg)
 {
-    printf(ERROR_PREFIX "%s%s\n" RESET, str_sub, str_cont);
+    size_t len_str = ft_strlen(str);
+    size_t len_arg = ft_strlen(arg);
+    write(STDERR_FILENO, "minishell: exit: ", 17);
+    write(STDERR_FILENO, arg, len_arg);
+    write(STDERR_FILENO, " : ", 3);
+    write(STDERR_FILENO, str, len_str);
+    write(STDERR_FILENO, "\n", 1);
 }
 
 int ft_isspace(char arg)

@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 08:53:14 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/08/20 15:30:13 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/06 01:02:16 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ long	ft_atoi(const char *str)
 	nbr = 0;
 	sign = 1;
 	i = 0;
+	
 	while (str[i] == ' ' || ('\t' <= str[i] && str[i] <= '\r'))
 		i++;
 	if (str[i] == '+')
@@ -35,6 +36,8 @@ long	ft_atoi(const char *str)
 		nbr = nbr * 10 + str[i] - '0';
 		i++;
 	}
+	if (i < ft_strlen(str))
+		return (-1);
 	return (nbr * sign);
 }
 /*

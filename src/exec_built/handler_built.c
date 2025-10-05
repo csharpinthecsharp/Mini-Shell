@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 14:17:48 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/05 22:35:52 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/06 01:44:33 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,19 @@ int handle_exit(char **argv, int count)
         exit(EXIT_SUCCESS);
     else if (count == 2)
     {
-        exit(atoi(argv[1]));
+        int res = ft_atoi(argv[1]);
+        if (res == -1)
+        {
+            print_error("numeric argument required", argv[1]);
+            exit(2);
+        }
+        exit(res);
     }
     else
-        print_error(argv[0], ": too many arguments");
+    {
+        print_error("too many arguments", argv[0]);
+        exit(EXIT_FAILURE);
+    }
     return (0);
 }
 
