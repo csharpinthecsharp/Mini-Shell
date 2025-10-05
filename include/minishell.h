@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/05 20:31:41 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/06 00:05:04 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,9 +88,8 @@ char    *get_promptpath(char *buffer);
 int     ft_isspace(char arg);
 int pipe_count(char **argv);
 char    *replace_envvar(char *s, t_data *d);
-int     get_arg_length(char *s, int *i, int *quoted, char *quote_char);
-char    *get_one_arg(char *s, int *i);
+char *get_one_arg(const char *s, int *i);
 char    **get_args(char *s, t_data *d);
 char    **split(t_data *d);
-
+int get_arg_length(const char *s, int *i);
 #endif /* MINISHELL_H */
