@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/06 13:36:56 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/06 14:35:58 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ typedef struct s_data
 char    *getpath(char *buffer);
 
 // Builtins
-int     run_build_cmd(t_data *d, char *envp[]);
+int     run_build_cmd(t_data *d);
 int     handle_pwd(char *argv, int count, char *path);
 int     handle_exit(char **argv, int count);
 int     handle_echo(char **argv, int count);
@@ -84,7 +84,7 @@ int     check_command(char **argv);
 void print_error(const char *str, const char *arg);
 int     run_custom_cmd(t_data *d);
 int     update_data(t_data *d);
-void    pipe_the_pipe(char ***commands, char **envp, int N_pipe);
+void    pipe_the_pipe(t_data *d, int N_pipe);
 char    ***split_commands(char **argv);
 char    *get_promptpath(char *buffer);
 int     ft_isspace(char arg);

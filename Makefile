@@ -5,7 +5,6 @@ CC		= clang
 CFLAGS	= -Wall -Wextra -Werror
 
 SRCS	= src/main.c \
-		  src/parse/select_exec.c \
 		  src/utils/utils_trash.c \
 		  src/parse/parsing.c \
 		  src/parse/parsing_utils.c \

@@ -6,13 +6,13 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/05 00:05:56 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/06 13:33:46 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/06 14:36:12 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../include/minishell.h"
 
-int run_build_cmd(t_data *d, char *envp[])
+int run_build_cmd(t_data *d)
 {       
     int cmds = 0;
     int count = 0;
@@ -27,6 +27,5 @@ int run_build_cmd(t_data *d, char *envp[])
         d->commands[cmds][0] = argv;
         cmds++;
     }
-    pipe_the_pipe(d->commands, envp, pipe_count(d->input_splitted));
     return (0);
 }
