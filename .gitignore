@@ -2,5 +2,6 @@
 removetests.sh
 minishell_tester
 
-# Ignore VS Code configuration folder
+# Ignore .
 .vscode
+.gitignore
