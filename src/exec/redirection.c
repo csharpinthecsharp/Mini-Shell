@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/06 14:38:32 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/06 14:51:29 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,12 @@ int select_type(t_data *d)
 {
     count_cmds(d);
     size_t i = 0;
+    d->cmd_state = malloc(sizeof(int) * d->cmd_count + 1);
+    if (!d->cmd_state)
+    {
+        perror("malloc failed");
+        exit(EXIT_FAILURE);
+    }
     while (i <= d->cmd_count)
     {
         if (check_command(d->commands[i]) == CUSTOM)
@@ -124,6 +130,29 @@ void pipe_the_pipe(t_data *d, int N_pipe)
                 close(var_pipe[j][1]);
                 j++;
             }
+
+
+            /*
+            Résumé :
+
+            - Les commandes "custom" comme cd, export, exit modifient l'état du shell (répertoire courant, variables d'environnement).
+            - Ces commandes doivent être exécutées dans le processus parent pour que les changements persistent.
+            - Or, la redirection de stdin/stdout via dup2 fonctionne uniquement dans le processus courant.
+            - Pour gérer la redirection avec ces commandes dans le parent :
+                1. On sauvegarde les descripteurs originaux stdin et stdout.
+                2. On effectue les redirections nécessaires avec dup2.
+                3. On exécute la commande "custom".
+                4. On restaure les descripteurs stdin et stdout sauvegardés.
+            - Les commandes non "stateful" (ex : echo, pwd, commandes externes) peuvent être exécutées dans des processus fils avec fork(), où dup2 pour la redirection fonctionne naturellement.
+            - Cette approche permet de conserver la bonne redirection tout en assurant que les changements d'état du shell sont effectifs.
+            */
+
+
+            // ERREUR ACTUELLE lucien@lucien-ThinkPad-T470-W10DG:~/C/minishell$ ./minishell 
+            // ➜  minishell  $> echo 'salut' | cat -e
+            //  salut | cat -e$
+            //  salut | cat -e$$
+            //  salut | cat -e$$$
 
             if (d->cmd_state[i] == BUILT_IN)
             {
