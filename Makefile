@@ -14,7 +14,9 @@ SRCS	= src/main.c \
 		  src/exec/exec_bin/run_bin.c \
 		  src/exec/exec_bin/prerun_bin.c \
 		  src/parse/handle_input.c \
-		  src/exec/redirection.c
+		  src/exec/execution.c \
+		  src/exec/exec_utils.c \
+		  src/signal/init_signal.c
 
 OBJS	= $(SRCS:.c=.o)
 LIBFT 	= libft/libft.a

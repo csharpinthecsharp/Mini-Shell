@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 20:20:39 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/06 14:27:51 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/06 20:09:08 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,29 +35,38 @@ char *getpath(char *buffer)
 char *get_promptpath(char *buffer)
 {
     if (!getcwd(buffer, BUFFER_SIZE))
-        return (NULL);
-    char tmp[BUFFER_SIZE];
+        return NULL;
+
+    char *tmp = malloc(sizeof(char) * BUFFER_SIZE);
+    if (!tmp)
+    {
+        perror("malloc failed");
+        exit(EXIT_FAILURE);
+    }
+
     int i = 0;
     while (buffer[i])
         i++;
-    buffer[i] = '\0';
-    
-    while (i--)
+
+    while (i > 0)
     {
         if (buffer[i - 1] == '/')
             break;
+        i--;
     }
-    
+
     int j = 0;
     while (buffer[i])
         tmp[j++] = buffer[i++];
-        
     tmp[j] = '\0';
-    
-    char *t = ft_strdup(ft_strjoin(TEMPLATE_PROMPT, tmp));
-    char *t2 = ft_strdup(ft_strjoin(t, TEMPLATE_PROMPT_END));
-    return (ft_strdup(t2));
+
+    char *t = ft_strjoin(TEMPLATE_PROMPT, tmp);
+    char *t2 = ft_strjoin(t, TEMPLATE_PROMPT_END);
+    free(t);
+    free(tmp);
+    return t2;
 }
+
 
 void print_error(const char *str, const char *arg)
 {

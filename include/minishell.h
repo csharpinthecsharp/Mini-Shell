@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/06 18:33:06 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/06 20:17:25 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@
 
 #define FAILED 1
 #define SUCCESS 0
-
+#define BUILT_IN 0
+#define CUSTOM 1
 /* ========================== */
 /*        DEPENDENCIES        */
 /* ========================== */
@@ -93,4 +94,12 @@ char *get_one_arg(const char *s, int *i);
 char    **get_args(char *s, t_data *d);
 char    **split(t_data *d);
 int get_arg_length(const char *s, int *i);
+void free_all(t_data *d);
+void close_pipe(int **var_pipe, int N_pipe, int state);
+int is_valid_bin(char *str);
+size_t count_cmds(char ***cmds);
+void handler_ctrl_bs(int sig);
+void prepare_signals(void);
+
+
 #endif /* MINISHELL_H */
