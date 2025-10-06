@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/05 21:31:28 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/06 17:43:50 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,16 +57,16 @@ char **get_args(char *s, t_data *d)
     argv[k] = NULL;
     return argv;
 }
-#define commands_count 10
 
 char ***split_commands(char **argv)
 {
+    int commands_count = pipe_count(argv) + 1;
     char ***cmds = malloc(sizeof(char **) * (commands_count + 1));
     if (!cmds)
         return NULL;
 
     int i = 0, cmds_i = 0, arg_i = 0;
-    cmds[cmds_i] = malloc(sizeof(char *) * (commands_count + 1));
+    cmds[cmds_i] = malloc(sizeof(char *) * (64));
     if (!cmds[cmds_i])
         return NULL;
 
@@ -83,7 +83,7 @@ char ***split_commands(char **argv)
         }
         else
         {
-            cmds[cmds_i][arg_i] = argv[i];
+            cmds[cmds_i][arg_i] = ft_strdup(argv[i]);
             arg_i++;
         }
         i++;

@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/06 14:51:29 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/06 18:31:45 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,22 +35,23 @@ static int is_valid_bin(char *str)
     int fd = open(bin, O_RDONLY);
     if (fd < 0)
         return (FAILED);
+    close(fd);
     return (SUCCESS);
 }
 
-static size_t count_cmds(t_data *d)
+static size_t count_cmds(char ***cmds)
 {
-    d->cmd_count = 0;
-    while (d->commands[d->cmd_count])
-        d->cmd_count++;
-    return (d->cmd_count);
+    size_t i = 0;
+    while (cmds[i])
+        i++;
+    return (i - 1);
 }
 
 int select_type(t_data *d)
 {
-    count_cmds(d);
+    d->cmd_count = count_cmds(d->commands);
     size_t i = 0;
-    d->cmd_state = malloc(sizeof(int) * d->cmd_count + 1);
+    d->cmd_state = malloc(sizeof(int) * (d->cmd_count + 1));
     if (!d->cmd_state)
     {
         perror("malloc failed");
@@ -58,33 +59,32 @@ int select_type(t_data *d)
     }
     while (i <= d->cmd_count)
     {
-        if (check_command(d->commands[i]) == CUSTOM)
-        {
+        int type = check_command(d->commands[i]);
+        if (type == CUSTOM)
             d->cmd_state[i] = CUSTOM;
-        }
-        else if (check_command(d->commands[i]) == BUILT_IN)
+        else
         {
             if (is_valid_bin(d->commands[i][0]) == SUCCESS)
-            {
                 d->cmd_state[i] = BUILT_IN;
-            }
             else
-                print_error("command not found", d->commands[i][0]);
+                print_error("command not found", d->commands[i][0]); 
         }
-        pipe_the_pipe(d, pipe_count(d->input_splitted));
         i++;
     }
+    pipe_the_pipe(d, pipe_count(d->input_splitted));
     return (SUCCESS);
 }
 
 void pipe_the_pipe(t_data *d, int N_pipe)
 {
+    // ALOCATE DOUBLE POINTEUR VAR PIPE
     int **var_pipe = malloc(sizeof(int *) * N_pipe);
     if (!var_pipe)
     {
         perror("malloc failed");
         exit(EXIT_FAILURE);
     }
+    // ALOCATE HIS COMPONENT
     int i = 0;
     while (i < N_pipe)
     {
@@ -105,65 +105,57 @@ void pipe_the_pipe(t_data *d, int N_pipe)
     i = 0;
     while (i <= N_pipe)
     {
-        pid_t pid = fork();
-        if (pid == -1)
+        // CUSTOM IN CMD HANDLE 
+        if (d->cmd_state[i] == CUSTOM)
         {
-            perror("fork failed");
-            exit(EXIT_FAILURE);
-        }
-
-        if (pid == 0)
-        {
-            // Redirection STDIN
+            int saved_stdin = dup(STDIN_FILENO);
+            int save_stdout = dup(STDOUT_FILENO);
             if (i > 0)
                 dup2(var_pipe[i - 1][0], STDIN_FILENO);
 
-            // Redirection STDOUT
             if (i < N_pipe)
                 dup2(var_pipe[i][1], STDOUT_FILENO);
-
-            // Fermer tous les descripteurs inutiles*
-            int j = 0;
+                
+            int j = 0; 
             while (j < N_pipe)
             {
                 close(var_pipe[j][0]);
                 close(var_pipe[j][1]);
                 j++;
             }
-
-
-            /*
-            Résumé :
-
-            - Les commandes "custom" comme cd, export, exit modifient l'état du shell (répertoire courant, variables d'environnement).
-            - Ces commandes doivent être exécutées dans le processus parent pour que les changements persistent.
-            - Or, la redirection de stdin/stdout via dup2 fonctionne uniquement dans le processus courant.
-            - Pour gérer la redirection avec ces commandes dans le parent :
-                1. On sauvegarde les descripteurs originaux stdin et stdout.
-                2. On effectue les redirections nécessaires avec dup2.
-                3. On exécute la commande "custom".
-                4. On restaure les descripteurs stdin et stdout sauvegardés.
-            - Les commandes non "stateful" (ex : echo, pwd, commandes externes) peuvent être exécutées dans des processus fils avec fork(), où dup2 pour la redirection fonctionne naturellement.
-            - Cette approche permet de conserver la bonne redirection tout en assurant que les changements d'état du shell sont effectifs.
-            */
-
-
-            // ERREUR ACTUELLE lucien@lucien-ThinkPad-T470-W10DG:~/C/minishell$ ./minishell 
-            // ➜  minishell  $> echo 'salut' | cat -e
-            //  salut | cat -e$
-            //  salut | cat -e$$
-            //  salut | cat -e$$$
-
-            if (d->cmd_state[i] == BUILT_IN)
+            
+            run_custom_cmd(d->commands[i], d);
+            // on restore stdin/stdout
+            dup2(saved_stdin, STDIN_FILENO);
+            dup2(save_stdout, STDOUT_FILENO);
+            close(saved_stdin);
+            close(save_stdout);
+        }
+        // BUILT CMD HANDLE
+        else
+        {
+            pid_t pid = fork();
+            if (pid == 0)
             {
-                run_build_cmd(d);
-                execve(d->commands[i][0], d->commands[i], d->envp);
+                if (i > 0)
+                    dup2(var_pipe[i - 1][0], STDIN_FILENO);
+
+                if (i < N_pipe)
+                    dup2(var_pipe[i][1], STDOUT_FILENO);
+
+                int j = 0;
+                while (j < N_pipe)
+                {
+                    close(var_pipe[j][0]);
+                    close(var_pipe[j][1]);
+                    j++;
+                }
+                
+                char *tmp_cmd = ft_strdup(ft_strjoin("/bin/", d->commands[i][0]));
+                execve(tmp_cmd, d->commands[i], d->envp);
+                free(tmp_cmd);
                 perror("execve failed");
                 exit(EXIT_FAILURE);
-            }
-            else if (d->cmd_state[i] == CUSTOM)
-            {
-                run_custom_cmd(d);
             }
         }
         i++;
@@ -187,15 +179,4 @@ void pipe_the_pipe(t_data *d, int N_pipe)
         wait(NULL);
         i++;
     }
-
-    //pipe[0] = read;
-    //pipe[1] = write;
-
-    // CREER N PIPES POUR N COMMANDES
-    // CREER N PROCESSUS AVEC FORK()
-    // REDIRIGER LES ENTREES/SORTIES AVEC DUP2()
-        // chaque commandes lit depuis le pipe precedents et,
-        // ecrit dans le pipe suivant.
-    // FERMER LES DESCRIPTEURS INUTILES DANS CHAQUE PROCESSUS
-    // EXECVP
 }
