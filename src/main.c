@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:18:23 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/06 20:18:18 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/06 22:03:15 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ int main(int ac, char *av[], char *envp[])
         // NON BUILD IN COMMAND
         if (filter_input(d) == 1)
             exit(EXIT_FAILURE);
+        free(d->path);
+        free(d->input);
     }
     free(buf);
     free_all(d);

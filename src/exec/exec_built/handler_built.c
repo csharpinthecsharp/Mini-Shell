@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 14:17:48 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/06 18:41:53 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/06 21:37:47 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,23 +47,29 @@ int handle_exit(char **argv, int count)
 
 int handle_echo(char **argv, int count)
 {
+    int found;
+    
+    found = 0;
     if (count < 2)
     {
         printf("\n");
         return (0);
     }
-    else
+    int i = 1;
+    while (i < count)
     {
-        int i = 1;
-        while (i < count)
+        if (ft_strncmp(argv[i], "-n", 2) == 0)
+            found = 1;
+        else
         {
             if (i > 1)
                 printf(" ");
             printf("%s", argv[i]);
-            i++;
         }
+        i++;
     }
-    printf("\n");
+    if (found == 0)
+        printf("\n");
     return (0);
 }
 

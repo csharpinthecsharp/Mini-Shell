@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 19:59:55 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/06 20:08:36 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/06 22:39:34 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,13 @@ int check_command(char **argv)
     if (ft_strncmp(argv[0], "pwd", len) == 0)
         return (CUSTOM);
     else if (ft_strncmp(argv[0], "exit", len) == 0)
-        return (CUSTOM);
+        return (STATEFUL);
     else if (ft_strncmp(argv[0], "echo", len) == 0)
         return (CUSTOM);
     else if (ft_strncmp(argv[0], "cd", len) == 0)
-        return (CUSTOM);
+        return (STATEFUL);
     else if (ft_strncmp(argv[0], "export", len) == 0)
-        return (CUSTOM);
+        return (STATEFUL);
     return (BUILT_IN);
 }
 
@@ -35,6 +35,7 @@ int is_valid_bin(char *str)
     if (fd < 0)
         return (FAILED);
     close(fd);
+    free(bin);
     return (SUCCESS);
 }
 

@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/06 20:17:25 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/06 22:25:30 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@
 #define SUCCESS 0
 #define BUILT_IN 0
 #define CUSTOM 1
+#define STATEFUL 2
+
 /* ========================== */
 /*        DEPENDENCIES        */
 /* ========================== */
