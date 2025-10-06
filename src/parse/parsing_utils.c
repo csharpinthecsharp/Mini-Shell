@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 00:34:09 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/06 20:08:58 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/07 01:05:09 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,9 @@ char *replace_envvar(char *s, t_data *d)
 
     while (s[i])
     {
+        // Handle env var 
+        // A faire $PWD etc.. all that is in d->env
+        // Read d->env et extract PWD par exemple
         if (s[i] == '$' && s[i + 1] == '?')
         {
             int k = 0;
