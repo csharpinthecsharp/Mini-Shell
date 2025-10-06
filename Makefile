@@ -11,12 +11,12 @@ SRCS	= src/main.c \
 		  src/utils/init.c \
 		  src/exec/exec_built/find_built.c \
 		  src/exec/exec_built/handler_built.c \
-		  src/exec/exec_bin/run_bin.c \
-		  src/exec/exec_bin/prerun_bin.c \
 		  src/parse/handle_input.c \
 		  src/exec/execution.c \
 		  src/exec/exec_utils.c \
-		  src/signal/init_signal.c
+		  src/signal/init_signal.c \
+		  src/utils/memory_alloc.c \
+		  src/utils/free.c
 
 OBJS	= $(SRCS:.c=.o)
 LIBFT 	= libft/libft.a

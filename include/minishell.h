@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/06 22:25:30 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/07 00:40:47 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int     check_command(char **argv);
 void print_error(const char *str, const char *arg);
 int     run_custom_cmd(char **argv, t_data *d);
 int     update_data(t_data *d);
-void    pipe_the_pipe(t_data *d, int N_pipe);
+void    run_pipe_cmd(t_data *d, int N_pipe);
 char    ***split_commands(char **argv);
 char    *get_promptpath(char *buffer);
 int     ft_isspace(char arg);
@@ -102,6 +102,7 @@ int is_valid_bin(char *str);
 size_t count_cmds(char ***cmds);
 void handler_ctrl_bs(int sig);
 void prepare_signals(void);
-
+void alloc_error_pipe(int N_pipe, int **var_pipe);
+void alloc_cmd_state(t_data *d);
 
 #endif /* MINISHELL_H */

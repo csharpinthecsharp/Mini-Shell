@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 14:17:48 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/06 21:37:47 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/07 00:44:07 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,8 @@ int handle_cd(char **argv, int count, t_data *d)
     }
     else
     {
-        char *oui = strdup(ft_strjoin(d->path, "/"));
-        char *test = strdup(ft_strjoin(oui, argv[1]));
+        char *oui = ft_strdup(ft_strjoin(d->path, "/"));
+        char *test = ft_strdup(ft_strjoin(oui, argv[1]));
         if (chdir(test) != 0)
         {
             print_error("Error: ", strerror(errno));
