@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   select_exec.c                                      :+:      :+:    :+:   */
+/*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/28 14:57:15 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/06 01:28:09 by ltrillar         ###   ########.fr       */
+/*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
+/*   Updated: 2025/10/06 13:41:22 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 
 int check_command(char **argv)
 {
-    // return 0 = on a pas trouvé de commande dedans.
-    // return 1 = on a trouvé une commande qu'il faut build.
-    // return 2 = pas besoin de la build, juste execve.
     int len = ft_strlen(argv[0]);
     if (ft_strncmp(argv[0], "pwd", len) == 0)
         return (FAILED);
@@ -40,22 +37,35 @@ static int is_valid_bin(char *str)
     return (SUCCESS);
 }
 
+static size_t count_cmds(t_data *d)
+{
+    d->cmd_count = 0;
+    while (d->commands[d->cmd_count])
+        d->cmd_count++;
+    return (d->cmd_count);
+}
+
 int select_type(t_data *d)
 {
-    if (check_command(d->input_splitted) == FAILED)
+    count_cmds(d);
+    int i = 0;
+    while (i <= d->cmd_count)
     {
-        if (run_custom_cmd(d) == FAILED)
-            return (FAILED);
-    }
-    else if (check_command(d->input_splitted) == SUCCESS)
-    {
-        if (is_valid_bin(d->input_splitted[0]) == SUCCESS)
+        if (check_command(d->commands[i]) == FAILED)
         {
-            if (run_build_cmd(d, d->envp) == FAILED)
+            if (run_custom_cmd(d) == FAILED)
                 return (FAILED);
         }
-        else
-            print_error("command not found", d->input_splitted[0]);
+        else if (check_command(d->commands[i]) == SUCCESS)
+        {
+            if (is_valid_bin(d->commands[i][0]) == SUCCESS)
+            {
+                if (run_build_cmd(d, d->envp) == FAILED)
+                    return (FAILED);
+            }
+            else
+                print_error("command not found", d->commands[i][0]);
+        }
     }
-    return (0);
+    return (SUCCESS);
 }

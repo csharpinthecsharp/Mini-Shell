@@ -10,11 +10,12 @@ SRCS	= src/main.c \
 		  src/parse/parsing.c \
 		  src/parse/parsing_utils.c \
 		  src/utils/init.c \
-		  src/exec_built/find_built.c \
-		  src/exec_built/handler_built.c \
-		  src/exec_bin/run_bin.c \
-		  src/exec_bin/prerun_bin.c \
-		  src/parse/handle_input.c
+		  src/exec/exec_built/find_built.c \
+		  src/exec/exec_built/handler_built.c \
+		  src/exec/exec_bin/run_bin.c \
+		  src/exec/exec_bin/prerun_bin.c \
+		  src/parse/handle_input.c \
+		  src/exec/redirection.c
 
 OBJS	= $(SRCS:.c=.o)
 LIBFT 	= libft/libft.a

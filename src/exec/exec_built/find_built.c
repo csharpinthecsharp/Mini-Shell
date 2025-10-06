@@ -6,11 +6,11 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/05 00:07:31 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/05 20:37:52 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/06 13:20:29 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "../../../include/minishell.h"
 
 int run_custom_cmd(t_data *d)
 {

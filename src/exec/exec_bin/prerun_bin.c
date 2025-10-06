@@ -6,18 +6,14 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/05 00:05:56 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/05 20:38:26 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/06 13:33:46 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "../../../include/minishell.h"
 
 int run_build_cmd(t_data *d, char *envp[])
-{
-    d->commands = split_commands(d->input_splitted);
-    if (d->commands == NULL)
-        return (1);
-        
+{       
     int cmds = 0;
     int count = 0;
     while (d->commands[cmds])

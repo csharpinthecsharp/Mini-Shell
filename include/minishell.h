@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/06 01:28:25 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/06 13:36:56 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ typedef struct s_data
     char *input;            // Raw user input
     char **input_splitted;  // Tokenized input
     char ***commands;
+    int *cmd_state;
+    size_t cmd_count;
     char *path;             // Current working path
     char **envp;
     unsigned int exit_status;

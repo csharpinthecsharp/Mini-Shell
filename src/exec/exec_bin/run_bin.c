@@ -6,11 +6,11 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 13:52:18 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/05 20:39:05 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/06 13:22:53 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "../../../include/minishell.h"
 
 #define N_proc 2
 #define N_desc 2
@@ -105,4 +105,3 @@ void pipe_the_pipe(char ***commands, char **envp, int N_pipe)
     // FERMER LES DESCRIPTEURS INUTILES DANS CHAQUE PROCESSUS
     // EXECVP
 }
-
