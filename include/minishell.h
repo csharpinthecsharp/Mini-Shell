@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/07 00:40:47 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/08 22:57:03 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 #define BUILT_IN 0
 #define CUSTOM 1
 #define STATEFUL 2
+#define REDIRECTION 3
 
 /* ========================== */
 /*        DEPENDENCIES        */
@@ -62,6 +63,7 @@ typedef struct s_data
     size_t cmd_count;
     char *path;             // Current working path
     char **envp;
+    char **r_content;
     unsigned int exit_status;
 }   t_data;
 

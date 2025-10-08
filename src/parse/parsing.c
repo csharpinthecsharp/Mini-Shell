@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/06 20:09:00 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/08 22:22:07 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ Les tokens ne sont pas la première étape du parsing mais ils sont la clé d'un
 #include "../../include/minishell.h"
 
 /*
-** Découpe la chaîne en arguments.
+** Découpe la chaî<ne en arguments.
 ** Retourne un tableau de chaînes terminé par NULL.
 */
 char **get_args(char *s, t_data *d)

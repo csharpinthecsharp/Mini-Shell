@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:18:23 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/07 00:48:18 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/08 23:04:17 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ int main(int ac, char *av[], char *envp[])
     t_data *d = &data;
     d->envp = envp;
     prepare_signals();
-    printf(TEMPLATE_SETUP_SCREEN);
     while (1)
     {
         update_data(d);

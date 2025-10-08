@@ -6,16 +6,32 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/07 00:43:05 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/08 23:08:04 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-
+#define NOT_FOUND 0
+#define LEFT 1
+#define RIGHT 2
+#define LEFT_LEFT 3
+#define RIGHT_RIGHT 4
+#define ERROR 5
+ 
 int select_type(t_data *d)
 {
     size_t i = 0;
     alloc_cmd_state(d);
+
+    while (i <= d->cmd_count)
+    {
+        if (is_redirect(d->commands[i] == NOT_FOUND)
+            break;
+        if (is_redirect(d->commands[i] = LEFT)  
+            exec_redirect();
+    }
+
+    i = 0;
     while (i <= d->cmd_count)
     {
         int type = check_command(d->commands[i]);
@@ -40,6 +56,40 @@ int select_type(t_data *d)
     run_pipe_cmd(d, pipe_count(d->input_splitted));
     return (SUCCESS);
 }
+
+void exec_redirect()
+
+int is_redirect(char **argv)
+{
+    int i = 0;
+    int count_left = 0;
+    int count_right = 0;
+    while (argv[i])
+    {
+        if (argv[i][0] == '>')
+        {
+            //*(tell_me_where) = i;
+            count_right++;
+        }
+        else if argv[i][0] == '<')
+            count_left++;
+        i++;
+    }
+    if (count_left + count_right == 0)
+        return (NOT_FOUND);
+    else if (count_left == 1 && count_right == 0)
+        return (LEFT);
+    else if (count_left == 2 && count_right == 0)
+        return (LEFT_LEFT);
+    else if (count_left == 0 && count_right == 1)
+        return (RIGHT);
+    else if (count_left == 0 && count_right == 2)
+        return (RIGHT_RIGHT);
+    else
+        return (ERROR);
+}
+
+
 static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
 {
     if ((*d).cmd_state[*pos] == CUSTOM)

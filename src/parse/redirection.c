@@ -1,26 +1,13 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/02 15:35:24 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/08 22:25:12 by ltrillar         ###   ########.fr       */
+/*   Created: 2025/10/08 15:55:27 by ltrillar          #+#    #+#             */
+/*   Updated: 2025/10/08 16:06:33 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-
-int update_data(t_data *d)
-{
-    d->input = NULL;
-    d->input_splitted = NULL;
-    d->path = NULL;
-    d->commands = NULL;
-    d->cmd_state = NULL;
-    d->cmd_count = 0;
-    d->r_content = NULL;
-    return (0);
-}
-

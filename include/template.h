@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 16:20:24 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/07 13:07:03 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/08 22:32:07 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@
 /* ========================== */
 /*        PROMPTS & UI        */
 /* ========================== */
-# define TEMPLATE_SETUP_SCREEN BOLD_YELLOW GUN RESET
 # define TEMPLATE_PROMPT BOLD_GREEN "➜ " RESET BACKGROUND_YELLOW BOLD_BLACK " " 
 # define TEMPLATE_PROMPT_END " " RESET BOLD_YELLOW " $> " RESET
 
