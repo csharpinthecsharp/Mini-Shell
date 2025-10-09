@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/10 00:25:51 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/10 00:37:01 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,11 +146,20 @@ int is_redirect(char **argv)
 
 static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
 {
+    int fd_out;
     if ((*d).cmd_state[*pos] == CUSTOM)
     {
         pid_t pid = fork();
         if (pid == 0)
         {
+            if (d->redirection_state[*pos] == RIGHT)
+            {
+                fd_out = open(d->output_file[*pos], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+                if (fd_out < 0)
+                    print_error("open failed", "oui");
+                dup2(fd_out, STDOUT_FILENO);
+                close(fd_out);
+            }
             if ((*pos) > 0)
                 dup2(var_pipe[(*pos) - 1][0], STDIN_FILENO);
             if ((*pos) < N_pipe)
