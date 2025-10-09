@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 15:35:24 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/08 22:25:12 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/09 22:41:50 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ int update_data(t_data *d)
     d->path = NULL;
     d->commands = NULL;
     d->cmd_state = NULL;
+    d->cmd_state = NULL;
     d->cmd_count = 0;
-    d->r_content = NULL;
     return (0);
 }
 
