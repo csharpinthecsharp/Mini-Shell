@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/08 23:08:04 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/09 15:40:17 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,14 @@ int select_type(t_data *d)
     run_pipe_cmd(d, pipe_count(d->input_splitted));
     return (SUCCESS);
 }
+// Redirection de la sortie standard avec dup2()
+// Exemple : commande "ls > output.txt"
+// Étapes :
+// 1. Extraire le nom du fichier après '>'
+// 2. Ouvrir le fichier en écriture avec open("output.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644)
+// 3. Rediriger stdout avec dup2(fd_out, STDOUT_FILENO)
+// 4. Exécuter la commande avec execvp()
+// Pas besoin de read() ou write() manuels — dup2 gère la redirection automatiquement
 
 void exec_redirect()
 
