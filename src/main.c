@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:18:23 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/10 01:08:36 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/10 20:02:30 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,14 @@ int main(int ac, char *av[], char *envp[])
     {
         update_data(d);
         d->path = getpath(buf);
-        d->input = readline(get_promptpath(buf)); 
+
+        if (isatty(STDIN_FILENO))
+            d->input = readline(get_promptpath(buf));
+        else
+            d->input = rl(STDIN_FILENO);
+        
         if (!d->input)
-            break;
+                break;
         if (*d->input)
             add_history(d->input);   
         if (filter_input(d) == 1)

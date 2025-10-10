@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/10 00:39:34 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/10 19:44:22 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ int select_type(t_data *d)
     size_t i = 0;
     alloc_cmd_state(d);
     alloc_redir_state(d);
-    
+    d->output_file = malloc(sizeof(char *) * BUFFER_SIZE);
+
     i = 0;
     while (i <= d->cmd_count)
     {
@@ -62,9 +63,9 @@ int select_type(t_data *d)
 static char *send_output(char **argv, int redir_state)
 {
     int i = 0;
-    if (redir_state == RIGHT)
+    if (redir_state == RIGHT || redir_state == LEFT)
     {
-        while (argv[i] && argv[i][0] != '>')
+        while (argv[i] && (argv[i][0] != '>' && argv[i][0] != '<'))
             i++;
         while (argv[i] && argv[i + 1])
             return (ft_strdup(argv[i + 1]));
@@ -81,13 +82,13 @@ static char *send_output(char **argv, int redir_state)
 // Pas besoin de read() ou write() manuels — dup2 gère la redirection automatiquement
 char **fix_redir_arg(t_data *d, char **argv, int redir_type, int index)
 {
-    // TEMP MALLOC AHAHHH
-    d->output_file = malloc(sizeof(char *) * BUFFER_SIZE);
-    
+    // TEMP MALLOC AHAHHH    
     int i = 0;
     while (argv[i])
     {
         if (ft_strncmp(argv[i], ">", 1) == 0) 
+            break;
+        if (ft_strncmp(argv[i], "<", 1) == 0) 
             break;
         i++;
     }
@@ -96,19 +97,21 @@ char **fix_redir_arg(t_data *d, char **argv, int redir_type, int index)
     if (!dup)
     {
         perror("malloc failed");
-        return (NULL);
+        return (NULL);        
     }
         
     int j = 0;
-    while (j < i)
+    if (redir_type == RIGHT || redir_type == LEFT)
     {
-        dup[j] = ft_strdup(argv[j]);
-        j++;
+        while (j < i)
+        {
+            dup[j] = ft_strdup(argv[j]);
+            j++;
+        }
     }
     // ls > test.txt
     // bah on envoi test.txt a d->output_file[i]
-    if (redir_type == RIGHT)
-        (*d).output_file[index] = send_output(argv, RIGHT);
+    (*d).output_file[index] = send_output(argv, redir_type);
     dup[i] = NULL;
     return (dup);
 }
@@ -147,24 +150,38 @@ int is_redirect(char **argv)
 static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
 {
     int fd_out;
+    int fd_in;
     if ((*d).cmd_state[*pos] == CUSTOM)
     {
         pid_t pid = fork();
         if (pid == 0)
         {
+            if (N_pipe > 0)
+            {
+                if ((*pos) > 0)
+                    dup2(var_pipe[(*pos) - 1][0], STDIN_FILENO);
+                else if ((*pos) < N_pipe)
+                    dup2(var_pipe[(*pos)][1], STDOUT_FILENO);
+                close_pipe(var_pipe, N_pipe, 1);
+            }
+
             if (d->redirection_state[*pos] == RIGHT)
             {
                 fd_out = open(d->output_file[*pos], O_WRONLY | O_CREAT | O_TRUNC, 0644);
                 if (fd_out < 0)
-                    print_error("open failed", "oui");
+                    print_error("open failed", d->output_file[*pos]);
                 dup2(fd_out, STDOUT_FILENO);
                 close(fd_out);
             }
-            if ((*pos) > 0)
-                dup2(var_pipe[(*pos) - 1][0], STDIN_FILENO);
-            else if ((*pos) < N_pipe)
-                dup2(var_pipe[(*pos)][1], STDOUT_FILENO);
-            close_pipe(var_pipe, N_pipe, 1);
+            else if (d->redirection_state[*pos] == LEFT)
+            {
+                fd_in = open(d->output_file[*pos], O_RDONLY);
+                if (fd_in < 0)
+                    print_error("open failed", d->output_file[*pos]);
+                dup2(fd_in, STDIN_FILENO);
+                close(fd_in);
+            }
+
             run_custom_cmd(d->commands[(*pos)], d);
             exit(EXIT_SUCCESS);
         }
@@ -194,21 +211,37 @@ static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
 {
     pid_t pid = fork();
     int fd_out;
+    int fd_in;
     if (pid == 0)
     {
+        if (N_pipe > 0)
+        {
+            if ((*pos) > 0)
+                dup2(var_pipe[(*pos) - 1][0], STDIN_FILENO);
+            else if ((*pos) < N_pipe)
+                dup2(var_pipe[(*pos)][1], STDOUT_FILENO);
+            close_pipe(var_pipe, N_pipe, 1);
+        }
+                
         if (d->redirection_state[*pos] == RIGHT)
         {
             fd_out = open(d->output_file[*pos], O_WRONLY | O_CREAT | O_TRUNC, 0644);
             if (fd_out < 0)
-                print_error("open failed", "oui");
+                print_error("open failed", d->output_file[*pos]);
             dup2(fd_out, STDOUT_FILENO);
             close(fd_out);
         }
-        if ((*pos) > 0)
-            dup2(var_pipe[*pos - 1][0], STDIN_FILENO);
-        else if ((*pos) < N_pipe)
-            dup2(var_pipe[*pos][1], STDOUT_FILENO);
-        close_pipe(var_pipe, N_pipe, 1);
+        else if (d->redirection_state[*pos] == LEFT)
+        {
+            for (int i = 0; d->commands[*pos][i]; i++)
+                fprintf(stderr, "%s", d->commands[*pos][i]);
+            fd_in = open(d->output_file[*pos], O_RDONLY);
+            if (fd_in < 0)
+                print_error("open failed", d->output_file[*pos]);
+            dup2(fd_in, STDIN_FILENO);
+            close(fd_in);
+        }
+        
         char *tmp_cmd = ft_strdup(ft_strjoin("/bin/", d->commands[*pos][0]));
         execve(tmp_cmd, d->commands[*pos], d->envp);
         perror("execve failed");

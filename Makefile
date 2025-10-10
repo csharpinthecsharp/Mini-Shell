@@ -16,7 +16,8 @@ SRCS	= src/main.c \
 		  src/exec/exec_utils.c \
 		  src/signal/init_signal.c \
 		  src/utils/memory_alloc.c \
-		  src/utils/free.c
+		  src/utils/free.c \
+		  rl.c
 
 OBJS	= $(SRCS:.c=.o)
 LIBFT 	= libft/libft.a

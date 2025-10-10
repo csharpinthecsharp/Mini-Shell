@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 19:59:55 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/08 22:58:41 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/10 19:36:21 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,25 +50,14 @@ size_t count_cmds(char ***cmds)
 void close_pipe(int **var_pipe, int N_pipe, int state)
 {
     int i = 0; 
-    if (state == 1)
+    while (i < N_pipe)
     {
-        while (i < N_pipe)
-        {
-            close(var_pipe[i][0]);
-            close(var_pipe[i][1]);
-            i++;
-        }
-    }
-    else
-    {
-        i = 0;
-        while (i < N_pipe)
-        {
-            close(var_pipe[i][0]);
-            close(var_pipe[i][1]);
+        close(var_pipe[i][0]);
+        close(var_pipe[i][1]);
+        if (state != 1)
             free(var_pipe[i]);
-            i++;
-        }
-        free(var_pipe);
+        i++;
     }
+    if (state != 1)
+        free(var_pipe);
 }

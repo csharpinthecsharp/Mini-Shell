@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/10 00:13:30 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/10 19:59:06 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,5 +126,6 @@ void exec_redirect_left(char **argv);
 int is_redirect(char **argv);
 void alloc_redir_state(t_data *d);
 char **fix_redir_arg(t_data *d, char **argv, int redir_type, int index);
+char *rl(int fd);
 
 #endif /* MINISHELL_H */
