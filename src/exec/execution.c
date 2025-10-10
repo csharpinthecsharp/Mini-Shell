@@ -162,7 +162,7 @@ static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
             }
             if ((*pos) > 0)
                 dup2(var_pipe[(*pos) - 1][0], STDIN_FILENO);
-            if ((*pos) < N_pipe)
+            else if ((*pos) < N_pipe)
                 dup2(var_pipe[(*pos)][1], STDOUT_FILENO);
             close_pipe(var_pipe, N_pipe, 1);
             run_custom_cmd(d->commands[(*pos)], d);
@@ -204,7 +204,7 @@ static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
             dup2(fd_out, STDOUT_FILENO);
             close(fd_out);
         }
-        else if ((*pos) > 0)
+        if ((*pos) > 0)
             dup2(var_pipe[*pos - 1][0], STDIN_FILENO);
         else if ((*pos) < N_pipe)
             dup2(var_pipe[*pos][1], STDOUT_FILENO);

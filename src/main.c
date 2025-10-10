@@ -29,6 +29,7 @@ int main(int ac, char *av[], char *envp[])
     t_data data;
     t_data *d = &data;
     d->envp = envp;
+    d->exit_status = 0;
     prepare_signals();
     while (1)
     {

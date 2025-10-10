@@ -19,7 +19,6 @@ int update_data(t_data *d)
     d->path = NULL;
     d->commands = NULL;
     d->cmd_state = NULL;
-    d->cmd_state = NULL;
     d->cmd_count = 0;
     return (0);
 }

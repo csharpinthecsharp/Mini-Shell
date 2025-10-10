@@ -53,7 +53,7 @@ int handle_echo(char **argv, int count)
     if (count < 2)
     {
         printf("\n");
-        return (0);
+        return (1);
     }
     int i = 1;
     while (i < count)

@@ -80,7 +80,7 @@ typedef struct s_data
     
     char *path;             // Current working path
     char **envp;
-    unsigned int exit_status;
+    int exit_status;
 }   t_data;
 
 /* ========================== */

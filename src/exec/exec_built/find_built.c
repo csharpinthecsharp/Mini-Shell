@@ -38,6 +38,7 @@ int run_custom_cmd(char **argv, t_data *d)
     {
         if (handle_echo(argv, count) == 1)
         {
+            printf("je suis dedans dady");
             d->exit_status = 1;
             return (1);
         }
