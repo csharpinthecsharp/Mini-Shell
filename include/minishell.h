@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/10 19:59:06 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/11 00:07:10 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ typedef struct s_data
 
     int *cmd_state;
     int *redirection_state;
+
+    int *cmd_quoted;
     
     size_t cmd_count;
     
@@ -108,7 +110,6 @@ void    run_pipe_cmd(t_data *d, int N_pipe);
 char    ***split_commands(char **argv);
 char    *get_promptpath(char *buffer);
 int     ft_isspace(char arg);
-int pipe_count(char **argv);
 char    *replace_envvar(char *s, t_data *d);
 char *get_one_arg(const char *s, int *i);
 char    **get_args(char *s, t_data *d);

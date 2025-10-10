@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 20:20:39 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/07 00:46:24 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/11 00:03:28 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ int pipe_count(char **argv)
         int j = 0;
         while (argv[i][j])
         {
-            if (argv[i][j] == PIPE)
+            if (argv[i][j] == PIPE && argv[i][j + 1])
                 count++;
             j++;
         }

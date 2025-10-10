@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/08 22:22:07 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/11 00:11:07 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,7 @@ char **get_args(char *s, t_data *d)
 
 char ***split_commands(char **argv)
 {
-    int commands_count = pipe_count(argv) + 1;
-    char ***cmds = malloc(sizeof(char **) * (commands_count + 1));
+    char ***cmds = malloc(sizeof(char **) * (32 + 1));
     if (!cmds)
         return NULL;
 
@@ -72,12 +71,13 @@ char ***split_commands(char **argv)
 
     while (argv[i])
     {
+        
         if (argv[i][0] == PIPE && argv[i][1] == '\0') // pipe isolé
         {
             cmds[cmds_i][arg_i] = NULL; // terminer la commande
             cmds_i++;
             arg_i = 0;
-            cmds[cmds_i] = malloc(sizeof(char *) * (commands_count + 1));
+            cmds[cmds_i] = malloc(sizeof(char *) * (32 + 1));
             if (!cmds[cmds_i])
                 return NULL;
         }

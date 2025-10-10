@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/10 21:19:20 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/11 00:11:54 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int select_type(t_data *d)
         }
         i++;
     }
-    run_pipe_cmd(d, pipe_count(d->input_splitted));
+    run_pipe_cmd(d, d->cmd_count);
     return (SUCCESS);
 }
 
@@ -212,6 +212,7 @@ static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
     pid_t pid = fork();
     int fd_out;
     int fd_in;
+    printf("%d", N_pipe);
     if (pid == 0)
     {
         if (N_pipe > 0)
