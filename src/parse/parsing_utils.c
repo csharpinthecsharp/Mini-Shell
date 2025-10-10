@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 00:34:09 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/10 23:59:06 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/11 00:22:13 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,9 @@ char *replace_envvar(char *s, t_data *d)
                 arg[j++] = env_value[k];
                 k++;
             }
-            i++; // skip $
+            // on skip que si get_env_string() à échoué.
+            if (env_value[0] != '\0')
+                i++; // skip $
             while (s[i] && !ft_isspace(s[i]) && s[i] != '$')
                 i++; 
             free(env_value);
