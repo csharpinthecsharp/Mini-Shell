@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/05 00:07:31 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/07 00:48:27 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/10 22:55:27 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,56 +14,34 @@
 
 int run_custom_cmd(char **argv, t_data *d)
 {
-    // RETURN 1 SEULEMENT SI ON VEUX TOUT EXIT
     int count = 0;
-
     while (argv[count])
         count++;
+
     if (ft_strncmp(argv[0], "pwd", 3) == 0)
     {
-        if (handle_pwd(argv[0], count, d->path) == 1)
-            return (1);
+        d->exit_status = handle_pwd(argv[0], count, d->path);
     }
     else if (ft_strncmp(argv[0], "exit", 4) == 0)
     {
-        if (handle_exit(argv, count) == 1)
-        {
-            d->exit_status = 1;
-            return (1);
-        }
-        else
-            d->exit_status = 0;
+        d->exit_status = handle_exit(argv, count);
     }
     else if (ft_strncmp(argv[0], "echo", 4) == 0)
     {
-        if (handle_echo(argv, count) == 1)
-        {
-            printf("je suis dedans dady");
-            d->exit_status = 1;
-            return (1);
-        }
-        else
-            d->exit_status = 0;
+        d->exit_status = handle_echo(argv, count);
     }
     else if (ft_strncmp(argv[0], "cd", 2) == 0)
     {
-        if (handle_cd(argv, count, d) == 1)
-        {
-            d->exit_status = 1;
-            return (1);
-        }
-        else
-            d->exit_status = 0;
+        d->exit_status = handle_cd(argv, count, d);
     }
     else if (ft_strncmp(argv[0], "export", 6) == 0)
     {
-        if (handle_export(argv, count, d) == 1)
-        {
-            d->exit_status = 1;
-            return (1);
-        }
-        else
-            d->exit_status = 0;
+        d->exit_status = handle_export(argv, count, d);
+    }
+    else
+    {
+        print_error("command not found", argv[0]);
+        d->exit_status = 127;
     }
     return (0);
 }

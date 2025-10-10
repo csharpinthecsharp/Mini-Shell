@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/10 19:44:22 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/10 21:19:20 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,7 @@ static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
             }
 
             run_custom_cmd(d->commands[(*pos)], d);
-            exit(EXIT_SUCCESS);
+            exit(d->exit_status);
         }
      }
 }
@@ -233,8 +233,6 @@ static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
         }
         else if (d->redirection_state[*pos] == LEFT)
         {
-            for (int i = 0; d->commands[*pos][i]; i++)
-                fprintf(stderr, "%s", d->commands[*pos][i]);
             fd_in = open(d->output_file[*pos], O_RDONLY);
             if (fd_in < 0)
                 print_error("open failed", d->output_file[*pos]);
@@ -244,8 +242,7 @@ static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
         
         char *tmp_cmd = ft_strdup(ft_strjoin("/bin/", d->commands[*pos][0]));
         execve(tmp_cmd, d->commands[*pos], d->envp);
-        perror("execve failed");
-        exit(EXIT_FAILURE);
+        exit(127);
     }
 }
 

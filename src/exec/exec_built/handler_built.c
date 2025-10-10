@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 14:17:48 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/07 00:48:25 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/10 21:27:02 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,26 +23,39 @@ int handle_pwd(char *argv, int count, char *path)
     return (0);
 }
 
+static int is_numeric(const char *str)
+{
+    int i = 0;
+    if (str[0] == '-' || str[0] == '+')
+        i++;
+    while (str[i])
+    {
+        if (!ft_isdigit(str[i]))
+            return (0);
+        i++;
+    }
+    return (1);
+}
+
 int handle_exit(char **argv, int count)
 {
-    if (count == 1)
-        exit(EXIT_SUCCESS);
-    else if (count == 2)
+    (void)count;
+    if (!argv[1])
+        exit(0);
+
+    if (!is_numeric(argv[1]))
     {
-        int res = ft_atoi(argv[1]);
-        if (res == -1)
-        {
-            print_error("numeric argument required", argv[1]);
-            exit(2);
-        }
-        exit(res);
+        print_error("numeric argument required", argv[1]);
+        exit(2);
     }
-    else
+
+    if (argv[2])
     {
         print_error("too many arguments", argv[0]);
-        exit(EXIT_FAILURE);
+        return 1;
     }
-    return (0);
+
+    exit(ft_atoi(argv[1]) % 256);
 }
 
 int handle_echo(char **argv, int count)
@@ -53,7 +66,7 @@ int handle_echo(char **argv, int count)
     if (count < 2)
     {
         printf("\n");
-        return (1);
+        return (0);
     }
     int i = 1;
     while (i < count)

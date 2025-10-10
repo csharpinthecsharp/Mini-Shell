@@ -6,13 +6,23 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:18:23 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/10 20:13:03 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/10 22:49:17 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 #include "../include/template.h"
 
+static int isfulls(char *s)
+{
+    size_t i = 0;
+    while (ft_isspace(s[i]))
+        i++;
+    if (ft_strlen(s) == i)
+        return (1);
+    else
+        return (0);
+}
 // REPL
 // R = READ | E = EVALUATE | P = EXECUTE | L = LOOP.
 int main(int ac, char *av[], char *envp[])
@@ -35,17 +45,18 @@ int main(int ac, char *av[], char *envp[])
     {
         update_data(d);
         d->path = getpath(buf);
-
+        
+        // si -> mode interactif on laisse la couleur du prompt.
+        // else -> mode script, pour les testeurs par exemple.
         if (isatty(STDIN_FILENO))
             d->input = readline(get_promptpath(buf));
         else
-            d->input = rl(STDIN_FILENO);
-        
+            d->input = readline("minishell > ");
+
         if (!d->input)
             break;
-
-                    
-        if (ft_strlen(d->input) != 0)
+              
+        if (ft_strlen(d->input) != 0 && !isfulls(d->input))
         {
             if (*d->input)
                 add_history(d->input);   

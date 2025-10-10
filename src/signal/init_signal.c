@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 20:16:28 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/07 01:10:42 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/10 22:54:54 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void handler_ctrl_c(int sig)
 {
     (void)sig;
-    write(STDOUT_FILENO, "\n", 1);
+    write(STDOUT_FILENO, "^C\n", 3);
     rl_replace_line("", 0);
     rl_on_new_line();
     rl_redisplay();
