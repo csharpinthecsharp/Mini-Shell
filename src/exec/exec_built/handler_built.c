@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 14:17:48 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/10 21:27:02 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/11 14:28:53 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,5 +124,28 @@ int handle_export(char **argv, int count, t_data *d)
             i++;
         }
     }
+    return (0);
+}
+
+int handle_env(char **argv, int count, t_data *d)
+{
+    (void)argv;
+    if (count == 1)
+    {
+        int i = 0;
+        while (d->envp[i])
+        {
+            printf("%s\n", d->envp[i]);
+            i++;
+        }
+    }
+    return (0);
+}
+
+int handle_unset(char **argv, int count, t_data *d)
+{
+    (void)count;
+    (void)d;
+    (void)argv;
     return (0);
 }

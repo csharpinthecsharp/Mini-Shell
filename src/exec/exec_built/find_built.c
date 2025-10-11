@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/05 00:07:31 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/10 22:55:27 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/11 14:25:20 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,14 @@ int run_custom_cmd(char **argv, t_data *d)
     else if (ft_strncmp(argv[0], "export", 6) == 0)
     {
         d->exit_status = handle_export(argv, count, d);
+    }
+    else if (ft_strncmp(argv[0], "env", 3) == 0)
+    {
+        d->exit_status = handle_env(argv, count, d);
+    }
+    else if (ft_strncmp(argv[0], "unset", 5) == 0)
+    {
+        d->exit_status = handle_unset(argv, count, d);
     }
     else
     {
