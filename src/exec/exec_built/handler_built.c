@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 14:17:48 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/11 19:59:29 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/11 20:35:37 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,7 +172,6 @@ int handle_unset(char **argv, int count, t_data *d)
             if (ft_strncmp(argv[pos], d->envp[i], len) == 0
                 && d->envp[i][len] == '=')
             {
-                printf("oui\n");
                 free(d->envp[i]);
 
                 int j = i;
