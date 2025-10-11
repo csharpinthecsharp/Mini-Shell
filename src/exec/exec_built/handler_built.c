@@ -114,7 +114,6 @@ int handle_cd(char **argv, int count, t_data *d)
 
 int handle_export(char **argv, int count, t_data *d)
 {
-    (void)argv;
     if (count == 1)
     {
         int i = 0;
@@ -123,6 +122,22 @@ int handle_export(char **argv, int count, t_data *d)
             printf("%s\n", d->envp[i]);
             i++;
         }
+    }
+    if (count == 2)
+    {
+        int i = 0;
+        while (d->envp[i])
+            i++;
+        int j = 0;
+        d->envp[i] = malloc(sizeof(char ) * ft_strlen(argv[1]) + 1);
+        while (argv[1][j])
+        {
+            d->envp[i][j] = argv[1][j];
+            j++;
+        }
+        d->envp[i][j] = '\0';
+        i += 1; // Go to NULL.
+        d->envp[i] = NULL;
     }
     return (0);
 }
@@ -144,8 +159,30 @@ int handle_env(char **argv, int count, t_data *d)
 
 int handle_unset(char **argv, int count, t_data *d)
 {
-    (void)count;
-    (void)d;
-    (void)argv;
+    printf("%d", count);
+    if (count == 1)
+    {
+        printf("count = 1");
+    }
+    if (count == 2)
+    {
+        int i = 0;
+        while (d->envp[i])
+        {
+            if (ft_strncmp(argv[1], d->envp[i], ft_strlen(argv[i])) == 0)
+            {
+                printf("IM IN");
+                free(d->envp[i]);
+                while (d->envp[i + 1])
+                {
+                    d->envp[i] = d->envp[i + 1];
+                    i++;
+                }
+                d->envp[i] = NULL;
+            }
+            printf("IM NOT IN");
+            i++;
+        }
+    }
     return (0);
 }

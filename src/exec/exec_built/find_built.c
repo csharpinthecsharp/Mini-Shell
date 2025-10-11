@@ -16,8 +16,11 @@ int run_custom_cmd(char **argv, t_data *d)
 {
     int count = 0;
     while (argv[count])
+    {
+        printf("%s\n", argv[count]);
         count++;
-
+    }
+    printf("\nCount: %d\n", count);
     if (ft_strncmp(argv[0], "pwd", 3) == 0)
     {
         d->exit_status = handle_pwd(argv[0], count, d->path);
@@ -44,6 +47,7 @@ int run_custom_cmd(char **argv, t_data *d)
     }
     else if (ft_strncmp(argv[0], "unset", 5) == 0)
     {
+         printf("grosse couille");
         d->exit_status = handle_unset(argv, count, d);
     }
     else
