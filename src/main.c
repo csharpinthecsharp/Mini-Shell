@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:18:23 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/11 00:13:44 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/11 19:52:15 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,10 +68,7 @@ int main(int ac, char *av[], char *envp[])
 
     // DUPLICATE ENVP;
     d->envp = duplicate_envp(envp);
-    for (int i = 0; d->envp[i]; i++)
-    {
-        printf("%s\n", d->envp[i]);
-    }
+    
     d->exit_status = 0;
     prepare_signals();
     while (1)

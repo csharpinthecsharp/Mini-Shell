@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/11 14:25:13 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/11 20:31:49 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,9 @@ typedef struct s_data
     
     char *path;             // Current working path
     char **envp;
+    
+    int N_redir;
+    
     int exit_status;
 }   t_data;
 
@@ -124,7 +127,7 @@ void prepare_signals(void);
 void alloc_error_pipe(int N_pipe, int **var_pipe);
 void alloc_cmd_state(t_data *d);
 void exec_redirect_left(char **argv);
-int is_redirect(char **argv);
+int is_redirect(char **argv, t_data *d);
 void alloc_redir_state(t_data *d);
 char **fix_redir_arg(t_data *d, char **argv, int redir_type, int index);
 char *rl(int fd);

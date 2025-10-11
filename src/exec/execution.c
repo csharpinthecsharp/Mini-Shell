@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/11 00:24:25 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/11 20:33:29 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int select_type(t_data *d)
     while (i <= d->cmd_count)
     {
         int type = check_command(d->commands[i]);
-        int redir_type = is_redirect(d->commands[i]);
+        int redir_type = is_redirect(d->commands[i], d);
         
         if (redir_type > NOT_FOUND)
         {
@@ -117,7 +117,7 @@ char **fix_redir_arg(t_data *d, char **argv, int redir_type, int index)
     return (dup);
 }
 
-int is_redirect(char **argv)
+int is_redirect(char **argv, t_data *d)
 {
     int i = 0;
     int count_left = 0;
@@ -133,9 +133,9 @@ int is_redirect(char **argv)
             count_left++;
         i++;
     }
-    if (count_left + count_right == 0)
-        return (NOT_FOUND);
-    else if (count_left == 1 && count_right == 0)
+    d->N_redir = (count_left + count_right);
+    
+    if (count_left == 1 && count_right == 0)
         return (LEFT);
     else if (count_left == 2 && count_right == 0)
         return (LEFT_LEFT);
@@ -144,7 +144,7 @@ int is_redirect(char **argv)
     else if (count_left == 0 && count_right == 2)
         return (RIGHT_RIGHT);
     else
-        return (ERROR);
+        return (NOT_FOUND);
 }
 
 
@@ -152,40 +152,56 @@ static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
 {
     int fd_out;
     int fd_in;
-    if ((*d).cmd_state[*pos] == CUSTOM)
-    {
-        pid_t pid = fork();
-        if (pid == 0)
-        {
-            if (N_pipe > 0)
-            {
-                if ((*pos) > 0)
-                    dup2(var_pipe[(*pos) - 1][0], STDIN_FILENO);
-                else if ((*pos) < N_pipe)
-                    dup2(var_pipe[(*pos)][1], STDOUT_FILENO);
-                close_pipe(var_pipe, N_pipe, 1);
-            }
 
-            if (d->redirection_state[*pos] == RIGHT)
+    if (d->cmd_state[*pos] == CUSTOM)
+    {
+        // Si on est dans un pipeline ou une redirection → on fork
+        if (N_pipe > 0 || d->N_redir > 0)
+        {
+            pid_t pid = fork();
+            if (pid == 0) // enfant
             {
-                fd_out = open(d->output_file[*pos], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-                if (fd_out < 0)
-                    print_error("No such file or directory", d->output_file[*pos]);
-                dup2(fd_out, STDOUT_FILENO);
-                close(fd_out);
+                // Gestion des pipes
+                if (N_pipe > 0)
+                {
+                    if (*pos > 0) // pas la première commande → lire depuis pipe précédent
+                        dup2(var_pipe[*pos - 1][0], STDIN_FILENO);
+                    if (*pos < N_pipe) // pas la dernière commande → écrire dans pipe suivant
+                        dup2(var_pipe[*pos][1], STDOUT_FILENO);
+
+                    close_pipe(var_pipe, N_pipe, 1);
+                }
+
+                // Gestion des redirections
+                if (d->redirection_state[*pos] == RIGHT)
+                {
+                    fd_out = open(d->output_file[*pos], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+                    if (fd_out < 0)
+                        print_error("No such file or directory", d->output_file[*pos]);
+                    dup2(fd_out, STDOUT_FILENO);
+                    close(fd_out);
+                }
+                else if (d->redirection_state[*pos] == LEFT)
+                {
+                    fd_in = open(d->output_file[*pos], O_RDONLY);
+                    if (fd_in < 0)
+                        print_error("No such file or directory", d->output_file[*pos]);
+                    dup2(fd_in, STDIN_FILENO);
+                    close(fd_in);
+                }
+
+                // Exécuter la commande builtin
+                run_custom_cmd(d->commands[*pos], d);
+                exit(d->exit_status);
             }
-            else if (d->redirection_state[*pos] == LEFT)
-            {
-                fd_in = open(d->output_file[*pos], O_RDONLY);
-                if (fd_in < 0)
-                    print_error("No such file or directory", d->output_file[*pos]);
-                dup2(fd_in, STDIN_FILENO);
-                close(fd_in);
-            }
-            run_custom_cmd(d->commands[(*pos)], d);
-            exit(d->exit_status);
+            // le parent ne fait rien ici, il attendra plus tard
         }
-     }
+        else
+        {
+            // Pas de pipe/redirection → exécution directe dans le parent
+            run_custom_cmd(d->commands[*pos], d);
+        }
+    }
 }
 
 /*
