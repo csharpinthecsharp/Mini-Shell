@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 20:20:39 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/11 00:03:28 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/11 23:47:48 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,52 +21,29 @@ int ft_countword(char **spli_args)
     return (i);
 }
 
-char *getpath(char *buffer)
+char *getpath(char *buffer, t_data *d)
 {    
     // On choppe le path.
     // Si -> Erreur <- NULL.
+
     if (!getcwd(buffer, BUFFER_SIZE))
         return (NULL);
     // On duplique buffer avant de l'envoyer,
     // Il faut lui alouer la mémoire.
-    return (ft_strdup(buffer));
+    if (d->new_path == NULL)
+        return (ft_strdup(buffer));
+    return (ft_strjoin(buffer, d->new_path));
 }
 
-char *get_promptpath(char *buffer)
+char *get_promptpath(char *buffer, t_data *d)
 {
-    if (!getcwd(buffer, BUFFER_SIZE))
-        return NULL;
-
-    char *tmp = malloc(sizeof(char) * BUFFER_SIZE);
-    if (!tmp)
-    {
-        perror("malloc failed");
-        exit(EXIT_FAILURE);
-    }
-
-    int i = 0;
-    while (buffer[i])
-        i++;
-
-    while (i > 0)
-    {
-        if (buffer[i - 1] == '/')
-            break;
-        i--;
-    }
-
-    int j = 0;
-    while (buffer[i])
-        tmp[j++] = buffer[i++];
-    tmp[j] = '\0';
-
-    char *t = ft_strjoin(TEMPLATE_PROMPT, tmp);
-    char *t2 = ft_strjoin(t, TEMPLATE_PROMPT_END);
+    (void)buffer;
+    (void)d;
+    char *t = ft_strjoin(TEMPLATE_PROMPT, "Void");
+    char *tt = ft_strjoin(t, TEMPLATE_PROMPT_END);
     free(t);
-    free(tmp);
-    return t2;
+    return (tt);
 }
-
 
 void print_error(const char *str, const char *arg)
 {
@@ -86,20 +63,4 @@ int ft_isspace(char arg)
     return (0);
 }
 
-int pipe_count(char **argv)
-{
-    int i = 0;
-    int count = 0;
-    while (argv[i])
-    {
-        int j = 0;
-        while (argv[i][j])
-        {
-            if (argv[i][j] == PIPE && argv[i][j + 1])
-                count++;
-            j++;
-        }
-        i++;
-    }
-    return (count);
-}
+

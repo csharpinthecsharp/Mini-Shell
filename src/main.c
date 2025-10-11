@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:18:23 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/11 21:12:55 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/11 23:35:08 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int main(int ac, char *av[], char *envp[])
     if (ac != 1)
         return (EXIT_FAILURE);
     (void)av;
-    char *buf = malloc(sizeof(char) * BUFFER_SIZE);
+    char *buf = malloc(sizeof(char) * 100000);
     if (!buf)
     {
         perror("malloc failed");
@@ -88,12 +88,11 @@ int main(int ac, char *av[], char *envp[])
     while (1)
     {
         update_data(d);
-        d->path = getpath(buf);
-        
+        d->path = getpath(buf, d);
         // si -> mode interactif on laisse la couleur du prompt.
         // else -> mode script, pour les testeurs par exemple.
         if (isatty(STDIN_FILENO))
-            d->input = readline(get_promptpath(buf));
+            d->input = readline(get_promptpath(d->path, d));
         else
             d->input = readline("minishell > ");
 

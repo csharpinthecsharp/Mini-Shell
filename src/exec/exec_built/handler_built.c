@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 14:17:48 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/11 20:53:16 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/11 23:36:19 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,27 +86,38 @@ int handle_echo(char **argv, int count)
     return (0);
 }
 
-#define PATH "/home/vez"
 int handle_cd(char **argv, int count, t_data *d)
 {
+    char *target_path;
+
     if (count == 1)
-    {
-        if (chdir(PATH) != 0)
-        {
-            print_error("Error: ", strerror(errno));
-        }
-    }
+        target_path = getenv("HOME"); // fallback vers le home
+    else if (count == 2)
+        target_path = argv[1];
     else
     {
-        char *oui = ft_strdup(ft_strjoin(d->path, "/"));
-        char *test = ft_strdup(ft_strjoin(oui, argv[1]));
-        if (chdir(test) != 0)
-        {
-            print_error("Error: ", strerror(errno));
-        }
+        print_error("too many arguments", argv[0]);
+        return FAILED;
     }
-    return (0);
+
+    if (chdir(target_path) != 0)
+    {
+        print_error("No such file or directory", argv[0]);
+        return FAILED;
+    }
+
+    char *buffer = malloc(sizeof(char) * 1024);
+    if (!getcwd(buffer, 1024))
+    {
+        perror("getcwd failed");
+        d->path = ft_strdup("?");
+    }
+    else
+        d->path = ft_strdup(buffer);
+    free(buffer);
+    return SUCCESS;
 }
+
 
 // UPDATE_ENVP
 // struct s_envp avec une key par value et un bool 
