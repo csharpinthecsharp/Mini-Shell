@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 20:20:39 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/11 23:47:48 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/12 00:58:16 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ char *get_promptpath(char *buffer, t_data *d)
 {
     (void)buffer;
     (void)d;
-    char *t = ft_strjoin(TEMPLATE_PROMPT, "Void");
+    char *t = ft_strjoin(TEMPLATE_PROMPT, "vbash");
     char *tt = ft_strjoin(t, TEMPLATE_PROMPT_END);
     free(t);
     return (tt);
