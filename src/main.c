@@ -23,6 +23,33 @@ static int isfulls(char *s)
     else
         return (0);
 }
+
+static char **duplicate_envp(char **envp)
+{
+    int count = 0;
+    while (envp[count])
+        count++;
+    
+    char **argv = malloc(sizeof(char *) * (count + 1));
+    if (!argv)
+        return (NULL);
+    
+    int i = 0;
+    while (envp[i])
+    {
+        argv[i] = ft_strdup(envp[i]);
+        if (!argv[i]) 
+        {
+            while (i > 0)
+                free(argv[--i]);
+            free(argv);
+            return (NULL);
+        }
+        i++;
+    }
+    argv[i] = NULL;
+    return (argv);
+}
 // REPL
 // R = READ | E = EVALUATE | P = EXECUTE | L = LOOP.
 int main(int ac, char *av[], char *envp[])
@@ -38,7 +65,13 @@ int main(int ac, char *av[], char *envp[])
     }
     t_data data;
     t_data *d = &data;
-    d->envp = envp;
+
+    // DUPLICATE ENVP;
+    d->envp = duplicate_envp(envp);
+    for (int i = 0; d->envp[i]; i++)
+    {
+        printf("%s\n", d->envp[i]);
+    }
     d->exit_status = 0;
     prepare_signals();
     while (1)

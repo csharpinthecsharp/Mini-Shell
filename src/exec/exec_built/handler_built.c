@@ -159,30 +159,33 @@ int handle_env(char **argv, int count, t_data *d)
 
 int handle_unset(char **argv, int count, t_data *d)
 {
-    printf("%d", count);
     if (count == 1)
-    {
-        printf("count = 1");
-    }
-    if (count == 2)
+        return (0);
+    
+    int pos = 1;
+    while (pos < count)
     {
         int i = 0;
         while (d->envp[i])
         {
-            if (ft_strncmp(argv[1], d->envp[i], ft_strlen(argv[i])) == 0)
+            int len = ft_strlen(argv[pos]);
+            if (ft_strncmp(argv[pos], d->envp[i], len) == 0
+                && d->envp[i][len] == '=')
             {
-                printf("IM IN");
                 free(d->envp[i]);
-                while (d->envp[i + 1])
+
+                int j = i;
+                while (d->envp[j + 1])
                 {
-                    d->envp[i] = d->envp[i + 1];
-                    i++;
+                    d->envp[j] = d->envp[j + 1];
+                    j++;
                 }
-                d->envp[i] = NULL;
+                d->envp[j] = NULL;
+                break;
             }
-            printf("IM NOT IN");
             i++;
         }
+        pos++;
     }
     return (0);
 }
