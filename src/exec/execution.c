@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/11 20:33:29 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/11 21:31:31 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,6 +194,8 @@ static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
                 run_custom_cmd(d->commands[*pos], d);
                 exit(d->exit_status);
             }
+            else if (pid > 0)
+                d->last_fork_pid = pid;
             // le parent ne fait rien ici, il attendra plus tard
         }
         else
@@ -234,7 +236,7 @@ static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
         {
             if ((*pos) > 0)
                 dup2(var_pipe[(*pos) - 1][0], STDIN_FILENO);
-            else if ((*pos) < N_pipe)
+            if ((*pos) < N_pipe)
                 dup2(var_pipe[(*pos)][1], STDOUT_FILENO);
             close_pipe(var_pipe, N_pipe, 1);
         }
@@ -255,16 +257,18 @@ static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
             dup2(fd_in, STDIN_FILENO);
             close(fd_in);
         }
-        
         char *tmp_cmd = ft_strdup(ft_strjoin("/bin/", d->commands[*pos][0]));
         execve(tmp_cmd, d->commands[*pos], d->envp);
         exit(127);
     }
+    else if (pid > 0)
+        d->last_fork_pid = pid;    
 }
 
 void run_pipe_cmd(t_data *d, int N_pipe)
 {
     int **var_pipe = malloc(sizeof(int *) * N_pipe);
+    pid_t last_pid = -1;
     if (!var_pipe)
     {
         perror("malloc failed");
@@ -278,13 +282,24 @@ void run_pipe_cmd(t_data *d, int N_pipe)
             exec_custom_inpipe(var_pipe, d, N_pipe, &pos);
         else if ((*d).cmd_state[pos] == BUILT_IN)
             exec_built_inpipe(var_pipe, d, N_pipe, &pos);
+        last_pid = d->last_fork_pid;
         pos++;
     }
     close_pipe(var_pipe, N_pipe, 0);
+
+    int status;
+    pid_t wpid;
+
     pos = 0;
-    while (pos <= N_pipe)
+    while ((wpid = wait(&status)) > 0)
     {
-        wait(NULL);
+        if (wpid == last_pid)
+        {
+            if (WIFEXITED(status))
+                d->exit_status = WEXITSTATUS(status);
+            else if (WIFSIGNALED(status))
+                d->exit_status = 128 + WTERMSIG(status);
+        }
         pos++;
     }
 }

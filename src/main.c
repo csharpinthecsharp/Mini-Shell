@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:18:23 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/11 19:52:15 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/11 21:12:55 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,20 @@ static int isfulls(char *s)
         return (0);
 }
 
+static char *up_shlvl(char *envp_i)
+{
+    if (ft_strncmp(envp_i, "SHLVL=1", 9) == 0)
+    {
+        int lvl = ft_atoi(envp_i + 6);
+        lvl++;          
+        char *new_lvl = ft_itoa(lvl); 
+        char *res = ft_strjoin("SHLVL=", new_lvl);
+        free (new_lvl);
+        return res;
+    }
+    else
+        return (ft_strdup(envp_i));
+}
 static char **duplicate_envp(char **envp)
 {
     int count = 0;
@@ -37,7 +51,7 @@ static char **duplicate_envp(char **envp)
     int i = 0;
     while (envp[i])
     {
-        argv[i] = ft_strdup(envp[i]);
+        argv[i] = up_shlvl(envp[i]);
         if (!argv[i]) 
         {
             while (i > 0)

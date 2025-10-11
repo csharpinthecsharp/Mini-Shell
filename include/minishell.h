@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/11 20:31:49 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/11 21:26:46 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,9 @@ typedef struct s_data
     char *path;             // Current working path
     char **envp;
     
+    int SHLVL;
     int N_redir;
+    int last_fork_pid;
     
     int exit_status;
 }   t_data;
