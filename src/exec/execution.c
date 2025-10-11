@@ -44,15 +44,16 @@ int select_type(t_data *d)
         {
             if (d->cmd_count == 0)
                 run_custom_cmd(d->commands[i], d);
-            else
-                print_error("can't run in a pipe command", d->commands[i][0]);
         }
         else if (type == BUILT_IN)
         {
             if (is_valid_bin(d->commands[i][0]) == SUCCESS)
                 (*d).cmd_state[i] = BUILT_IN;
             else
-                print_error("command not found", d->commands[i][0]); 
+            {
+                print_error("command not found", d->commands[i][0]);
+                d->exit_status = 127;
+            } 
         }
         i++;
     }
@@ -169,7 +170,7 @@ static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
             {
                 fd_out = open(d->output_file[*pos], O_WRONLY | O_CREAT | O_TRUNC, 0644);
                 if (fd_out < 0)
-                    print_error("open failed", d->output_file[*pos]);
+                    print_error("No such file or directory", d->output_file[*pos]);
                 dup2(fd_out, STDOUT_FILENO);
                 close(fd_out);
             }
@@ -177,11 +178,10 @@ static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
             {
                 fd_in = open(d->output_file[*pos], O_RDONLY);
                 if (fd_in < 0)
-                    print_error("open failed", d->output_file[*pos]);
+                    print_error("No such file or directory", d->output_file[*pos]);
                 dup2(fd_in, STDIN_FILENO);
                 close(fd_in);
             }
-
             run_custom_cmd(d->commands[(*pos)], d);
             exit(d->exit_status);
         }
@@ -227,7 +227,7 @@ static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
         {
             fd_out = open(d->output_file[*pos], O_WRONLY | O_CREAT | O_TRUNC, 0644);
             if (fd_out < 0)
-                print_error("open failed", d->output_file[*pos]);
+                print_error("No such file or directory", d->output_file[*pos]);
             dup2(fd_out, STDOUT_FILENO);
             close(fd_out);
         }
@@ -235,7 +235,7 @@ static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
         {
             fd_in = open(d->output_file[*pos], O_RDONLY);
             if (fd_in < 0)
-                print_error("open failed", d->output_file[*pos]);
+                print_error("No such file or directory", d->output_file[*pos]);
             dup2(fd_in, STDIN_FILENO);
             close(fd_in);
         }
