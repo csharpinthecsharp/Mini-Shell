@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 00:34:09 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/12 02:40:38 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/12 03:02:48 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,10 +115,11 @@ static char *get_env_string(t_data *d, char *s)
         if (ft_strncmp(d->envp[j], arg, ft_strlen(arg)) == 0
         && d->envp[j][ft_strlen(arg)] == '=')
         {
-            return ft_strdup(d->envp[j] + ft_strlen(arg) + 1);
+            return (ft_strdup(getenv(arg)));
         }
         j++;
     }
+    free(arg);
     return (ft_strdup(""));
 }
 
@@ -134,7 +135,7 @@ char *replace_envvar(char *s, t_data *d, int *is_dquote)
         free(envvar);
         return (NULL);
     }
-    char *arg = malloc(sizeof(char) * ft_strlen(s) + ft_strlen(envvar) + 1);
+    char *arg = malloc(sizeof(char) * ft_strlen(s) + ft_strlen(envvar) + 256);
     if (!arg)
     {
         perror("failed to allocate");
