@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/11 21:31:31 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/12 02:03:46 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int select_type(t_data *d)
     d->output_file = malloc(sizeof(char *) * BUFFER_SIZE);
 
     i = 0;
+    int is_stateful = 0;
     while (i <= d->cmd_count)
     {
         int type = check_command(d->commands[i]);
@@ -42,6 +43,7 @@ int select_type(t_data *d)
             (*d).cmd_state[i] = CUSTOM;
         else if (type == STATEFUL)
         {
+            is_stateful = 1;
             if (d->cmd_count == 0)
                 run_custom_cmd(d->commands[i], d);
         }
@@ -57,7 +59,8 @@ int select_type(t_data *d)
         }
         i++;
     }
-    run_pipe_cmd(d, d->cmd_count);
+    if (is_stateful == 0)
+        run_pipe_cmd(d, d->cmd_count);
     return (SUCCESS);
 }
 
@@ -70,6 +73,13 @@ static char *send_output(char **argv, int redir_state)
             i++;
         while (argv[i] && argv[i + 1])
             return (ft_strdup(argv[i + 1]));
+    }
+    else if (redir_state == RIGHT_RIGHT)
+    {
+        while (argv[i] && (argv[i][0] != '>' && argv[i][0] != '<'))
+            i++;
+        while (argv[i] && argv[i + 2])
+            return (ft_strdup(argv[i + 2]));
     }
     return (NULL);
 }
@@ -85,11 +95,16 @@ char **fix_redir_arg(t_data *d, char **argv, int redir_type, int index)
 {
     // TEMP MALLOC AHAHHH    
     int i = 0;
+    // >> APPEND strlcat ;)
     while (argv[i])
     {
-        if (ft_strncmp(argv[i], ">", 1) == 0) 
+        if (ft_strncmp(argv[i], ">>", 2) == 0)
             break;
-        if (ft_strncmp(argv[i], "<", 1) == 0) 
+        else if (ft_strncmp(argv[i], "<<", 2) == 0) 
+            break;
+        else if (ft_strncmp(argv[i], ">", 1) == 0)
+            break;
+        else if (ft_strncmp(argv[i], "<", 1) == 0) 
             break;
         i++;
     }
@@ -100,9 +115,9 @@ char **fix_redir_arg(t_data *d, char **argv, int redir_type, int index)
         perror("malloc failed");
         return (NULL);        
     }
-        
     int j = 0;
-    if (redir_type == RIGHT || redir_type == LEFT)
+    if (redir_type == RIGHT || redir_type == LEFT
+        || redir_type == RIGHT_RIGHT)
     {
         while (j < i)
         {
@@ -181,6 +196,14 @@ static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
                     dup2(fd_out, STDOUT_FILENO);
                     close(fd_out);
                 }
+                else if (d->redirection_state[*pos] == RIGHT_RIGHT)
+                {
+                    fd_out = open(d->output_file[*pos], O_WRONLY | O_CREAT | O_APPEND, 0644);
+                    if (fd_out < 0)
+                        print_error("No such file or directory", d->output_file[*pos]);
+                    dup2(fd_out, STDOUT_FILENO);
+                    close(fd_out);
+                }
                 else if (d->redirection_state[*pos] == LEFT)
                 {
                     fd_in = open(d->output_file[*pos], O_RDONLY);
@@ -244,6 +267,14 @@ static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
         if (d->redirection_state[*pos] == RIGHT)
         {
             fd_out = open(d->output_file[*pos], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+            if (fd_out < 0)
+                print_error("No such file or directory", d->output_file[*pos]);
+            dup2(fd_out, STDOUT_FILENO);
+            close(fd_out);
+        }
+        else if (d->redirection_state[*pos] == RIGHT_RIGHT)
+        {
+            fd_out = open(d->output_file[*pos], O_WRONLY | O_CREAT | O_APPEND, 0644);
             if (fd_out < 0)
                 print_error("No such file or directory", d->output_file[*pos]);
             dup2(fd_out, STDOUT_FILENO);

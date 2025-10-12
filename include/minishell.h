@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/11 23:35:26 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/12 02:37:35 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,15 +113,15 @@ int     filter_input(t_data *d);
 char    **split(t_data *d);
 char    ***split_commands(char **argv);
 char    **get_args(char *s, t_data *d);
-char    *get_one_arg(const char *s, int *i);
-int     get_arg_length(const char *s, int *i);
+char    *get_one_arg(const char *s, int *i, int *is_dquote);
+int     get_arg_length(const char *s, int *i, int *is_dquote);
 int     ft_isspace(char arg);
 int     ft_countword(char **spli_args);
 
 // Environment & Path
 char    *getpath(char *buffer, t_data *d);
 char    *get_promptpath(char *buffer, t_data *d);
-char    *replace_envvar(char *s, t_data *d);
+char    *replace_envvar(char *s, t_data *d, int *is_dquote);
 int     update_data(t_data *d);
 int     is_valid_bin(char *str);
 

@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/05 00:07:31 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/11 14:25:20 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/12 02:07:56 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int run_custom_cmd(char **argv, t_data *d)
     else
     {
         print_error("command not found", argv[0]);
-        d->exit_status = 127;
+        d->exit_status = 126;
     }
     return (0);
 }

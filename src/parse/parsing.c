@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/11 00:11:07 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/12 02:37:09 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ char **get_args(char *s, t_data *d)
 {
     int i = 0;
     int k = 0;
+    int is_dquote = 0;
     int len = ft_strlen(s);
     char **argv = malloc(sizeof(char *) * (len + 1));
     if (!argv)
@@ -45,10 +46,10 @@ char **get_args(char *s, t_data *d)
 
     while (s[i])
     {
-        char *raw_arg = get_one_arg(s, &i);
+        char *raw_arg = get_one_arg(s, &i, &is_dquote);
         if (!raw_arg)
             break;
-        char *arg = replace_envvar(raw_arg, d);
+        char *arg = replace_envvar(raw_arg, d, &is_dquote);
         free(raw_arg);
         if (!arg)
             break;

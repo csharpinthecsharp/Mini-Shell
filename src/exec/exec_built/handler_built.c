@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 14:17:48 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/11 23:36:19 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/12 01:51:26 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,14 +133,24 @@ int handle_export(char **argv, int count, t_data *d)
             printf("%s\n", d->envp[i]);
             i++;
         }
+        return (0);
     }
     if (count == 2)
     {
         int i = 0;
         while (d->envp[i])
             i++;
-        int j = 0;
+        char **new_envp = realloc(d->envp, sizeof(char *) * (i + 2));
+        if (!new_envp)
+            return (1);
+            
+        d->envp = new_envp;
+
         d->envp[i] = malloc(sizeof(char ) * ft_strlen(argv[1]) + 1);
+        if (!d->envp[i])
+            return (1);
+        
+        int j = 0;
         while (argv[1][j])
         {
             d->envp[i][j] = argv[1][j];

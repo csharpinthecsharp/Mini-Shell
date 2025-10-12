@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 00:34:09 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/11 00:22:13 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/12 02:40:38 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static int skip_quoted(const char *s, int *i, char quote_char)
 }
 
 // Calcule la longueur d'un argument (sans copier)
-int get_arg_length(const char *s, int *i)
+int get_arg_length(const char *s, int *i, int *is_dquote)
 {
     int start = *i;
 
@@ -48,6 +48,8 @@ int get_arg_length(const char *s, int *i)
     {
         if (s[*i] == '\'' || s[*i] == '"')
         {
+            if (s[*i] == '\'')
+                (*is_dquote) = 1;
             if (skip_quoted(s, i, s[*i]) == -1)
                 return -1;
         }
@@ -59,10 +61,10 @@ int get_arg_length(const char *s, int *i)
 }
 
 // Extrait un argument en supprimant les quotes
-char *get_one_arg(const char *s, int *i)
+char *get_one_arg(const char *s, int *i, int *is_dquote)
 {
     int start = *i;
-    int len = get_arg_length(s, i);
+    int len = get_arg_length(s, i, is_dquote);
     if (len <= 0)
         return NULL;
 
@@ -121,7 +123,7 @@ static char *get_env_string(t_data *d, char *s)
 }
 
 
-char *replace_envvar(char *s, t_data *d)
+char *replace_envvar(char *s, t_data *d, int *is_dquote)
 {
     int i = 0;
     int j = 0;
@@ -145,14 +147,14 @@ char *replace_envvar(char *s, t_data *d)
         // Handle env var 
         // A faire $PWD etc.. all that is in d->env
         // Read d->env et extract PWD par exemple
-        if (s[i] == '$' && s[i + 1] == '?')
+        if (s[i] == '$' && s[i + 1] == '?' && *is_dquote == 0)
         {
             int k = 0;
             while (envvar[k])
                 arg[j++] = envvar[k++];
             i += 2;
         }
-        else if (s[i] == '$')
+        else if (s[i] == '$' && *is_dquote == 0)
         {
             char *env_value = get_env_string(d, s + i);
             int k = 0;
