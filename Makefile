@@ -13,6 +13,7 @@ SRCS	= src/main.c \
 		  src/exec/exec_built/handler_built.c \
 		  src/parse/handle_input.c \
 		  src/exec/execution.c \
+		  src/exec/redirection.c \
 		  src/exec/exec_utils.c \
 		  src/signal/init_signal.c \
 		  src/utils/memory_alloc.c \

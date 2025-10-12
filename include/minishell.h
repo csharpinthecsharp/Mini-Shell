@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/12 15:07:44 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/12 21:51:42 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,5 +144,9 @@ int     check_command(char **argv);
 void    print_error(const char *str, const char *arg);
 char    *rl(int fd);
 size_t  count_cmds(char ***cmds);
+void redirect_left_left(t_data *d, int *pos, int fd_in);
+void redirect_left(t_data *d, int *pos, int fd_in);
+void redirect_right_right(t_data *d, int *pos, int fd_out);
+void redirect_right(t_data *d, int *pos, int fd_out);
 
 #endif /* MINISHELL_H */
