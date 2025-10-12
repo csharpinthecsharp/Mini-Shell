@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/12 15:10:00 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/12 16:05:25 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,13 @@ int select_type(t_data *d)
             // fix_redir_arg() = ls
             // d->store_redir = test.txt
             d->commands[i] = fix_redir_arg(d, d->commands[i], redir_type, i);
+            if (d->commands[i][0] == NULL)
+            {
+                d->exit_status = 2;
+                print_error("syntax error near unexpected token `newline'", "!");
+                return (0);
+            }
+
         }
         else
             (*d).redirection_state[i] = 0;
@@ -108,7 +115,13 @@ char **fix_redir_arg(t_data *d, char **argv, int redir_type, int index)
             break;
         i++;
     }
-        
+
+    if (i < 1)
+    {
+        argv[0] = NULL;
+        return (argv);
+    }
+    
     char **dup = malloc(sizeof(char *) * (i + 1));
     if (!dup)
     {
