@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/12 16:41:43 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/12 17:58:56 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,22 +75,11 @@ int select_type(t_data *d)
 
 static char *send_output(char **argv, int redir_state)
 {
+    (void)redir_state;
     int i = 0;
-    if (redir_state == RIGHT || redir_state == LEFT)
-    {
-        while (argv[i] && (argv[i][0] != '>' && argv[i][0] != '<'))
-            i++;
-        while (argv[i] && argv[i + 1])
-            return (ft_strdup(argv[i + 1]));
-    }
-    else if (redir_state == RIGHT_RIGHT || redir_state == LEFT_LEFT)
-    {
-        while (argv[i] && (argv[i][0] != '>' && argv[i][0] != '<'))
-            i++;
-        while (argv[i] && argv[i + 2])
-            return (ft_strdup(argv[i + 2]));
-    }
-    return (NULL);
+    while (argv[i + 1])
+        i++;
+    return (strdup(argv[i]));
 }
 // Redirection de la sortie standard avec dup2()
 // Exemple : commande "ls > output.txt"
@@ -209,24 +198,41 @@ static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
                     fd_out = open(d->output_file[*pos], O_WRONLY | O_CREAT | O_TRUNC, 0644);
                     if (fd_out < 0)
                         print_error("No such file or directory", d->output_file[*pos]);
-                    dup2(fd_out, STDOUT_FILENO);
-                    close(fd_out);
+                    else
+                    {
+                        dup2(fd_out, STDOUT_FILENO);
+                        close(fd_out);
+                    }
                 }
                 else if (d->redirection_state[*pos] == RIGHT_RIGHT)
                 {
                     fd_out = open(d->output_file[*pos], O_WRONLY | O_CREAT | O_APPEND, 0644);
                     if (fd_out < 0)
+                    {
                         print_error("No such file or directory", d->output_file[*pos]);
-                    dup2(fd_out, STDOUT_FILENO);
-                    close(fd_out);
+                        d->exit_status = 1;
+                        return ;
+                    }
+                    else
+                    {
+                        dup2(fd_out, STDOUT_FILENO);
+                        close(fd_out);
+                    }
                 }
                 else if (d->redirection_state[*pos] == LEFT)
                 {
                     fd_in = open(d->output_file[*pos], O_RDONLY);
                     if (fd_in < 0)
+                    {
                         print_error("No such file or directory", d->output_file[*pos]);
-                    dup2(fd_in, STDIN_FILENO);
-                    close(fd_in);
+                        d->exit_status = 1;
+                        return ;
+                    }
+                    else
+                    {
+                        dup2(fd_in, STDIN_FILENO);
+                        close(fd_in);
+                    }
                 }
 
                 // Exécuter la commande builtin
@@ -284,25 +290,46 @@ static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
         {
             fd_out = open(d->output_file[*pos], O_WRONLY | O_CREAT | O_TRUNC, 0644);
             if (fd_out < 0)
+            {
                 print_error("No such file or directory", d->output_file[*pos]);
-            dup2(fd_out, STDOUT_FILENO);
-            close(fd_out);
+                d->exit_status = 1;
+                return ;
+            }
+            else
+            {
+                dup2(fd_out, STDOUT_FILENO);
+                close(fd_out);
+            }
         }
         else if (d->redirection_state[*pos] == RIGHT_RIGHT)
         {
             fd_out = open(d->output_file[*pos], O_WRONLY | O_CREAT | O_APPEND, 0644);
             if (fd_out < 0)
+            {
                 print_error("No such file or directory", d->output_file[*pos]);
-            dup2(fd_out, STDOUT_FILENO);
-            close(fd_out);
+                d->exit_status = 1;
+                return ;
+            }
+            else
+            {
+                dup2(fd_out, STDOUT_FILENO);
+                close(fd_out);
+            }
         }
         else if (d->redirection_state[*pos] == LEFT)
         {
             fd_in = open(d->output_file[*pos], O_RDONLY);
             if (fd_in < 0)
+            {
                 print_error("No such file or directory", d->output_file[*pos]);
-            dup2(fd_in, STDIN_FILENO);
-            close(fd_in);
+                d->exit_status = 1;
+                return ;
+            }
+            else
+            {
+                dup2(fd_in, STDIN_FILENO);
+                close(fd_in);
+            }
         }
         else if (d->redirection_state[*pos] == LEFT_LEFT)
         {
@@ -312,7 +339,7 @@ static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
             int pipefd[2];
             pipe(pipefd);
             
-            while (1)
+            while (1) 
             {
                 res = readline("> ");
                 if (!res)
