@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/12 16:05:25 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/12 16:41:43 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ int select_type(t_data *d)
             is_stateful = 1;
             if (d->cmd_count == 0)
                 run_custom_cmd(d->commands[i], d);
+            else
+                d->exit_status = 1;
         }
         else if (type == BUILT_IN)
         {
