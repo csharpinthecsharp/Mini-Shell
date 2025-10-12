@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 14:17:48 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/12 01:51:26 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/12 15:07:04 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,8 @@
 
 int handle_pwd(char *argv, int count, char *path)
 {
-    if (count != 1)
-    {
-        print_error(argv, ": too many arguments");
-        return (0);
-    }
+    (void)count;
+    (void)argv;
     printf("%s\n", path);
     return (0);
 }
@@ -61,7 +58,6 @@ int handle_exit(char **argv, int count)
 int handle_echo(char **argv, int count)
 {
     int found;
-    
     found = 0;
     if (count < 2)
     {
@@ -137,6 +133,27 @@ int handle_export(char **argv, int count, t_data *d)
     }
     if (count == 2)
     {
+        int p = 0;
+        while (argv[1][p])
+        {
+            if (argv[1][p] == '=')
+                break;
+            if ((argv[1][p] >= 'a' && argv[1][p] <= 'z')
+                || (argv[1][p] >= 'A' && argv[1][p] <= 'Z'))
+                p++;
+            else
+            {
+                print_error("not a valid identifier", argv[1]);
+                return (1);
+            }
+        }
+        
+        if (is_numeric(argv[1]) || argv[1][0] == '=')
+        {
+            print_error("not a valid identifier", argv[1]);
+            return (1);
+        }
+        
         int i = 0;
         while (d->envp[i])
             i++;

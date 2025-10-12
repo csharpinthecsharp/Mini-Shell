@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 20:20:39 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/12 03:07:47 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/12 14:41:22 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char *getpath(char *buffer, t_data *d)
     // On choppe le path.
     // Si -> Erreur <- NULL.
 
-    if (!getcwd(buffer, BUFFER_SIZE))
+    if (!getcwd(buffer, 1024))
         return (NULL);
     // On duplique buffer avant de l'envoyer,
     // Il faut lui alouer la mémoire.

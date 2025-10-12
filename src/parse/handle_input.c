@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/05 20:19:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/10 23:59:00 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/12 15:09:56 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int filter_input(t_data *d)
     d->commands = split_commands(d->input_splitted);
     if (d->commands == NULL)
         return (FAILED);
-    
+
     if (select_type(d) == FAILED)
         return (FAILED);
     return (SUCCESS);

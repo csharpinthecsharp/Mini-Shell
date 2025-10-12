@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/12 13:45:24 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/12 15:10:00 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ static char *send_output(char **argv, int redir_state)
         while (argv[i] && argv[i + 1])
             return (ft_strdup(argv[i + 1]));
     }
-    else if (redir_state == RIGHT_RIGHT)
+    else if (redir_state == RIGHT_RIGHT || redir_state == LEFT_LEFT)
     {
         while (argv[i] && (argv[i][0] != '>' && argv[i][0] != '<'))
             i++;
@@ -117,7 +117,8 @@ char **fix_redir_arg(t_data *d, char **argv, int redir_type, int index)
     }
     int j = 0;
     if (redir_type == RIGHT || redir_type == LEFT
-        || redir_type == RIGHT_RIGHT)
+        || redir_type == RIGHT_RIGHT 
+        || redir_type == LEFT_LEFT)
     {
         while (j < i)
         {
@@ -287,6 +288,33 @@ static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
                 print_error("No such file or directory", d->output_file[*pos]);
             dup2(fd_in, STDIN_FILENO);
             close(fd_in);
+        }
+        else if (d->redirection_state[*pos] == LEFT_LEFT)
+        {
+            char *res = NULL;
+            char *delimiter = d->output_file[*pos];
+            
+            int pipefd[2];
+            pipe(pipefd);
+            
+            while (1)
+            {
+                res = readline("> ");
+                if (!res)
+                    break;
+                
+                if (strcmp(res, delimiter) == 0)
+                {
+                    free(res);
+                    break;
+                }
+                write(pipefd[1], res, ft_strlen(res));
+                write(pipefd[1], "\n", 1);
+                free(res);
+            }
+            close(pipefd[1]);
+            dup2(pipefd[0], STDIN_FILENO);
+            close(pipefd[0]);
         }
         char *tmp_cmd = ft_strdup(ft_strjoin("/bin/", d->commands[*pos][0]));
         execve(tmp_cmd, d->commands[*pos], d->envp);
