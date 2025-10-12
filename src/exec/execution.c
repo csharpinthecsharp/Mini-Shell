@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/12 17:58:56 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/12 18:44:51 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,8 +196,12 @@ static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
                 if (d->redirection_state[*pos] == RIGHT)
                 {
                     fd_out = open(d->output_file[*pos], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-                    if (fd_out < 0)
+                    if (fd_out < 0) 
+                    {
                         print_error("No such file or directory", d->output_file[*pos]);
+                        d->exit_status = 1;
+                        return;
+                    }
                     else
                     {
                         dup2(fd_out, STDOUT_FILENO);
@@ -207,11 +211,11 @@ static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
                 else if (d->redirection_state[*pos] == RIGHT_RIGHT)
                 {
                     fd_out = open(d->output_file[*pos], O_WRONLY | O_CREAT | O_APPEND, 0644);
-                    if (fd_out < 0)
+                    if (fd_out < 0) 
                     {
                         print_error("No such file or directory", d->output_file[*pos]);
                         d->exit_status = 1;
-                        return ;
+                        return;
                     }
                     else
                     {
@@ -226,7 +230,7 @@ static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
                     {
                         print_error("No such file or directory", d->output_file[*pos]);
                         d->exit_status = 1;
-                        return ;
+                        exit(1);
                     }
                     else
                     {
@@ -234,7 +238,6 @@ static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
                         close(fd_in);
                     }
                 }
-
                 // Exécuter la commande builtin
                 run_custom_cmd(d->commands[*pos], d);
                 exit(d->exit_status);
@@ -293,7 +296,7 @@ static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
             {
                 print_error("No such file or directory", d->output_file[*pos]);
                 d->exit_status = 1;
-                return ;
+                exit(1);
             }
             else
             {
@@ -308,7 +311,7 @@ static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
             {
                 print_error("No such file or directory", d->output_file[*pos]);
                 d->exit_status = 1;
-                return ;
+                exit(1);
             }
             else
             {
@@ -323,7 +326,7 @@ static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
             {
                 print_error("No such file or directory", d->output_file[*pos]);
                 d->exit_status = 1;
-                return ;
+                exit(1);
             }
             else
             {
