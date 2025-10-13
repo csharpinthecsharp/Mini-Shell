@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/12 21:49:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/13 22:35:11 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/14 01:13:08 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void redirect_left(t_data *d, int *pos, int fd_in)
     }
 }
 
-int redirect_left_left(t_data *d, int *pos, int fd_in)
+void redirect_left_left(t_data *d, int *pos, int fd_in)
 {
     (void)fd_in;
     char *res = NULL;
@@ -70,50 +70,37 @@ int redirect_left_left(t_data *d, int *pos, int fd_in)
     if (pipe(pipefd) == -1)
     {
         perror("pipe");
-        return (1);
     }
-
+      
     d->kill_heredoc = 0;
     d->in_heredoc = 1;
 
-    while (1) 
+    while (1)
     {
         if (d->kill_heredoc == 1)
         {
-            d->in_heredoc = 0;
-            close(pipefd[0]);
-            close(pipefd[1]);
-            d->exit_status = 130;
-            return (1); 
+            d->kill_execution = 0;
+            break;
         }
-
         res = readline("> ");
         if (!res)
         {
-            print_error("warning: here-document delimited by end-of-file", delimiter);
-            d->exit_status = 0;
+            print_error("here-document delimited by end-of-file", "warning");
             break;
         }
-
         if (strcmp(res, delimiter) == 0)
         {
             free(res);
             break;
         }
-
-        write(pipefd[1], res, ft_strlen(res));
+        write(pipefd[1], res, strlen(res));
         write(pipefd[1], "\n", 1);
         free(res);
     }
-
     d->in_heredoc = 0;
-    d->kill_heredoc = 0;
-
     close(pipefd[1]);
-    dup2(pipefd[0], STDIN_FILENO);
     close(pipefd[0]);
-
-    return (0);
+    d->exit_status = 0;
 }
 
 

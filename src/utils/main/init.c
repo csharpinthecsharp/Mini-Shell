@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 15:35:24 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/13 22:43:04 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/14 00:19:29 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void update_data(t_data *d)
 
 void init_data(t_data *d)
 {
+    d->kill_execution = 0;
     d->kill_heredoc = 0;
     d->exit_status = 0;
     d->input = NULL;
@@ -58,8 +59,7 @@ int start_minishell(t_data *d)
     {
         if (*d->input)
             add_history(d->input);   
-        if (start_point_parsing(d) == 1)
-            return (FAILED);
+        start_point_parsing(d);
     }
     return (SUCCESS);
 }

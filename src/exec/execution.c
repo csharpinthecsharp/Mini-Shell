@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/13 22:22:07 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/14 01:22:50 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,7 @@ int select_type(t_data *d)
         i++;
     }
     if (is_stateful == 0)
-        if (run_pipe_cmd(d, d->cmd_count) == 1)
-            return (1);
+        run_pipe_cmd(d, d->cmd_count);
     return (SUCCESS);
 }
 
@@ -159,6 +158,13 @@ static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
                     redirect_right_right(d, pos, fd_out);
                 else if (d->redirection_state[*pos] == LEFT)
                     redirect_left(d, pos, fd_in);
+                else if (d->redirection_state[*pos] == LEFT_LEFT)
+                {
+                    redirect_left_left(d, pos, fd_in);
+                    if (d->kill_execution == 1)
+                        exit(137);
+                    exit(0);
+                }
                 run_custom_cmd(d->commands[*pos], d);
                 exit(d->exit_status);
             }
@@ -170,7 +176,7 @@ static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
     }
 }
 
-static int exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
+static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
 {
     int fd_out = 0;
     int fd_in = 0;
@@ -189,21 +195,24 @@ static int exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
             redirect_right(d, pos, fd_out);
         else if (d->redirection_state[*pos] == RIGHT_RIGHT)
             redirect_right_right(d, pos, fd_out);
-         else if (d->redirection_state[*pos] == LEFT)
+        else if (d->redirection_state[*pos] == LEFT)
             redirect_left(d, pos, fd_in);
         else if (d->redirection_state[*pos] == LEFT_LEFT)
-            if (redirect_left_left(d, pos, fd_in) == 1)
-                return (1);
+        {
+            redirect_left_left(d, pos, fd_in);
+            if (d->kill_execution == 1)
+                exit(137);
+            exit(0);
+        }
         char *tmp_cmd = ft_strdup(ft_strjoin("/bin/", d->commands[*pos][0]));
         execve(tmp_cmd, d->commands[*pos], d->envp);
         exit(127);
     }
     else if (pid > 0)
         d->last_fork_pid = pid;
-    return (0);
 }
 
-int run_pipe_cmd(t_data *d, int N_pipe)
+void run_pipe_cmd(t_data *d, int N_pipe)
 {
     int **var_pipe = malloc(sizeof(int *) * N_pipe);
     pid_t last_pid = -1;
@@ -219,8 +228,7 @@ int run_pipe_cmd(t_data *d, int N_pipe)
         if ((*d).cmd_state[pos] == CUSTOM)
             exec_custom_inpipe(var_pipe, d, N_pipe, &pos);
         else if ((*d).cmd_state[pos] == BUILT_IN)
-            if (exec_built_inpipe(var_pipe, d, N_pipe, &pos) == 1)
-                return (1);
+            exec_built_inpipe(var_pipe, d, N_pipe, &pos);
         last_pid = d->last_fork_pid;
         pos++;
     }
@@ -241,5 +249,4 @@ int run_pipe_cmd(t_data *d, int N_pipe)
         }
         pos++;
     }
-    return (0);
 }
