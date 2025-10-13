@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/13 12:56:35 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/13 13:15:36 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,6 +149,6 @@ void redirect_left(t_data *d, int *pos, int fd_in);
 void redirect_right_right(t_data *d, int *pos, int fd_out);
 void redirect_right(t_data *d, int *pos, int fd_out);
 int is_numeric(const char *str);
-int global_check(char *input);
+int global_check(t_data *d);
 
 #endif /* MINISHELL_H */

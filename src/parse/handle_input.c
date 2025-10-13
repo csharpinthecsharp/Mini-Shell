@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/05 20:19:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/13 12:58:19 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/13 13:15:50 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int filter_input(t_data *d)
 
     //validate token, if return success,
     // it mean that this not passed.
-    if (global_check(d->input) == 1)
+    if (global_check(d) == 1)
         return (SUCCESS);
 
     d->input_splitted = split(d);

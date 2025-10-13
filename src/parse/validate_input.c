@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 12:46:28 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/13 12:59:10 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/13 13:16:22 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,13 @@ static int pipe_check(char *input, int *pos)
     return (0);
 }
 
-int global_check(char *input)
+int global_check(t_data *d)
 {
     int pos = 0;
-    if (pipe_check(input, &pos) == 1)
+    if (pipe_check(d->input, &pos) == 1)
+    {
+        d->exit_status = 2;
         return (1);
+    }
     return (0);
 }

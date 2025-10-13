@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/12 21:57:48 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/13 13:43:20 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ int select_type(t_data *d)
                 print_error("syntax error near unexpected token `newline'", "!");
                 return (0);
             }
-
         }
         else
             (*d).redirection_state[i] = 0;
