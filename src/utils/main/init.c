@@ -6,11 +6,12 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 15:35:24 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/13 20:02:14 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/13 20:35:46 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../include/minishell.h"
+#include "../../../include/template.h"
 
 void update_data(t_data *d)
 {
@@ -40,7 +41,9 @@ void init_data(t_data *d)
 void select_readline_mode(t_data *d)
 {
     if (isatty(STDIN_FILENO))
+    {
         d->input = readline(get_promptpath(d->path, d));
+    }
     else
         d->input = readline("minishell > ");
 }
