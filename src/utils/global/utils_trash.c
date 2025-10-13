@@ -6,12 +6,12 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 20:20:39 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/13 12:43:32 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/13 20:01:25 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-#include "../../include/template.h"
+#include "../../../include/minishell.h"
+#include "../../../include/template.h"
 
 int ft_countword(char **spli_args)
 {
@@ -23,13 +23,8 @@ int ft_countword(char **spli_args)
 
 char *getpath(char *buffer, t_data *d)
 {    
-    // On choppe le path.
-    // Si -> Erreur <- NULL.
-
     if (!getcwd(buffer, 1024))
         return (NULL);
-    // On duplique buffer avant de l'envoyer,
-    // Il faut lui alouer la mémoire.
     if (d->new_path == NULL)
         return (ft_strdup(buffer));
     return (ft_strjoin(buffer, d->new_path));
@@ -86,4 +81,13 @@ int is_numeric(const char *str)
     return (1);
 }
 
-
+int isfulls(char *s)
+{
+    size_t i = 0;
+    while (ft_isspace(s[i]))
+        i++;
+    if (ft_strlen(s) == i)
+        return (1);
+    else
+        return (0);
+}

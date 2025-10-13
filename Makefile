@@ -5,12 +5,13 @@ CC		= clang
 CFLAGS	= -Wall -Wextra -Werror -g
 
 SRCS	= src/main.c \
-		  src/utils/utils_trash.c \
+		  src/utils/global/utils_trash.c \
 		  src/parse/parsing.c \
 		  src/parse/validate_input.c \
 		  src/parse/parsing_utils.c \
-		  src/utils/init.c \
-		  src/exec/exec_built/find_built.c \
+		  src/utils/main/init.c \
+		  src/utils/main/envp.c \
+		  src/exec/find_built.c \
 		  src/exec/exec_built/cd.c \
 		  src/exec/exec_built/echo.c \
 		  src/exec/exec_built/env.c \
@@ -23,8 +24,8 @@ SRCS	= src/main.c \
 		  src/exec/redirection.c \
 		  src/exec/exec_utils.c \
 		  src/signal/init_signal.c \
-		  src/utils/memory_alloc.c \
-		  src/utils/free.c \
+		  src/utils/global/memory_alloc.c \
+		  src/utils/global/free.c \
 		  rl.c
 
 OBJS	= $(SRCS:.c=.o)

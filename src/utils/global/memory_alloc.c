@@ -6,11 +6,11 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 00:38:50 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/09 22:42:42 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/13 19:51:04 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "../../../include/minishell.h"
 
 void alloc_error_pipe(int N_pipe, int **var_pipe)
 {
@@ -48,6 +48,16 @@ void alloc_redir_state(t_data *d)
     d->cmd_count = count_cmds(d->commands);
     d->redirection_state = malloc(sizeof(int) * (d->cmd_count + 1));
     if (!d->redirection_state)
+    {
+        perror("malloc failed");
+        exit(EXIT_FAILURE);
+    }
+}
+
+void alloc_buffer(char **buffer)
+{
+    *buffer = malloc(sizeof(char) * 100000);
+    if (!buffer)
     {
         perror("malloc failed");
         exit(EXIT_FAILURE);

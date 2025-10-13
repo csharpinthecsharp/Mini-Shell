@@ -6,34 +6,12 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/13 15:17:10 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/13 19:59:23 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-/*Pour chaques lignes de commandes envoyée à votre programme, plein de choses seront faite mais la plus important des choses à faire est de se créer une liste chainée de token pour chaques éléments de la ligne de commande.
-La liste chainée aura une str et un int pour chaque maillon, la str sera le "mot" et l'int le token. Prenons l'exemple de la pire ligne de commande possible : cat|ls (on remarquera qu'il n'y a pas d'espace et c'est normal)
-
-    le premier token aura comme str "cat" avec CMD comme type (6).
-    le deuxieme token aura comme str "|" avec PIPE comme type (5).
-    le dernier token aura comme str "ls" avec CMD comme type (6).
-
-(se referer à minishell.h)
-
-Les règles sont simple :
-
-    Si on croise une redirection (<, >, << ou >>) alors le token sera soit INPUT (1), soit TRUNC (3), soit HEREDOC (2) ou soit APPEND (4) respectivement.
-    Le premier token sera CMD (6) si pas de redirection.
-    Les tokens après un CMD ou une redirection seront ARG (7).
-    Si "|" est la str avec il aura le type PIPE (5).
-    Après un pipe le prochain token sera soit une redirection soit CMD.
-
-Les tokens ne sont pas la première étape du parsing mais ils sont la clé d'un minishell simple à faire.*/
 #include "../../include/minishell.h"
 
-/*
-** Découpe la chaî<ne en arguments.
-** Retourne un tableau de chaînes terminé par NULL.
-*/
 char **get_args(char *s, t_data *d)
 {
     int i = 0;
@@ -59,28 +37,48 @@ char **get_args(char *s, t_data *d)
     return argv;
 }
 
+
+static int count_args(char **argv, int start)
+{
+    int count = 0;
+    while (argv[start] && !(argv[start][0] == '|' && argv[start][1] == '\0'))
+    {
+        count++;
+        start++;
+    }
+    return count;
+}
+
 char ***split_commands(char **argv)
 {
-    char ***cmds = malloc(sizeof(char **) * (10000));
+    char ***cmds = malloc(sizeof(char **) * 2);
     if (!cmds)
-        return NULL;
+        return (NULL);
 
     int i = 0, cmds_i = 0, arg_i = 0;
-    cmds[cmds_i] = malloc(sizeof(char *) * (10001));
+    int arg_count = count_args(argv, 0);
+    cmds[cmds_i] = malloc(sizeof(char *) * (arg_count + 2));
     if (!cmds[cmds_i])
-        return NULL;
+        return (NULL);
 
     while (argv[i])
     {
         
-        if (argv[i][0] == PIPE && argv[i][1] == '\0') // pipe isolé
+        if (argv[i][0] == '|' && argv[i][1] == '\0')
         {
-            cmds[cmds_i][arg_i] = NULL; // terminer la commande
+            cmds[cmds_i][arg_i] = NULL;
             cmds_i++;
-            arg_i = 0;
-            cmds[cmds_i] = malloc(sizeof(char *) * (10000 + 1));
+            
+            char ***tmp = realloc(cmds, sizeof(char **) * (cmds_i + 2));
+            if (!tmp)
+                return (NULL);
+            cmds = tmp;
+            
+            arg_count = count_args(argv, i);
+            cmds[cmds_i] = malloc(sizeof(char *) * (arg_count + 2));
             if (!cmds[cmds_i])
-                return NULL;
+                return (NULL);
+            arg_i = 0;
         }
         else
         {
@@ -89,8 +87,8 @@ char ***split_commands(char **argv)
         }
         i++;
     }
-    cmds[cmds_i][arg_i] = NULL; // terminer la dernière commande
-    cmds[cmds_i + 1] = NULL;    // terminer le tableau de commandes
+    cmds[cmds_i][arg_i] = NULL;
+    cmds[cmds_i + 1] = NULL;
     return cmds;
 }
 

@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/13 13:15:36 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/13 20:06:49 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ int     is_redirect(char **argv, t_data *d);
 void    exec_redirect_left(char **argv);
 
 // Parsing & Input
-int     filter_input(t_data *d);
+int start_point_parsing(t_data *d);
 char    **split(t_data *d);
 char    ***split_commands(char **argv);
 char    **get_args(char *s, t_data *d);
@@ -122,7 +122,9 @@ int     ft_countword(char **spli_args);
 char    *getpath(char *buffer, t_data *d);
 char    *get_promptpath(char *buffer, t_data *d);
 char    *replace_envvar(char *s, t_data *d, int *is_dquote);
-int     update_data(t_data *d);
+void     update_data(t_data *d);
+void     init_data(t_data *d);
+
 int     is_valid_bin(char *str);
 
 // Redirection & Pipes
@@ -131,13 +133,15 @@ void    alloc_cmd_state(t_data *d);
 void    alloc_error_pipe(int N_pipe, int **var_pipe);
 void    close_pipe(int **var_pipe, int N_pipe, int state);
 char    **fix_redir_arg(t_data *d, char **argv, int redir_type, int index);
+void alloc_buffer(char **buffer);
 
 // Signals & Terminal
 void    prepare_signals(void);
 void    handler_ctrl_bs(int sig);
 
 // Memory & Cleanup
-void    free_all(t_data *d);
+void free_all(t_data *d, char *buffer);
+void free_beforenewline(t_data *d, char *buffer);
 
 // Misc
 int     check_command(char **argv);
@@ -150,5 +154,10 @@ void redirect_right_right(t_data *d, int *pos, int fd_out);
 void redirect_right(t_data *d, int *pos, int fd_out);
 int is_numeric(const char *str);
 int global_check(t_data *d);
+char **duplicate_envp(char **envp);
+char *up_shlvl(char *envp_i);
+int isfulls(char *s);
+void select_readline_mode(t_data *d);
+int start_minishell(t_data *d);
 
 #endif /* MINISHELL_H */

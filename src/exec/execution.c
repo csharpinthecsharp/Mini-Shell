@@ -6,12 +6,16 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/13 13:43:20 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/13 20:00:28 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
  
+/*
+ * Sélectionne le type de chaque commande (custom, built-in, etc.)
+ * Gère les redirections et lance l'exécution des pipes.
+ */
 int select_type(t_data *d)
 {
     size_t i = 0;
@@ -67,6 +71,9 @@ int select_type(t_data *d)
     return (SUCCESS);
 }
 
+/*
+ * Retourne le dernier argument (utilisé pour les redirections de sortie).
+ */
 static char *send_output(char **argv, int redir_state)
 {
     (void)redir_state;
@@ -76,6 +83,10 @@ static char *send_output(char **argv, int redir_state)
     return (strdup(argv[i]));
 }
 
+/*
+ * Corrige les arguments pour les redirections (ne garde que les bons).
+ * Retourne un tableau d'arguments sans la redirection.
+ */
 char **fix_redir_arg(t_data *d, char **argv, int redir_type, int index)
 {
     int i = 0;
@@ -94,10 +105,11 @@ char **fix_redir_arg(t_data *d, char **argv, int redir_type, int index)
 
     if (i < 1)
     {
+        if (argv[0] && ft_strncmp(argv[0], "echo", 4) == 0)
+            return argv;
         argv[0] = NULL;
         return (argv);
     }
-    
     char **dup = malloc(sizeof(char *) * (i + 1));
     if (!dup)
     {
@@ -119,7 +131,6 @@ char **fix_redir_arg(t_data *d, char **argv, int redir_type, int index)
     dup[i] = NULL;
     return (dup);
 }
-
 
 static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
 {

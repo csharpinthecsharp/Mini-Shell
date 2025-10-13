@@ -6,26 +6,23 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 00:34:09 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/12 03:02:48 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/13 20:00:03 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-// Avance jusqu'à la fin d'un segment entre quotes simples ou doubles
-// Retourne -1 si quote non fermée
 static int skip_quoted(const char *s, int *i, char quote_char)
 {
-    (*i)++; // skip ouverture
+    (*i)++;
     while (s[*i] && s[*i] != quote_char)
         (*i)++;
     if (!s[*i])
-        return -1; // quote non fermée
-    (*i)++; // skip fermeture
+        return -1;
+    (*i)++;
     return 0;
 }
 
-// Calcule la longueur d'un argument (sans copier)
 int get_arg_length(const char *s, int *i, int *is_dquote)
 {
     int start = *i;
@@ -36,14 +33,12 @@ int get_arg_length(const char *s, int *i, int *is_dquote)
     if (!s[*i])
         return 0;
 
-    // token spécial
     if (s[*i] == '|' || s[*i] == '<' || s[*i] == '>')
     {
         (*i)++;
         return 1;
     }
 
-    // lecture normale
     while (s[*i] && !ft_isspace(s[*i]) && s[*i] != '|' && s[*i] != '<' && s[*i] != '>')
     {
         if (s[*i] == '\'' || s[*i] == '"')
@@ -60,7 +55,6 @@ int get_arg_length(const char *s, int *i, int *is_dquote)
     return *i - start;
 }
 
-// Extrait un argument en supprimant les quotes
 char *get_one_arg(const char *s, int *i, int *is_dquote)
 {
     int start = *i;
@@ -83,7 +77,7 @@ char *get_one_arg(const char *s, int *i, int *is_dquote)
             while (k < *i && s[k] != qc)
                 arg[j++] = s[k++];
             if (s[k] == qc)
-                k++; // skip fermeture
+                k++;
         }
         else
         {
@@ -123,7 +117,6 @@ static char *get_env_string(t_data *d, char *s)
     return (ft_strdup(""));
 }
 
-
 char *replace_envvar(char *s, t_data *d, int *is_dquote)
 {
     int i = 0;
@@ -145,9 +138,6 @@ char *replace_envvar(char *s, t_data *d, int *is_dquote)
 
     while (s[i])
     {
-        // Handle env var 
-        // A faire $PWD etc.. all that is in d->env
-        // Read d->env et extract PWD par exemple
         if (s[i] == '$' && s[i + 1] == '?' && *is_dquote == 0)
         {
             int k = 0;
@@ -164,7 +154,6 @@ char *replace_envvar(char *s, t_data *d, int *is_dquote)
                 arg[j++] = env_value[k];
                 k++;
             }
-            // on skip que si get_env_string() à échoué.
             if (env_value[0] != '\0')
                 i++; // skip $
             while (s[i] && !ft_isspace(s[i]) && s[i] != '$')

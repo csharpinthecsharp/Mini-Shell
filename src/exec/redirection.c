@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/12 21:49:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/12 21:59:02 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/13 19:59:07 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,12 +96,9 @@ int is_redirect(char **argv, t_data *d)
     int count_right = 0;
     while (argv[i])
     {
-        if (argv[i][0] == '>')
-        {
-            //*(tell_me_where) = i;
+        if (ft_strncmp(argv[i], ">", 2) == 0)
             count_right++;
-        }
-        else if (argv[i][0] == '<')
+        else if (ft_strncmp(argv[i], "<", 2) == 0)
             count_left++;
         i++;
     }

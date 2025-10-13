@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 12:38:38 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/13 12:38:44 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/13 20:00:40 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int handle_cd(char **argv, int count, t_data *d)
     char *target_path;
 
     if (count == 1)
-        target_path = getenv("HOME"); // fallback vers le home
+        target_path = getenv("HOME");
     else if (count == 2)
         target_path = argv[1];
     else
