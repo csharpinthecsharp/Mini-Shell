@@ -7,10 +7,17 @@ CFLAGS	= -Wall -Wextra -Werror
 SRCS	= src/main.c \
 		  src/utils/utils_trash.c \
 		  src/parse/parsing.c \
+		  src/parse/validate_input.c \
 		  src/parse/parsing_utils.c \
 		  src/utils/init.c \
 		  src/exec/exec_built/find_built.c \
-		  src/exec/exec_built/handler_built.c \
+		  src/exec/exec_built/cd.c \
+		  src/exec/exec_built/echo.c \
+		  src/exec/exec_built/env.c \
+		  src/exec/exec_built/exit.c \
+		  src/exec/exec_built/export.c \
+		  src/exec/exec_built/pwd.c \
+		  src/exec/exec_built/unset.c \
 		  src/parse/handle_input.c \
 		  src/exec/execution.c \
 		  src/exec/redirection.c \
