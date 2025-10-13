@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/13 13:48:26 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/13 15:15:27 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,12 @@ char **get_args(char *s, t_data *d)
 
 char ***split_commands(char **argv)
 {
-    char ***cmds = malloc(sizeof(char **) * (32 + 1));
+    char ***cmds = malloc(sizeof(char **) * (10000));
     if (!cmds)
         return NULL;
 
     int i = 0, cmds_i = 0, arg_i = 0;
-    cmds[cmds_i] = malloc(sizeof(char *) * (64));
+    cmds[cmds_i] = malloc(sizeof(char *) * (10001));
     if (!cmds[cmds_i])
         return NULL;
 
@@ -78,7 +78,7 @@ char ***split_commands(char **argv)
             cmds[cmds_i][arg_i] = NULL; // terminer la commande
             cmds_i++;
             arg_i = 0;
-            cmds[cmds_i] = malloc(sizeof(char *) * (32 + 1));
+            cmds[cmds_i] = malloc(sizeof(char *) * (10000 + 1));
             if (!cmds[cmds_i])
                 return NULL;
         }
