@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/13 20:06:49 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/13 21:37:39 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@
 
 typedef struct s_data
 {
+    int in_heredoc;
+    int kill_heredoc;
     char    *input;
     char    **input_splitted;
     char    ***commands;
@@ -104,7 +106,7 @@ int     handle_env(char **argv, int count, t_data *d);
 // Command & Execution
 int     select_type(t_data *d);
 int     run_custom_cmd(char **argv, t_data *d);
-void    run_pipe_cmd(t_data *d, int N_pipe);
+int    run_pipe_cmd(t_data *d, int N_pipe);
 int     is_redirect(char **argv, t_data *d);
 void    exec_redirect_left(char **argv);
 
@@ -136,7 +138,7 @@ char    **fix_redir_arg(t_data *d, char **argv, int redir_type, int index);
 void alloc_buffer(char **buffer);
 
 // Signals & Terminal
-void    prepare_signals(void);
+void    prepare_signals(t_data *d);
 void    handler_ctrl_bs(int sig);
 
 // Memory & Cleanup
@@ -148,7 +150,7 @@ int     check_command(char **argv);
 void    print_error(const char *str, const char *arg);
 char    *rl(int fd);
 size_t  count_cmds(char ***cmds);
-void redirect_left_left(t_data *d, int *pos, int fd_in);
+int redirect_left_left(t_data *d, int *pos, int fd_in);
 void redirect_left(t_data *d, int *pos, int fd_in);
 void redirect_right_right(t_data *d, int *pos, int fd_out);
 void redirect_right(t_data *d, int *pos, int fd_out);

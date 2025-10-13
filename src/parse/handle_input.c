@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/05 20:19:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/13 19:58:45 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/13 22:21:53 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,9 @@ int start_point_parsing(t_data *d)
         return (FAILED);
 
     if (select_type(d) == FAILED)
-        return (FAILED);
+    {
+        update_data(d);
+        exit(EXIT_SUCCESS);
+    }
     return (SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 15:35:24 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/13 20:35:46 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/13 22:43:04 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,12 @@ void update_data(t_data *d)
     d->cmd_count = 0;
     d->N_redir = 0;
     d->new_path = NULL;
+    d->in_heredoc = 0;
 }
 
 void init_data(t_data *d)
 {
+    d->kill_heredoc = 0;
     d->exit_status = 0;
     d->input = NULL;
     d->input_splitted = NULL;
@@ -40,12 +42,14 @@ void init_data(t_data *d)
 
 void select_readline_mode(t_data *d)
 {
-    if (isatty(STDIN_FILENO))
+    if (isatty(STDIN_FILENO) && d->in_heredoc == 0)
     {
         d->input = readline(get_promptpath(d->path, d));
     }
     else
+    {
         d->input = readline("minishell > ");
+    }
 }
 
 int start_minishell(t_data *d)

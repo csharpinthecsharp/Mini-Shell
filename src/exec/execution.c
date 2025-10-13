@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/13 20:21:34 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/13 22:22:07 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,8 @@ int select_type(t_data *d)
         i++;
     }
     if (is_stateful == 0)
-        run_pipe_cmd(d, d->cmd_count);
+        if (run_pipe_cmd(d, d->cmd_count) == 1)
+            return (1);
     return (SUCCESS);
 }
 
@@ -169,7 +170,7 @@ static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
     }
 }
 
-static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
+static int exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
 {
     int fd_out = 0;
     int fd_in = 0;
@@ -191,16 +192,18 @@ static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
          else if (d->redirection_state[*pos] == LEFT)
             redirect_left(d, pos, fd_in);
         else if (d->redirection_state[*pos] == LEFT_LEFT)
-            redirect_left_left(d, pos, fd_in);
+            if (redirect_left_left(d, pos, fd_in) == 1)
+                return (1);
         char *tmp_cmd = ft_strdup(ft_strjoin("/bin/", d->commands[*pos][0]));
         execve(tmp_cmd, d->commands[*pos], d->envp);
         exit(127);
     }
     else if (pid > 0)
-        d->last_fork_pid = pid;    
+        d->last_fork_pid = pid;
+    return (0);
 }
 
-void run_pipe_cmd(t_data *d, int N_pipe)
+int run_pipe_cmd(t_data *d, int N_pipe)
 {
     int **var_pipe = malloc(sizeof(int *) * N_pipe);
     pid_t last_pid = -1;
@@ -216,7 +219,8 @@ void run_pipe_cmd(t_data *d, int N_pipe)
         if ((*d).cmd_state[pos] == CUSTOM)
             exec_custom_inpipe(var_pipe, d, N_pipe, &pos);
         else if ((*d).cmd_state[pos] == BUILT_IN)
-            exec_built_inpipe(var_pipe, d, N_pipe, &pos);
+            if (exec_built_inpipe(var_pipe, d, N_pipe, &pos) == 1)
+                return (1);
         last_pid = d->last_fork_pid;
         pos++;
     }
@@ -237,4 +241,5 @@ void run_pipe_cmd(t_data *d, int N_pipe)
         }
         pos++;
     }
+    return (0);
 }
