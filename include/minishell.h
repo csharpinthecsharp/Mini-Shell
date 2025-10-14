@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/14 01:06:20 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/14 17:12:08 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ typedef struct s_data
     int in_heredoc;
     int kill_heredoc;
     int kill_execution;
+    int stdin_back;
     char    *input;
     char    **input_splitted;
     char    ***commands;
@@ -110,6 +111,7 @@ int     select_type(t_data *d);
 int     run_custom_cmd(char **argv, t_data *d);
 void    run_pipe_cmd(t_data *d, int N_pipe);
 int     is_redirect(char **argv, t_data *d);
+void handler_ctrl_c(int sig);
 
 // Parsing & Input
 int start_point_parsing(t_data *d);
@@ -139,7 +141,7 @@ char    **fix_redir_arg(t_data *d, char **argv, int redir_type, int index);
 void alloc_buffer(char **buffer);
 
 // Signals & Terminal
-void    prepare_signals(t_data *d);
+void    prepare_signals(void);
 void    handler_ctrl_bs(int sig);
 
 // Memory & Cleanup
@@ -162,5 +164,6 @@ int isfulls(char *s);
 void select_readline_mode(t_data *d);
 int start_minishell(t_data *d);
 void prepare_heredoc(t_data *d, int *pos);
+void heredoc(t_data *d, int *pos);
 
 #endif /* MINISHELL_H */

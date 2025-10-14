@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/12 21:49:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/14 02:05:47 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/14 16:17:23 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,51 +59,6 @@ void redirect_left(t_data *d, int *pos, int fd_in)
         close(fd_in);
     }
 }
-
-void redirect_left_left(t_data *d, int *pos, int fd_in)
-{
-    (void)fd_in;
-    char *res = NULL;
-    char *delimiter = d->output_file[*pos];
-    int pipefd[2];
-
-    if (pipe(pipefd) == -1)
-    {
-        perror("pipe");
-        return ;
-    }
-      
-    d->kill_heredoc = 0;
-    d->in_heredoc = 1;
-
-    while (1)
-    {
-        if (d->kill_heredoc == 1)
-            break;
-        res = readline("> ");
-        if (!res)
-        {
-            print_error("here-document delimited by end-of-file", "warning");
-            break;
-        }
-        if (strcmp(res, delimiter) == 0)
-        {
-            free(res);
-            break;
-        }
-        write(pipefd[1], res, strlen(res));
-        write(pipefd[1], "\n", 1);
-        free(res);
-    }
-    if (d->kill_heredoc == 1)
-        exit(137);
-    d->in_heredoc = 0;
-    close(pipefd[1]);
-    dup2(pipefd[0], STDIN_FILENO);
-    close(pipefd[0]);
-    d->exit_status = 0;
-}
-
 
 int is_redirect(char **argv, t_data *d)
 {

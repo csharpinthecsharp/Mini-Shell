@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 15:35:24 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/14 00:19:29 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/14 17:27:50 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 void update_data(t_data *d)
 {
+    d->kill_heredoc = 0;
+    d->in_heredoc = 0;
     d->input = NULL;
     d->input_splitted = NULL;
     d->path = NULL;
@@ -23,7 +25,7 @@ void update_data(t_data *d)
     d->cmd_count = 0;
     d->N_redir = 0;
     d->new_path = NULL;
-    d->in_heredoc = 0;
+    d->stdin_back = -1;
 }
 
 void init_data(t_data *d)
@@ -43,7 +45,7 @@ void init_data(t_data *d)
 
 void select_readline_mode(t_data *d)
 {
-    if (isatty(STDIN_FILENO) && d->in_heredoc == 0)
+    if (isatty(STDIN_FILENO))
     {
         d->input = readline(get_promptpath(d->path, d));
     }
@@ -55,6 +57,8 @@ void select_readline_mode(t_data *d)
 
 int start_minishell(t_data *d)
 {
+    if (d->kill_execution == 1)
+        return 0;
     if (ft_strlen(d->input) != 0 && !isfulls(d->input))
     {
         if (*d->input)

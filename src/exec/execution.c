@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/14 01:50:45 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/14 17:18:36 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ int select_type(t_data *d)
     }
     if (is_stateful == 0)
         run_pipe_cmd(d, d->cmd_count);
+    if (d->kill_execution == 1)
+        return (FAILED);
     return (SUCCESS);
 }
 
@@ -158,8 +160,7 @@ static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
                     redirect_right_right(d, pos, fd_out);
                 else if (d->redirection_state[*pos] == LEFT)
                     redirect_left(d, pos, fd_in);
-                else if (d->redirection_state[*pos] == LEFT_LEFT)
-                    redirect_left_left(d, pos, fd_in);
+
                 run_custom_cmd(d->commands[*pos], d);
                 exit(d->exit_status);
             }
@@ -173,6 +174,12 @@ static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
 
 static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
 {
+
+    if (d->redirection_state[*pos] == LEFT_LEFT)
+    {
+        heredoc(d, pos);
+    }
+        
     int fd_out = 0;
     int fd_in = 0;
     pid_t pid = fork();
@@ -192,8 +199,6 @@ static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
             redirect_right_right(d, pos, fd_out);
         else if (d->redirection_state[*pos] == LEFT)
             redirect_left(d, pos, fd_in);
-        else if (d->redirection_state[*pos] == LEFT_LEFT)
-            redirect_left_left(d, pos, fd_in);
         char *tmp_cmd = ft_strdup(ft_strjoin("/bin/", d->commands[*pos][0]));
         execve(tmp_cmd, d->commands[*pos], d->envp);
         exit(127);
@@ -223,10 +228,8 @@ void run_pipe_cmd(t_data *d, int N_pipe)
         pos++;
     }
     close_pipe(var_pipe, N_pipe, 0);
-
     int status;
     pid_t wpid;
-
     pos = 0;
     while ((wpid = wait(&status)) > 0)
     {
@@ -238,5 +241,12 @@ void run_pipe_cmd(t_data *d, int N_pipe)
                 d->exit_status = 128 + WTERMSIG(status);
         }
         pos++;
+    }
+    
+    if (d->stdin_back != -1)
+    {
+        dup2(d->stdin_back, STDIN_FILENO);
+        close(d->stdin_back);
+        d->stdin_back = -1;
     }
 }

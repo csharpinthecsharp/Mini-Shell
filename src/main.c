@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:18:23 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/13 23:46:26 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/14 17:01:33 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,24 +23,21 @@ int main(int ac, char *av[], char *envp[])
     t_data data;
     t_data *d = &data;
     init_data(d);
-    prepare_signals(d);
+    prepare_signals();
     d->envp = duplicate_envp(envp);
     while (1)
     {
         update_data(d);
         d->path = getpath(buf, d);
         select_readline_mode(d);
+        
         if (!d->input)
         {
             printf("exit\n");
             free_all(d, buf);
             exit(d->exit_status);
         }
-        if (start_minishell(d) == 1)
-        {
-            update_data(d);
-            continue;
-        }
+        start_minishell(d);
             
         free_beforenewline(d, buf);
     }

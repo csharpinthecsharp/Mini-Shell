@@ -22,6 +22,7 @@ SRCS	= src/main.c \
 		  src/parse/handle_input.c \
 		  src/exec/execution.c \
 		  src/exec/redirection.c \
+		  src/exec/heredoc.c \
 		  src/exec/exec_utils.c \
 		  src/signal/init_signal.c \
 		  src/utils/global/memory_alloc.c \
