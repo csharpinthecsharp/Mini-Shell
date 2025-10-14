@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 16:16:18 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/14 17:30:39 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/14 17:37:39 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ void heredoc(t_data *d, int *pos)
             if (!res)
             {
                 print_error("here-document delimited by end-of-file", "warning");
+                d->exit_status = 0;
                 break;
             }
             if (strcmp(res, delimiter) == 0)
@@ -81,7 +82,6 @@ void heredoc(t_data *d, int *pos)
         {
             close(heredoc[0]);
             close(stdin);
-            d->kill_execution = 1;
 
             rl_on_new_line();
             rl_replace_line("", 0);

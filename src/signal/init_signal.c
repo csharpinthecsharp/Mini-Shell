@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 20:16:28 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/14 17:30:23 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/14 17:32:22 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void heredoc_ctrl_c(int sig)
     rl_done = 1;
     write(STDOUT_FILENO, "\n", 1);
     rl_cleanup_after_signal();
-    exit(1);
+    exit(0);
 }
 void handler_ctrl_bs(int sig)
 {

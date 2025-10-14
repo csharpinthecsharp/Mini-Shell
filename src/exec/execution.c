@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/14 17:18:36 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/14 17:39:14 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,6 @@ int select_type(t_data *d)
     }
     if (is_stateful == 0)
         run_pipe_cmd(d, d->cmd_count);
-    if (d->kill_execution == 1)
-        return (FAILED);
     return (SUCCESS);
 }
 
