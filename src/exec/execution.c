@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/14 01:22:50 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/14 01:50:45 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,12 +159,7 @@ static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
                 else if (d->redirection_state[*pos] == LEFT)
                     redirect_left(d, pos, fd_in);
                 else if (d->redirection_state[*pos] == LEFT_LEFT)
-                {
                     redirect_left_left(d, pos, fd_in);
-                    if (d->kill_execution == 1)
-                        exit(137);
-                    exit(0);
-                }
                 run_custom_cmd(d->commands[*pos], d);
                 exit(d->exit_status);
             }
@@ -198,12 +193,7 @@ static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
         else if (d->redirection_state[*pos] == LEFT)
             redirect_left(d, pos, fd_in);
         else if (d->redirection_state[*pos] == LEFT_LEFT)
-        {
             redirect_left_left(d, pos, fd_in);
-            if (d->kill_execution == 1)
-                exit(137);
-            exit(0);
-        }
         char *tmp_cmd = ft_strdup(ft_strjoin("/bin/", d->commands[*pos][0]));
         execve(tmp_cmd, d->commands[*pos], d->envp);
         exit(127);

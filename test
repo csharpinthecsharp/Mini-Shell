@@ -1,0 +1,12 @@
+total 68
+drwxrwxr-x 2 vez vez  4096 Oct 12 13:48 include
+drwxrwxr-x 2 vez vez  4096 Oct 12 19:41 libft
+-rw-rw-r-- 1 vez vez  2051 Oct 12 13:48 Makefile
+-rwxrwxr-x 1 vez vez 32464 Oct 12 19:41 minishell
+drwxrwxrwx 4 vez vez  4096 Oct 12 19:35 minishell_tester
+-rw-rw-r-- 1 vez vez  1947 Oct 12 13:48 README.md
+-rwxrwxr-x 1 vez vez    85 Oct 12 14:16 removetests.sh
+-rw-rw-r-- 1 vez vez  1680 Oct 12 13:48 rl.c
+-rw-rw-r-- 1 vez vez  2400 Oct 12 19:41 rl.o
+drwxrwxr-x 6 vez vez  4096 Oct 12 19:41 src
+-rw-r--r-- 1 vez vez     0 Oct 12 19:42 test
