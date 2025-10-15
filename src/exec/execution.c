@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 02:53:42 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/15 02:58:41 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ int select_type(t_data *d)
         // $> '|' WAS CRASHING
         if (!d->commands[i] || !d->commands[i][0])
         {
-            d->exit_status = 2;
-            print_error("syntax error near unexpected token `newline'", "!");
+            d->exit_status = 127;
+            print_error("command not found", "!");
             return (0);
         }
         int type = check_command(d->commands[i]);
