@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 19:59:55 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/13 20:00:32 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/15 02:28:27 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,18 @@ int check_command(char **argv)
 
 int is_valid_bin(char *str)
 {
-    char *bin = ft_strdup(ft_strjoin("/bin/", str));
-    int fd = open(bin, O_RDONLY);
+    int fd;
+    if (ft_strncmp(str, "/bin/", 5) == 0)
+        fd = open(str, O_RDONLY);
+    else
+    {
+        char *bin = ft_strjoin("/bin/", str);
+        fd = open(bin, O_RDONLY);
+        free(bin);
+    }
     if (fd < 0)
         return (FAILED);
     close(fd);
-    free(bin);
     return (SUCCESS);
 }
 

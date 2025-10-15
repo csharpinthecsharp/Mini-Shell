@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 02:12:10 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/15 02:31:16 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,6 @@ All of the Bash builtins return an exit status of zero if they succeed and a non
 The exit status of the last command is available in the special parameter $? (see Special Parameters).
 
 Bash itself returns the exit status of the last command executed, unless a syntax error occurs, in which case it exits with a non-zero value. See also the exit builtin command (see Bourne Shell Builtins. */
-
-
 
 /*
  * Sélectionne le type de chaque commande (custom, built-in, etc.)
@@ -225,8 +223,14 @@ static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
             redirect_right_right(d, pos, fd_out);
         else if (d->redirection_state[*pos] == LEFT)
             redirect_left(d, pos, fd_in);
-        char *tmp_cmd = ft_strdup(ft_strjoin("/bin/", d->commands[*pos][0]));
-        execve(tmp_cmd, d->commands[*pos], d->envp);
+        
+        if (ft_strncmp(d->commands[*pos][0], "/bin/", 5) == 0)
+            execve(d->commands[*pos][0], d->commands[*pos], d->envp);
+        else
+        {
+            char *tmp_cmd = ft_strdup(ft_strjoin("/bin/", d->commands[*pos][0]));
+            execve(tmp_cmd, d->commands[*pos], d->envp);
+        }
         exit(127);
     }
     else if (pid > 0)
