@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/05 20:19:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/14 16:30:48 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/15 00:53:17 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,15 @@ int start_point_parsing(t_data *d)
     if (d->commands == NULL)
         return (FAILED);
 
+    /* DEBUG ->
+    for (int i = 0; d->commands[i]; i++)
+    {
+        printf("COMMAND [%d]:\n", i);
+        for (int j = 0; d->commands[i][j]; j++)
+            printf("[ARG OF CMD]: %s\n", d->commands[i][j]);
+    }
+    */
+   
     select_type(d);
     return (SUCCESS);
 }
