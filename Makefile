@@ -12,13 +12,13 @@ SRCS	= src/main.c \
 		  src/utils/main/init.c \
 		  src/utils/main/envp.c \
 		  src/exec/find_built.c \
-		  src/exec/exec_built/cd.c \
-		  src/exec/exec_built/echo.c \
-		  src/exec/exec_built/env.c \
-		  src/exec/exec_built/exit.c \
-		  src/exec/exec_built/export.c \
-		  src/exec/exec_built/pwd.c \
-		  src/exec/exec_built/unset.c \
+		  src/exec/exec_custom/cd.c \
+		  src/exec/exec_custom/echo.c \
+		  src/exec/exec_custom/env.c \
+		  src/exec/exec_custom/exit.c \
+		  src/exec/exec_custom/export.c \
+		  src/exec/exec_custom/pwd.c \
+		  src/exec/exec_custom/unset.c \
 		  src/parse/handle_input.c \
 		  src/exec/execution.c \
 		  src/exec/redirection.c \

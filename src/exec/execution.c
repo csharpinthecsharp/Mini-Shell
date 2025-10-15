@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 02:31:16 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/15 02:53:42 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ The exit status of the last command is available in the special parameter $? (se
 
 Bash itself returns the exit status of the last command executed, unless a syntax error occurs, in which case it exits with a non-zero value. See also the exit builtin command (see Bourne Shell Builtins. */
 
+
 /*
  * Sélectionne le type de chaque commande (custom, built-in, etc.)
  * Gère les redirections et lance l'exécution des pipes.
@@ -44,12 +45,23 @@ int select_type(t_data *d)
     int is_stateful = 0;
     while (i <= d->cmd_count)
     {
+        // PREVENT SHELL FROM SEGFAULT IF CMDS IS EMPTY (exemple)
+        // $> | 
+        // IS OK
+        // $> '|' WAS CRASHING
+        if (!d->commands[i] || !d->commands[i][0])
+        {
+            d->exit_status = 2;
+            print_error("syntax error near unexpected token `newline'", "!");
+            return (0);
+        }
         int type = check_command(d->commands[i]);
         int redir_type = is_redirect(d->commands[i], d);
         if ((redir_type > NOT_FOUND))
         {
             (*d).redirection_state[i] = redir_type;
             d->commands[i] = fix_redir_arg(d, d->commands[i], redir_type, i);
+            // LOOK FOR ERROR AFTER FIXING ARGS.
             if (!d->commands[i] || !d->commands[i][0])
             {
                 d->exit_status = 2;
@@ -70,10 +82,10 @@ int select_type(t_data *d)
             else
                 d->exit_status = 1;
         }
-        else if (type == BUILT_IN)
+        else if (type == BIN)
         {
             if (is_valid_bin(d->commands[i][0]) == SUCCESS)
-                (*d).cmd_state[i] = BUILT_IN;
+                (*d).cmd_state[i] = BIN;
             else
             {
                 print_error("command not found", d->commands[i][0]);
@@ -87,33 +99,6 @@ int select_type(t_data *d)
     return (SUCCESS);
 }
 
-/*
- * Retourne le dernier argument (utilisé pour les redirections de sortie).
- *//*
-static char *send_output(char **argv, int redir_state)
-{
-    (void)redir_state;
-    char *target = NULL;
-    int i = 0;
-
-    while (argv[i]) {
-        if ((redir_state == RIGHT && strcmp(argv[i], ">") == 0) ||
-            (redir_state == RIGHT_RIGHT && strcmp(argv[i], ">>") == 0) ||
-            (redir_state == LEFT && strcmp(argv[i], "<") == 0) ||
-            (redir_state == LEFT_LEFT && strcmp(argv[i], "<<") == 0)) {
-            if (argv[i + 1])
-                target = argv[i + 1];
-            i++;
-        }
-        i++;
-    }
-    return (ft_strdup(target));
-}*/
-
-/*
- * Corrige les arguments pour les redirections (ne garde que les bons).
- * Retourne un tableau d'arguments sans la redirection.
- */
 char **fix_redir_arg(t_data *d, char **argv, int redir_type, int index)
 {
     (void)redir_type;
@@ -252,7 +237,7 @@ void run_pipe_cmd(t_data *d, int N_pipe)
     {
         if ((*d).cmd_state[pos] == CUSTOM)
             exec_custom_inpipe(var_pipe, d, N_pipe, &pos);
-        else if ((*d).cmd_state[pos] == BUILT_IN)
+        else if ((*d).cmd_state[pos] == BIN)
             exec_built_inpipe(var_pipe, d, N_pipe, &pos);
         last_pid = d->last_fork_pid;
         pos++;

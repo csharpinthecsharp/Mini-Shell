@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 19:59:55 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 02:28:27 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/15 02:32:47 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int check_command(char **argv)
         return (CUSTOM);
     else if (ft_strncmp(argv[0], "env", len) == 0)
         return (CUSTOM);
-    return (BUILT_IN);
+    return (BIN);
 }
 
 int is_valid_bin(char *str)

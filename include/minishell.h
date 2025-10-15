@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/14 17:12:08 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/15 02:32:35 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 # define SUCCESS         0
 
 // Command Type
-# define BUILT_IN        0
+# define BIN             0
 # define CUSTOM          1
 # define STATEFUL        2
 
