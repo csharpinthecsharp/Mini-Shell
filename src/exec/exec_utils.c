@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 19:59:55 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 16:17:05 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/15 16:25:06 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,8 @@ int is_empty(int i, t_data *d)
 {
     if (!d->commands[i] || !d->commands[i][0])
     {
-        d->exit_status = 2;
-        print_error("syntax error near unexpected token `newline'", "!");
+        d->exit_status = 127;
+        print_error("command not found", "!");
         return (FAILED);
     }
     return (SUCCESS);
