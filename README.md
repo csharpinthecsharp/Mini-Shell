@@ -1,4 +1,4 @@
-# 🐚 Mini-Bash
+# Mini-Shell
 
 Mini-Bash is a small Unix shell inspired by **bash**, built as part of the 42 curriculum.  
 It handles command parsing, execution, pipes, redirections, environment variables, and builtins.
