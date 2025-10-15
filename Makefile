@@ -24,8 +24,8 @@ SRCS	= src/main.c \
 		  src/exec/exec_custom/unset.c \
 		  src/parse/handle_input.c \
 		  src/exec/execution.c \
-		  src/exec/redirection.c \
-		  src/exec/heredoc.c \
+		  src/exec/redirection/r_basic.c \
+		  src/exec/redirection/r_heredoc.c \
 		  src/exec/exec_utils.c \
 		  src/signal/init_signal.c \
 		  src/utils/malloc/allocation.c \
@@ -48,14 +48,14 @@ before:
 	@echo "\033[0;32mCompiling..\033[0m"
 banner:
 	@echo ""
-	@echo "\033[1;36m		   ░██                              ░██        \033[0m"
-	@echo "\033[1;36m                   ░██                              ░██        \033[0m"
-	@echo "\033[1;36m░██    ░██         ░████████   ░██████    ░███████  ░████████  \033[0m"
-	@echo "\033[1;36m░██    ░██ ░██████ ░██    ░██       ░██  ░██        ░██    ░██ \033[0m"
-	@echo "\033[1;36m ░██  ░██          ░██    ░██  ░███████   ░███████  ░██    ░██ \033[0m"
-	@echo "\033[1;36m  ░██░██           ░███   ░██ ░██   ░██         ░██ ░██    ░██ \033[0m"
-	@echo "\033[1;36m   ░███            ░██░█████   ░█████░██  ░███████  ░██    ░██ \033[0m"
+	@echo "\033[0;32m		.__       .__       .__           .__  .__   \033[0m"
+	@echo "\033[0;32m	  _____ |__| ____ |__| _____|  |__   ____ |  | |  |  \033[0m"
+	@echo "\033[0;32m	 /     \|  |/    \|  |/  ___/  |  \_/ __ \|  | |  |  \033[0m"
+	@echo "\033[0;32m	|  Y Y  \  |   |  \  |\___ \|   Y  \  ___/|  |_|  |__\033[0m"
+	@echo "\033[0;32m	|__|_|  /__|___|  /__/____  >___|  /\___  >____/____/\033[0m"
+	@echo "\033[0;32m	      \/        \/        \/     \/     \/          \033[0m"
 	@echo ""
+
 
 clean:
 	rm -f $(OBJS)
