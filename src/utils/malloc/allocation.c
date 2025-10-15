@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   memory_alloc.c                                     :+:      :+:    :+:   */
+/*   allocation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 00:38:50 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/13 19:51:04 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/15 15:20:56 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,28 +29,6 @@ void alloc_error_pipe(int N_pipe, int **var_pipe)
             exit(EXIT_FAILURE);
         }
         i++;
-    }
-}
-
-void alloc_cmd_state(t_data *d)
-{
-    d->cmd_count = count_cmds(d->commands);
-    d->cmd_state = malloc(sizeof(int) * (d->cmd_count + 1));
-    if (!d->cmd_state)
-    {
-        perror("malloc failed");
-        exit(EXIT_FAILURE);
-    }
-}
-
-void alloc_redir_state(t_data *d)
-{
-    d->cmd_count = count_cmds(d->commands);
-    d->redirection_state = malloc(sizeof(int) * (d->cmd_count + 1));
-    if (!d->redirection_state)
-    {
-        perror("malloc failed");
-        exit(EXIT_FAILURE);
     }
 }
 

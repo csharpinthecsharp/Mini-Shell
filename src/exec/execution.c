@@ -6,145 +6,47 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 02:58:41 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/15 15:54:18 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
- /*The exit status of an executed command is the value returned by the waitpid system call or equivalent function. Exit statuses fall between 0 and 255, though, as explained below, the shell may use values above 125 specially. Exit statuses from shell builtins and compound commands are also limited to this range. Under certain circumstances, the shell will use special values to indicate specific failure modes.
 
-For the shell’s purposes, a command which exits with a zero exit status has succeeded. So while an exit status of zero indicates success, a non-zero exit status indicates failure. This seemingly counter-intuitive scheme is used so there is one well-defined way to indicate success and a variety of ways to indicate various failure modes.
-
-When a command terminates on a fatal signal whose number is N, Bash uses the value 128+N as the exit status.
-
-If a command is not found, the child process created to execute it returns a status of 127. If a command is found but is not executable, the return status is 126.
-
-If a command fails because of an error during expansion or redirection, the exit status is greater than zero.
-
-The exit status is used by the Bash conditional commands (see Conditional Constructs) and some of the list constructs (see Lists of Commands).
-
-All of the Bash builtins return an exit status of zero if they succeed and a non-zero status on failure, so they may be used by the conditional and list constructs. All builtins return an exit status of 2 to indicate incorrect usage, generally invalid options or missing arguments.
-
-The exit status of the last command is available in the special parameter $? (see Special Parameters).
-
-Bash itself returns the exit status of the last command executed, unless a syntax error occurs, in which case it exits with a non-zero value. See also the exit builtin command (see Bourne Shell Builtins. */
-
-
-/*
- * Sélectionne le type de chaque commande (custom, built-in, etc.)
- * Gère les redirections et lance l'exécution des pipes.
- */
-int select_type(t_data *d)
+int start_execution(t_data *d)
 {
-    size_t i = 0;
-    alloc_cmd_state(d);
-    alloc_redir_state(d);
-    d->output_file = malloc(sizeof(char *) * BUFFER_SIZE);
+    int i;
+    int is_stateful;
 
     i = 0;
-    int is_stateful = 0;
+    is_stateful = 0;
+    alloc_start_execution(d);
     while (i <= d->cmd_count)
     {
-        // PREVENT SHELL FROM SEGFAULT IF CMDS IS EMPTY (exemple)
-        // $> | 
-        // IS OK
-        // $> '|' WAS CRASHING
-        if (!d->commands[i] || !d->commands[i][0])
-        {
-            d->exit_status = 127;
-            print_error("command not found", "!");
-            return (0);
-        }
+        if (is_empty(i, d) == 1)
+            return (FAILED);
         int type = check_command(d->commands[i]);
         int redir_type = is_redirect(d->commands[i], d);
+        put_cmdstate(type, &i, &is_stateful, d);
         if ((redir_type > NOT_FOUND))
         {
             (*d).redirection_state[i] = redir_type;
             d->commands[i] = fix_redir_arg(d, d->commands[i], redir_type, i);
-            // LOOK FOR ERROR AFTER FIXING ARGS.
-            if (!d->commands[i] || !d->commands[i][0])
-            {
-                d->exit_status = 2;
-                print_error("syntax error near unexpected token `newline'", "!");
-                return (0);
-            }
+            if (is_empty(i, d) == 1)
+                return (FAILED);
         }
         else
             (*d).redirection_state[i] = 0;
-            
-        if (type == CUSTOM)
-            (*d).cmd_state[i] = CUSTOM;
-        else if (type == STATEFUL)
-        {
-            is_stateful = 1;
-            if (d->cmd_count == 0)
-                run_custom_cmd(d->commands[i], d);
-            else
-                d->exit_status = 1;
-        }
-        else if (type == BIN)
-        {
-            if (is_valid_bin(d->commands[i][0]) == SUCCESS)
-                (*d).cmd_state[i] = BIN;
-            else
-            {
-                print_error("command not found", d->commands[i][0]);
-                d->exit_status = 127;
-            } 
-        }
         i++;
     }
     if (is_stateful == 0)
-        run_pipe_cmd(d, d->cmd_count);
+        run_non_stateful(d, d->cmd_count);
     return (SUCCESS);
 }
-
-char **fix_redir_arg(t_data *d, char **argv, int redir_type, int index)
-{
-    (void)redir_type;
-    int i = 0;
-    int j = 0;
-    char **dup = malloc(sizeof(char *) * 256); 
-    if (!dup)
-    {
-        perror("malloc failed");
-        return NULL;
-    }
-
-    while (argv[i])
-    {
-        if ((ft_strncmp(argv[i], ">>", 2) == 0) ||
-            (ft_strncmp(argv[i], "<<", 2) == 0) ||
-            (ft_strncmp(argv[i], ">", 1) == 0) ||
-            (ft_strncmp(argv[i], "<", 1) == 0))
-        {
-            if (argv[i + 1])
-                (*d).output_file[index] = strdup(argv[i + 1]);
-            i += 2;
-            continue;
-        }
-        dup[j++] = ft_strdup(argv[i]);
-        i++;
-    }
-
-    dup[j] = NULL;
-
-    if (j == 0)
-    {
-        dup[0] = NULL;
-        return (dup);
-    }
-    return (dup);
-}
-
 
 static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
 {
     if (d->redirection_state[*pos] == LEFT_LEFT)
-    {
         heredoc(d, pos);
-    }
-    
     int fd_out = 0;
     int fd_in = 0;
     if (d->cmd_state[*pos] == CUSTOM)
@@ -183,12 +85,8 @@ static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
 
 static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
 {
-
     if (d->redirection_state[*pos] == LEFT_LEFT)
-    {
         heredoc(d, pos);
-    }
-        
     int fd_out = 0;
     int fd_in = 0;
     pid_t pid = fork();
@@ -222,7 +120,7 @@ static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
         d->last_fork_pid = pid;
 }
 
-void run_pipe_cmd(t_data *d, int N_pipe)
+void run_non_stateful(t_data *d, int N_pipe)
 {
     int **var_pipe = malloc(sizeof(int *) * N_pipe);
     pid_t last_pid = -1;

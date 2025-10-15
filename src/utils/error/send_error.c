@@ -1,40 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   send_error.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/13 12:38:26 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 13:14:39 by ltrillar         ###   ########.fr       */
+/*   Created: 2025/10/15 14:02:05 by ltrillar          #+#    #+#             */
+/*   Updated: 2025/10/15 14:15:08 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../include/minishell.h"
 
-int handle_echo(char **argv, int count)
+void print_error(const char *str, const char *arg)
 {
-    int found;
-    found = 0;
-    if (count < 2)
+    size_t len_str = ft_strlen(str);
+    size_t len_arg = ft_strlen(arg);
+
+    write(STDERR_FILENO, "minishell: ", 11);
+    if (arg[0] != '!')
     {
-        printf("\n");
-        return (0);
+        write(STDERR_FILENO, arg, len_arg);
+        write(STDERR_FILENO, " : ", 3);
     }
-    int i = 1;
-    while (i < count)
-    {
-        if (ft_strncmp(argv[i], "-n", 2) == 0)
-            found = 1;
-        else
-        {
-            if (i > 1)
-                printf(" ");
-            printf("%s", argv[i]);
-        }
-        i++;
-    }
-    if (found == 0)
-        printf("\n");
-    return (0);
+    write(STDERR_FILENO, str, len_str);
+    write(STDERR_FILENO, "\n", 1);
 }

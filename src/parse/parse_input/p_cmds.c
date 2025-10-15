@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing.c                                          :+:      :+:    :+:   */
+/*   p_cmds.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/14 01:30:04 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/15 15:52:12 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "../../../include/minishell.h"
 
 char **get_args(char *s, t_data *d)
 {
@@ -18,10 +18,9 @@ char **get_args(char *s, t_data *d)
     int k = 0;
     int is_dquote = 0;
     int len = ft_strlen(s);
-    char **argv = malloc(sizeof(char *) * (len + 1));
-    if (!argv)
-        return NULL;
-
+    char **argv;
+    argv = NULL;
+    alloc_parse_args(&argv, len);
     while (s[i])
     {
         char *raw_arg = get_one_arg(s, &i, &is_dquote);
@@ -35,18 +34,6 @@ char **get_args(char *s, t_data *d)
     }
     argv[k] = NULL;
     return argv;
-}
-
-
-static int count_args(char **argv, int start)
-{
-    int count = 0;
-    while (argv[start] && !(argv[start][0] == '|' && argv[start][1] == '\0'))
-    {
-        count++;
-        start++;
-    }
-    return count;
 }
 
 char ***split_commands(char **argv)

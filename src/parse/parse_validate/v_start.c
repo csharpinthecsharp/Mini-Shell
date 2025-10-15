@@ -1,40 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   v_start.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/13 12:38:26 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 13:14:39 by ltrillar         ###   ########.fr       */
+/*   Created: 2025/10/13 12:46:28 by ltrillar          #+#    #+#             */
+/*   Updated: 2025/10/15 15:39:38 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../include/minishell.h"
 
-int handle_echo(char **argv, int count)
+int global_check(t_data *d)
 {
-    int found;
-    found = 0;
-    if (count < 2)
+    if (check_pipe_syntax(d->input) == FAILED)
     {
-        printf("\n");
-        return (0);
+        d->exit_status = 2;
+        return (FAILED);
     }
-    int i = 1;
-    while (i < count)
+    if (check_redirection_syntax(d->input) == FAILED)
     {
-        if (ft_strncmp(argv[i], "-n", 2) == 0)
-            found = 1;
-        else
-        {
-            if (i > 1)
-                printf(" ");
-            printf("%s", argv[i]);
-        }
-        i++;
+        d->exit_status = 2;
+        return (FAILED);
     }
-    if (found == 0)
-        printf("\n");
-    return (0);
+    return (SUCCESS);
 }

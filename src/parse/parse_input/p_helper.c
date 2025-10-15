@@ -1,94 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing_utils.c                                    :+:      :+:    :+:   */
+/*   parsing_helper.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/02 00:34:09 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/13 20:00:03 by ltrillar         ###   ########.fr       */
+/*   Created: 2025/10/15 15:32:50 by ltrillar          #+#    #+#             */
+/*   Updated: 2025/10/15 15:35:50 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "../../../include/minishell.h"
 
-static int skip_quoted(const char *s, int *i, char quote_char)
+int count_args(char **argv, int start)
 {
-    (*i)++;
-    while (s[*i] && s[*i] != quote_char)
-        (*i)++;
-    if (!s[*i])
-        return -1;
-    (*i)++;
-    return 0;
-}
-
-int get_arg_length(const char *s, int *i, int *is_dquote)
-{
-    int start = *i;
-
-    // skip espaces
-    while (s[*i] && ft_isspace(s[*i]))
-        (*i)++;
-    if (!s[*i])
-        return 0;
-
-    if (s[*i] == '|' || s[*i] == '<' || s[*i] == '>')
+    int count = 0;
+    while (argv[start] && !(argv[start][0] == '|' && argv[start][1] == '\0'))
     {
-        (*i)++;
-        return 1;
+        count++;
+        start++;
     }
-
-    while (s[*i] && !ft_isspace(s[*i]) && s[*i] != '|' && s[*i] != '<' && s[*i] != '>')
-    {
-        if (s[*i] == '\'' || s[*i] == '"')
-        {
-            if (s[*i] == '\'')
-                (*is_dquote) = 1;
-            if (skip_quoted(s, i, s[*i]) == -1)
-                return -1;
-        }
-        else
-            (*i)++;
-    }
-
-    return *i - start;
-}
-
-char *get_one_arg(const char *s, int *i, int *is_dquote)
-{
-    int start = *i;
-    int len = get_arg_length(s, i, is_dquote);
-    if (len <= 0)
-        return NULL;
-
-    char *arg = malloc(len + 1);
-    if (!arg)
-        return NULL;
-
-    int j = 0;
-    int k = start;
-
-    while (k < *i)
-    {
-        if (s[k] == '\'' || s[k] == '"')
-        {
-            char qc = s[k++];
-            while (k < *i && s[k] != qc)
-                arg[j++] = s[k++];
-            if (s[k] == qc)
-                k++;
-        }
-        else
-        {
-            if (ft_isspace(s[k]))
-                k++;
-            else
-                arg[j++] = s[k++];
-        }
-    }
-    arg[j] = '\0';
-    return arg;
+    return count;
 }
 
 static char *get_env_string(t_data *d, char *s)

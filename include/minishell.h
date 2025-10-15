@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 02:32:35 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/15 15:57:47 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ typedef struct s_data
     int     *cmd_state;
     int     *redirection_state;
     int     *cmd_quoted;
-    size_t  cmd_count;
+    int  cmd_count;
     char    *path;
     char    **envp;
     int     SHLVL;
@@ -107,9 +107,9 @@ int     handle_env(char **argv, int count, t_data *d);
 void heredoc_ctrl_c(int sig);
 
 // Command & Execution
-int     select_type(t_data *d);
+int     start_execution(t_data *d);
 int     run_custom_cmd(char **argv, t_data *d);
-void    run_pipe_cmd(t_data *d, int N_pipe);
+void    run_non_stateful(t_data *d, int N_pipe);
 int     is_redirect(char **argv, t_data *d);
 void handler_ctrl_c(int sig);
 
@@ -118,10 +118,15 @@ int start_point_parsing(t_data *d);
 char    **split(t_data *d);
 char    ***split_commands(char **argv);
 char    **get_args(char *s, t_data *d);
-char    *get_one_arg(const char *s, int *i, int *is_dquote);
+char    *get_one_arg(char *s, int *i, int *is_dquote);
 int     get_arg_length(const char *s, int *i, int *is_dquote);
 int     ft_isspace(char arg);
 int     ft_countword(char **spli_args);
+int loop_into_arg(int i, char *s, int k, char *arg, int *j);
+int count_args(char **argv, int start);
+int check_pipe_syntax(char *input);
+int check_in_check_pipe(char *input, int *pos);
+int check_redirection_syntax(char *input);
 
 // Environment & Path
 char    *getpath(char *buffer, t_data *d);
@@ -139,6 +144,7 @@ void    alloc_error_pipe(int N_pipe, int **var_pipe);
 void    close_pipe(int **var_pipe, int N_pipe, int state);
 char    **fix_redir_arg(t_data *d, char **argv, int redir_type, int index);
 void alloc_buffer(char **buffer);
+int put_cmdstate(int type, int *pos, int *is_stateful, t_data *d);
 
 // Signals & Terminal
 void    prepare_signals(void);
@@ -147,11 +153,14 @@ void    handler_ctrl_bs(int sig);
 // Memory & Cleanup
 void free_all(t_data *d, char *buffer);
 void free_beforenewline(t_data *d, char *buffer);
+void alloc_output_file(t_data *d);
+void alloc_start_execution(t_data *d);
+void alloc_parse_args(char ***argv, int len);
 
 // Misc
 int     check_command(char **argv);
 void    print_error(const char *str, const char *arg);
-size_t  count_cmds(char ***cmds);
+int count_cmds(char ***cmds);
 void redirect_left_left(t_data *d, int *pos, int fd_in);
 void redirect_left(t_data *d, int *pos, int fd_in);
 void redirect_right_right(t_data *d, int *pos, int fd_out);
@@ -162,8 +171,10 @@ char **duplicate_envp(char **envp);
 char *up_shlvl(char *envp_i);
 int isfulls(char *s);
 void select_readline_mode(t_data *d);
-int start_minishell(t_data *d);
+void start_minishell(t_data *d);
 void prepare_heredoc(t_data *d, int *pos);
 void heredoc(t_data *d, int *pos);
+void exit_ctrl_d(t_data *d, char *buf);
+int is_empty(int i, t_data *d);
 
 #endif /* MINISHELL_H */

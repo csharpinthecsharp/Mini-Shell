@@ -6,12 +6,78 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 19:59:55 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 02:32:47 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/15 15:10:23 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
+char **fix_redir_arg(t_data *d, char **argv, int redir_type, int index)
+{
+    (void)redir_type;
+    int i = 0;
+    int j = 0;
+    char **dup = malloc(sizeof(char *) * 256); 
+    if (!dup)
+    {
+        perror("malloc failed");
+        return NULL;
+    }
+
+    while (argv[i])
+    {
+        if ((ft_strncmp(argv[i], ">>", 2) == 0) ||
+            (ft_strncmp(argv[i], "<<", 2) == 0) ||
+            (ft_strncmp(argv[i], ">", 1) == 0) ||
+            (ft_strncmp(argv[i], "<", 1) == 0))
+        {
+            if (argv[i + 1])
+                (*d).output_file[index] = strdup(argv[i + 1]);
+            i += 2;
+            continue;
+        }
+        dup[j++] = ft_strdup(argv[i]);
+        i++;
+    }
+
+    dup[j] = NULL;
+
+    if (j == 0)
+    {
+        dup[0] = NULL;
+        return (dup);
+    }
+    return (dup);
+}
+
+int put_cmdstate(int type, int *pos, int *is_stateful, t_data *d)
+{
+    if (type == CUSTOM)
+        (*d).cmd_state[*pos] = CUSTOM;
+    else if (type == STATEFUL)
+    {
+        *is_stateful = 1;
+        if (d->cmd_count == 0)
+            run_custom_cmd(d->commands[*pos], d);
+        else
+        {
+            d->exit_status = 1;
+            return (FAILED);
+        }
+    }
+    else if (type == BIN)
+    {
+        if (is_valid_bin(d->commands[*pos][0]) == SUCCESS)
+            (*d).cmd_state[*pos] = BIN;
+        else
+        {
+            print_error("command not found", d->commands[*pos][0]);
+            d->exit_status = 127;
+            return (FAILED);
+        } 
+    }
+    return (SUCCESS);
+}
 int check_command(char **argv)
 {
     int len = ft_strlen(argv[0]);
@@ -29,7 +95,19 @@ int check_command(char **argv)
         return (CUSTOM);
     else if (ft_strncmp(argv[0], "env", len) == 0)
         return (CUSTOM);
-    return (BIN);
+    else
+        return (BIN);
+}
+
+int is_empty(int i, t_data *d)
+{
+    if (!d->commands[i] || !d->commands[i][0])
+    {
+        d->exit_status = 2;
+        print_error("syntax error near unexpected token `newline'", "!");
+        return (FAILED);
+    }
+    return (SUCCESS);
 }
 
 int is_valid_bin(char *str)
@@ -49,9 +127,9 @@ int is_valid_bin(char *str)
     return (SUCCESS);
 }
 
-size_t count_cmds(char ***cmds)
+int count_cmds(char ***cmds)
 {
-    size_t i = 0;
+    int i = 0;
     while (cmds[i])
         i++;
     return (i - 1);

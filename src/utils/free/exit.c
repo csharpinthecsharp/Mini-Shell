@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.c                                             :+:      :+:    :+:   */
+/*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 00:41:34 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/13 19:54:00 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/15 14:08:40 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,4 @@ void free_all(t_data *d, char *buffer)
     }
     free(d->path);
     free(buffer);
-}
-
-void free_beforenewline(t_data *d, char *buffer)
-{
-    (void)buffer;
-    free(d->path);
-    free(d->input);
 }

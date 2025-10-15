@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   validate_input.c                                   :+:      :+:    :+:   */
+/*   v_input.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 12:46:28 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 02:54:42 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/15 15:40:15 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "../../../include/minishell.h"
 
-static int check_redirection_syntax(char *input)
+int check_redirection_syntax(char *input)
 {
     int i = 0;
     char quote = 0;
@@ -44,7 +44,7 @@ static int check_redirection_syntax(char *input)
             if (!input[i])
             {
                 print_error("syntax error near unexpected token `newline'", "!");
-                return FAILED;
+                return (FAILED);
             }
 
             if (input[i] == '>' || input[i] == '<' || input[i] == '|')
@@ -69,7 +69,29 @@ static int check_redirection_syntax(char *input)
     return SUCCESS;
 }
 
-static int check_pipe_syntax(char *input)
+int check_in_check_pipe(char *input, int *pos)
+{
+    if (input[(*pos)] == '|' && input[(*pos) + 1] == '|')
+    {
+        print_error("syntax error near unexpected token `||'", "!");
+        return (FAILED);
+    }
+
+    if (input[*pos] == '|' && input[(*pos) + 1])
+    {
+        int j = (*pos) + 1;
+        while (input[j] == ' ')
+            j++;
+        if (input[j] == '|')
+        {
+            print_error("syntax error near unexpected token `|'", "!");
+            return (FAILED);
+        }
+    }
+    return (SUCCESS);
+}
+
+int check_pipe_syntax(char *input)
 {
     int i = 0;
     char quote = 0;
@@ -86,47 +108,16 @@ static int check_pipe_syntax(char *input)
             quote = input[i];
         else if (input[i] == quote)
             quote = 0;
-
         if (quote)
         {
             i++;
             continue;
         }
-
-        if (input[i] == '|' && input[i + 1] == '|')
-        {
-            print_error("syntax error near unexpected token `||'", "!");
-            return FAILED;
-        }
-
-        if (input[i] == '|' && input[i + 1])
-        {
-            int j = i + 1;
-            while (input[j] == ' ')
-                j++;
-            if (input[j] == '|')
-            {
-                print_error("syntax error near unexpected token `|'", "!");
-                return FAILED;
-            }
-        }
+        if (check_in_check_pipe(input, &i) == 1)
+            return (FAILED);
         i++;
     }
     return (SUCCESS);
 }
 
-int global_check(t_data *d)
-{
-    if (check_pipe_syntax(d->input) == FAILED)
-    {
-        d->exit_status = 2;
-        return (FAILED);
-    }
-    if (check_redirection_syntax(d->input) == FAILED)
-    {
-        d->exit_status = 2;
-        return (FAILED);
-    }
-    return (SUCCESS);
-}
  

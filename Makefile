@@ -6,11 +6,14 @@ CFLAGS	= -Wall -Wextra -Werror -g
 
 SRCS	= src/main.c \
 		  src/utils/global/utils_trash.c \
-		  src/parse/parsing.c \
-		  src/parse/validate_input.c \
-		  src/parse/parsing_utils.c \
-		  src/utils/main/init.c \
-		  src/utils/main/envp.c \
+		  src/parse/parse_input/p_cmds.c \
+		  src/parse/parse_input/p_helper.c \
+		  src/parse/parse_validate/v_input.c \
+		  src/parse/parse_validate/v_start.c \
+		  src/parse/parse_input/p_args.c \
+		  src/utils/init/init_struct.c \
+		  src/utils/init/init_envp.c \
+		  src/utils/main/readline.c \
 		  src/exec/find_built.c \
 		  src/exec/exec_custom/cd.c \
 		  src/exec/exec_custom/echo.c \
@@ -25,8 +28,12 @@ SRCS	= src/main.c \
 		  src/exec/heredoc.c \
 		  src/exec/exec_utils.c \
 		  src/signal/init_signal.c \
-		  src/utils/global/memory_alloc.c \
-		  src/utils/global/free.c \
+		  src/utils/malloc/allocation.c \
+		  src/utils/malloc/a_exec.c \
+		  src/utils/malloc/a_parse.c \
+		  src/utils/free/exit.c \
+		  src/utils/free/newline.c \
+		  src/utils/error/send_error.c
 
 OBJS	= $(SRCS:.c=.o)
 LIBFT 	= libft/libft.a

@@ -6,12 +6,13 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:18:23 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 02:54:15 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/15 14:41:57 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 #include "../include/template.h"
+
 
 int main(int ac, char *av[], char *envp[])
 {
@@ -30,13 +31,7 @@ int main(int ac, char *av[], char *envp[])
         update_data(d);
         d->path = getpath(buf, d);
         select_readline_mode(d);
-        
-        if (!d->input)
-        {
-            printf("exit\n");
-            free_all(d, buf);
-            exit(d->exit_status);
-        }
+        exit_ctrl_d(d, buf);
         start_minishell(d);
         free_beforenewline(d, buf);
     }

@@ -9,3 +9,6 @@ read -p "Enter to continue [Syntax Test]"
 
 ./tester syntax
 
+echo
+read -p "Enter to continue [Pipes Test]"
+./tester pipes
