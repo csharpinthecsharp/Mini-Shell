@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 13:56:09 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 14:41:54 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/15 17:47:07 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,11 @@
 void select_readline_mode(t_data *d)
 {
     if (isatty(STDIN_FILENO))
-        d->input = readline(get_promptpath(d->path, d));
+    {
+        char *res = get_promptpath(d->path, d);
+        d->input = readline(res);
+        free(res);
+    }
     else
         d->input = readline("minishell: ");
 }

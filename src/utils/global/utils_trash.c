@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 20:20:39 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 14:09:39 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/15 17:43:29 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ char *get_promptpath(char *buffer, t_data *d)
     free(res);
     char *full_prompt = ft_strjoin(prompt, TEMPLATE_PROMPT_END);
     free(prompt);
-
     return (full_prompt);
 }
 
