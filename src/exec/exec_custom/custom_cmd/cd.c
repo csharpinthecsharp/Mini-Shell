@@ -6,11 +6,11 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 12:38:38 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 13:47:20 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/15 17:34:08 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../include/minishell.h"
+#include "../../../../include/minishell.h"
 
 int handle_cd(char **argv, int count, t_data *d)
 {

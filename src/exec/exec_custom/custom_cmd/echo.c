@@ -6,11 +6,11 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 12:38:26 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 13:14:39 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/15 17:34:07 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../include/minishell.h"
+#include "../../../../include/minishell.h"
 
 int handle_echo(char **argv, int count)
 {

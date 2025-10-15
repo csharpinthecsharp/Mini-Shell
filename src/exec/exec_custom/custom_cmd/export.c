@@ -6,11 +6,11 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 12:39:16 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/13 20:00:57 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/15 17:34:18 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../include/minishell.h"
+#include "../../../../include/minishell.h"
 
 int handle_export(char **argv, int count, t_data *d)
 {

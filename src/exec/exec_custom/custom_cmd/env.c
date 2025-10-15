@@ -1,34 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/13 12:37:54 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/13 12:38:05 by ltrillar         ###   ########.fr       */
+/*   Created: 2025/10/13 12:39:38 by ltrillar          #+#    #+#             */
+/*   Updated: 2025/10/15 17:34:10 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../include/minishell.h"
+#include "../../../../include/minishell.h"
 
-int handle_exit(char **argv, int count)
+int handle_env(char **argv, int count, t_data *d)
 {
-    (void)count;
-    if (!argv[1])
-        exit(0);
-
-    if (!is_numeric(argv[1]))
+    (void)argv;
+    if (count == 1)
     {
-        print_error("numeric argument required", argv[1]);
-        exit(2);
+        int i = 0;
+        while (d->envp[i])
+        {
+            printf("%s\n", d->envp[i]);
+            i++;
+        }
     }
-
-    if (argv[2])
-    {
-        print_error("too many arguments", argv[0]);
-        return 1;
-    }
-
-    exit(ft_atoi(argv[1]) % 256);
+    return (0);
 }

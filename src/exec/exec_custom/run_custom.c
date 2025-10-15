@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   find_built.c                                       :+:      :+:    :+:   */
+/*   run_custom.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/05 00:07:31 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 17:30:22 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/15 17:33:57 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "../../../include/minishell.h"
 
 int run_custom_cmd(char **argv, t_data *d)
 {

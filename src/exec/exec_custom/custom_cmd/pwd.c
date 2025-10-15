@@ -1,28 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/13 12:39:38 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/13 12:39:47 by ltrillar         ###   ########.fr       */
+/*   Created: 2025/10/13 12:37:19 by ltrillar          #+#    #+#             */
+/*   Updated: 2025/10/15 17:34:21 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../include/minishell.h"
+#include "../../../../include/minishell.h"
 
-int handle_env(char **argv, int count, t_data *d)
+int handle_pwd(char *argv, int count, char *path)
 {
+    (void)count;
     (void)argv;
-    if (count == 1)
-    {
-        int i = 0;
-        while (d->envp[i])
-        {
-            printf("%s\n", d->envp[i]);
-            i++;
-        }
-    }
+    printf("%s\n", path);
     return (0);
 }

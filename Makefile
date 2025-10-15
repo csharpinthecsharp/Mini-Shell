@@ -14,14 +14,14 @@ SRCS	= src/main.c \
 		  src/utils/init/init_struct.c \
 		  src/utils/init/init_envp.c \
 		  src/utils/main/readline.c \
-		  src/exec/find_built.c \
-		  src/exec/exec_custom/cd.c \
-		  src/exec/exec_custom/echo.c \
-		  src/exec/exec_custom/env.c \
-		  src/exec/exec_custom/exit.c \
-		  src/exec/exec_custom/export.c \
-		  src/exec/exec_custom/pwd.c \
-		  src/exec/exec_custom/unset.c \
+		  src/exec/exec_custom/run_custom.c \
+		  src/exec/exec_custom/custom_cmd/cd.c \
+		  src/exec/exec_custom/custom_cmd/echo.c \
+		  src/exec/exec_custom/custom_cmd/env.c \
+		  src/exec/exec_custom/custom_cmd/exit.c \
+		  src/exec/exec_custom/custom_cmd/export.c \
+		  src/exec/exec_custom/custom_cmd/pwd.c \
+		  src/exec/exec_custom/custom_cmd/unset.c \
 		  src/parse/handle_input.c \
 		  src/exec/execution.c \
 		  src/exec/redirection/r_basic.c \

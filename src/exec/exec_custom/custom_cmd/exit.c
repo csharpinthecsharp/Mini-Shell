@@ -1,21 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/13 12:37:19 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/13 12:44:50 by ltrillar         ###   ########.fr       */
+/*   Created: 2025/10/13 12:37:54 by ltrillar          #+#    #+#             */
+/*   Updated: 2025/10/15 17:34:13 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../include/minishell.h"
+#include "../../../../include/minishell.h"
 
-int handle_pwd(char *argv, int count, char *path)
+int handle_exit(char **argv, int count)
 {
     (void)count;
-    (void)argv;
-    printf("%s\n", path);
-    return (0);
+    if (!argv[1])
+        exit(0);
+
+    if (!is_numeric(argv[1]))
+    {
+        print_error("numeric argument required", argv[1]);
+        exit(2);
+    }
+
+    if (argv[2])
+    {
+        print_error("too many arguments", argv[0]);
+        return 1;
+    }
+
+    exit(ft_atoi(argv[1]) % 256);
 }
