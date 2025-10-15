@@ -1,6 +1,4 @@
-# Ignore specific files
-removetests.sh
-minishell_tester
+
 
 # Ignore .
 .vscode/
