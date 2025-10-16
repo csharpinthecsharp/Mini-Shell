@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 19:59:55 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 16:28:10 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/16 01:55:25 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ char **fix_redir_arg(t_data *d, char **argv, int redir_type, int index)
     {
         if ((ft_strncmp(argv[i], ">>", 2) == 0) ||
             (ft_strncmp(argv[i], "<<", 2) == 0) ||
-            (ft_strncmp(argv[i], ">", 1) == 0) ||
-            (ft_strncmp(argv[i], "<", 1) == 0))
+            (ft_strncmp(argv[i], ">", 2) == 0) ||
+            (ft_strncmp(argv[i], "<", 2) == 0))
         {
             if (argv[i + 1])
                 (*d).output_file[index] = strdup(argv[i + 1]);
@@ -67,14 +67,13 @@ int put_cmdstate(int type, int *pos, int *is_stateful, t_data *d)
     }
     else if (type == BIN)
     {
-        if (is_valid_bin(d->commands[*pos][0]) == SUCCESS)
+        if (do_cmd_exist(d->commands[*pos][0], d) == SUCCESS)
             (*d).cmd_state[*pos] = BIN;
         else
         {
-            print_error("command not found", d->commands[*pos][0]);
             d->exit_status = 127;
-            return (FAILED);
-        } 
+            print_error("command not found", d->commands[*pos][0]);
+        }
     }
     return (SUCCESS);
 }
@@ -109,21 +108,78 @@ int is_empty(int i, t_data *d)
     }
     return (SUCCESS);
 }
+/*
+0	✅ Succès	Commande exécutée sans erreur
+1	⚠️ Erreur générale	Erreur non spécifique
+2	❌ Mauvaise utilisation de la commande	Mauvais arguments, syntaxe invalide
+126	🚫 Commande trouvée mais non exécutable	Fichier sans droits d'exécution
+127	❓ Commande introuvable	Typo ou commande absente du $PATH
+128	🔒 Fin anormale par signal	Interruption par signal (ex: SIGINT)
+130	⛔ Interruption clavier (Ctrl+C)	Signal SIGINT (128 + 2)
+*/
 
-int is_valid_bin(char *str)
+int do_wehave_perm(char *str, t_data *d)
 {
-    int fd;
-    if (ft_strncmp(str, "/bin/", 5) == 0)
-        fd = open(str, O_RDONLY);
-    else
+    if (access(str, X_OK) != 0)
     {
-        char *bin = ft_strjoin("/bin/", str);
-        fd = open(bin, O_RDONLY);
-        free(bin);
+        perror("access");
+        if (errno > 0)
+        {
+            if (errno == EACCES)
+            {
+                print_error("Permission denied", str);
+                d->exit_status = 126;
+            }
+        }
     }
-    if (fd < 0)
+    return (SUCCESS);
+}
+
+int do_file_exist(char *str, t_data *d)
+{
+    if (access(str, X_OK) != 0)
+    {
+        perror("access");
+        if (errno > 0)
+        {
+            if (errno == EACCES)
+            {
+                print_error("Permission denied", str);
+                d->exit_status = 126;
+            }
+            else if (errno == ENOENT)
+            {
+                print_error("No such file or directory", str);
+                d->exit_status = 127;
+            }
+            else if (errno == ENOTDIR)
+            {
+                print_error("A path component is not a directory", str);
+                d->exit_status = 126;
+            }
+            return (FAILED);
+        }
+    }
+    return (SUCCESS);
+}
+
+int do_cmd_exist(char *str, t_data *d)
+{
+    char *res;
+    if (ft_strncmp(str, "/bin/", 5) == 0)
+        res = str;
+    else
+        res = ft_strjoin("/bin/", str);
+
+    if (access(res, R_OK) != 0)
+    {
+        d->exit_status = 127;
+        if (res != str)
+            free(res);
         return (FAILED);
-    close(fd);
+    }
+    if (res != str)
+        free(res);
     return (SUCCESS);
 }
 

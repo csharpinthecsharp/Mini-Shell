@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 15:32:50 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 16:03:39 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/16 02:00:41 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int count_args(char **argv, int start)
         count++;
         start++;
     }
-    return count;
+    return (count);
 }
 
 static char *get_env_string(t_data *d, char *s)

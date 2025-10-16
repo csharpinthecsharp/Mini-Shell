@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/12 21:49:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 16:17:24 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/16 02:15:35 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ void redirect_right(t_data *d, int *pos, int fd_out)
     if (fd_out < 0)
     {
         print_error("No such file or directory", d->output_file[*pos]);
-        d->exit_status = 1;
-        exit(1);
+        d->exit_status = 2;
+        exit(2);
     }
     else
     {
@@ -34,8 +34,8 @@ void redirect_right_right(t_data *d, int *pos, int fd_out)
     if (fd_out < 0)
     {
         print_error("No such file or directory", d->output_file[*pos]);
-        d->exit_status = 1;
-        exit(1);
+        d->exit_status = 2;
+        exit(2);
     }
     else
     {
@@ -48,11 +48,7 @@ void redirect_left(t_data *d, int *pos, int fd_in)
 {
     fd_in = open(d->output_file[*pos], O_RDONLY);
     if (fd_in < 0)
-    {
-        print_error("No such file or directory", d->output_file[*pos]);
-        d->exit_status = 1;
-        exit(1);
-    }
+        exit(2);
     else
     {
         dup2(fd_in, STDIN_FILENO);
@@ -67,10 +63,14 @@ int is_redirect(char **argv, t_data *d)
     int count_right = 0;
     while (argv[i])
     {
-        if (ft_strncmp(argv[i], ">", 2) == 0)
-            count_right++;
+        if (ft_strncmp(argv[i], ">>", 3) == 0)
+            count_right=2;
+        else if (ft_strncmp(argv[i], ">", 2) == 0)
+            count_right=1;
         else if (ft_strncmp(argv[i], "<", 2) == 0)
-            count_left++;
+            count_left=1;
+        else if (ft_strncmp(argv[i], "<<", 3) == 0)
+            count_left=2;
         i++;
     }
     d->N_redir = (count_left + count_right);

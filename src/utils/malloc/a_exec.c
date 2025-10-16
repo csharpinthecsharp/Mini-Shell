@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 15:12:13 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 15:55:58 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/16 00:05:00 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void alloc_start_execution(t_data *d)
 
 void alloc_cmd_state(t_data *d)
 {
-    d->cmd_state = malloc(sizeof(int) * d->cmd_count);
+    d->cmd_state = malloc(sizeof(int) * d->cmd_count + 1);
     if (!d->cmd_state)
     {
         perror("malloc failed");
@@ -32,7 +32,7 @@ void alloc_cmd_state(t_data *d)
 
 void alloc_redir_state(t_data *d)
 {
-    d->redirection_state = malloc(sizeof(int) * d->cmd_count);
+    d->redirection_state = malloc(sizeof(int) * d->cmd_count + 1);
     if (!d->redirection_state)
     {
         perror("malloc failed");
@@ -42,7 +42,7 @@ void alloc_redir_state(t_data *d)
 
 void alloc_output_file(t_data *d)
 {
-    d->output_file = malloc(sizeof(char *) * d->cmd_count);
+    d->output_file = malloc(sizeof(char *) * d->cmd_count + 1);
     if (!d->output_file)
     {
         perror("malloc failed");

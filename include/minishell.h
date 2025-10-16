@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 15:57:47 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/16 00:51:21 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,7 @@ int count_args(char **argv, int start);
 int check_pipe_syntax(char *input);
 int check_in_check_pipe(char *input, int *pos);
 int check_redirection_syntax(char *input);
+int do_wehave_perm(char *str, t_data *d);
 
 // Environment & Path
 char    *getpath(char *buffer, t_data *d);
@@ -135,7 +136,8 @@ char    *replace_envvar(char *s, t_data *d, int *is_dquote);
 void     update_data(t_data *d);
 void     init_data(t_data *d);
 
-int     is_valid_bin(char *str);
+int do_cmd_exist(char *str, t_data *d);
+int do_file_exist(char *str, t_data *d);
 
 // Redirection & Pipes
 void    alloc_redir_state(t_data *d);

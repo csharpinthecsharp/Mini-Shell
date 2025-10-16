@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 16:03:38 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/16 02:05:36 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,44 +38,56 @@ char **get_args(char *s, t_data *d)
 
 char ***split_commands(char **argv)
 {
-    char ***cmds = malloc(sizeof(char **) * 2);
-    if (!cmds)
-        return (NULL);
-
     int i = 0, cmds_i = 0, arg_i = 0;
-    int arg_count = count_args(argv, 0);
-    cmds[cmds_i] = malloc(sizeof(char *) * (arg_count + 2));
-    if (!cmds[cmds_i])
-        return (NULL);
+
+    // tableau de commandes (NULL-terminé)
+    char ***cmds = malloc(sizeof(char **) * 2);
+    if (!cmds) return NULL;
+
+    // tableau d'arguments pour la première commande
+    int arg_cap = 4; // capacité initiale
+    cmds[cmds_i] = malloc(sizeof(char *) * arg_cap);
+    if (!cmds[cmds_i]) return NULL;
 
     while (argv[i])
     {
-        
-        if (argv[i][0] == '|' && argv[i][1] == '\0')
+        if (strcmp(argv[i], "|") == 0)
         {
+            // fin de la commande courante
             cmds[cmds_i][arg_i] = NULL;
             cmds_i++;
-            
-            char ***tmp = realloc(cmds, sizeof(char **) * (cmds_i + 2));
-            if (!tmp)
-                return (NULL);
-            cmds = tmp;
-            
-            arg_count = count_args(argv, i);
-            cmds[cmds_i] = malloc(sizeof(char *) * (arg_count + 2));
-            if (!cmds[cmds_i])
-                return (NULL);
             arg_i = 0;
+
+            // agrandir le tableau de commandes
+            char ***tmp = realloc(cmds, sizeof(char **) * (cmds_i + 2));
+            if (!tmp) return NULL;
+            cmds = tmp;
+
+            // nouvelle commande
+            arg_cap = 4;
+            cmds[cmds_i] = malloc(sizeof(char *) * arg_cap);
+            if (!cmds[cmds_i]) return NULL;
         }
         else
         {
-            cmds[cmds_i][arg_i] = ft_strdup(argv[i]);
+            // agrandir si nécessaire
+            if (arg_i >= arg_cap - 1)
+            {
+                arg_cap *= 2;
+                char **tmp = realloc(cmds[cmds_i], sizeof(char *) * arg_cap);
+                if (!tmp) return NULL;
+                cmds[cmds_i] = tmp;
+            }
+            cmds[cmds_i][arg_i] = strdup(argv[i]);
             arg_i++;
         }
         i++;
     }
+
+    // terminer la dernière commande
     cmds[cmds_i][arg_i] = NULL;
     cmds[cmds_i + 1] = NULL;
+
     return cmds;
 }
 

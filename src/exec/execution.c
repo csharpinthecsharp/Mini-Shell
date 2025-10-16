@@ -6,12 +6,24 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 16:23:38 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/16 02:09:29 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
+// CATCH LES ERROR DE EXECVE AVEC ERRNO
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+static int is_output_valid(char *str, t_data *d, int redir_type)
+{
+    if (redir_type == LEFT)
+        if (do_file_exist(str, d) == 1)
+        {
+            d->exit_status = 1;
+            return (FAILED);
+        }
+    return (SUCCESS);
+}
 int start_execution(t_data *d)
 {
     int i;
@@ -22,15 +34,17 @@ int start_execution(t_data *d)
     alloc_start_execution(d);
     while (i <= d->cmd_count)
     {
-        if (is_empty(i, d) == 1)
+        if (is_empty(i, d) == FAILED)
             return (FAILED);
         int type = check_command(d->commands[i]);
         int redir_type = is_redirect(d->commands[i], d);
-        put_cmdstate(type, &i, &is_stateful, d);
+        if (put_cmdstate(type, &i, &is_stateful, d) == FAILED)
+                return (FAILED);
         if ((redir_type > NOT_FOUND))
         {
             (*d).redirection_state[i] = redir_type;
             d->commands[i] = fix_redir_arg(d, d->commands[i], redir_type, i);
+            is_output_valid(d->output_file[i], d, redir_type);
             if (is_empty(i, d) == 1)
                 return (FAILED);
         }

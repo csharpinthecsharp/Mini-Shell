@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 00:34:09 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 15:59:50 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/16 01:53:03 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,12 @@ int get_arg_length(const char *s, int *i, int *is_dquote)
         return 0;
     if (s[*i] == '|' || s[*i] == '<' || s[*i] == '>')
     {
-        (*i)++;
+        if (s[*i + 1] == '<' && s[*i] == '<')
+            (*i)+=2;
+        else if (s[*i + 1] == '>' && s[*i] == '>')
+            (*i)+=2;
+        else 
+            (*i)+=1;
         return 1;
     }
     while (s[*i] && !ft_isspace(s[*i]) && s[*i] != '|' && s[*i] != '<' && s[*i] != '>')
