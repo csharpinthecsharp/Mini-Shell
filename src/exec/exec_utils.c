@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 19:59:55 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/16 16:44:20 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/16 17:16:23 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,30 +141,100 @@ char **fix_redir_arg(t_data *d, char **argv, int redir_type, int index)
 int put_cmdstate(int type, int *pos, int *is_stateful, t_data *d)
 {
     if (type == CUSTOM)
-        (*d).cmd_state[*pos] = CUSTOM;
+    {
+        d->cmd_state[*pos] = CUSTOM;
+    }
     else if (type == STATEFUL)
     {
         *is_stateful = 1;
         if (d->cmd_count == 0)
+        {
             run_custom_cmd(d->commands[*pos], d);
+        }
         else
         {
             d->exit_status = 1;
-            return (FAILED);
+            return FAILED;
         }
     }
     else if (type == BIN)
     {
-        if (do_cmd_exist(d->commands[*pos][0], d) == SUCCESS)
-            (*d).cmd_state[*pos] = BIN;
+        char *cmd = d->commands[*pos][0];
+
+        if (do_cmd_exist(cmd, d) == SUCCESS)
+        {
+            d->cmd_state[*pos] = BIN;
+        }
         else
         {
+            if (ft_strchr(cmd, '/') == NULL)
+            {
+                d->exit_status = 127;
+                print_error("command not found", cmd);
+                return FAILED;
+            }
+            
+            struct stat st;
+            if (stat(cmd, &st) == -1)
+            {
+                if (errno == ENOENT && ft_strchr(cmd, '/') != NULL)
+                {
+                    d->exit_status = 127;
+                    print_error("No such file or directory", cmd);
+                }
+                else if (errno == EACCES)
+                {
+                    d->exit_status = 126;
+                    print_error("Permission denied", cmd);
+                }
+                else
+                {
+                    d->exit_status = 127;
+                    print_error("command not found", cmd);
+                }
+                return FAILED;
+            }
+
+            if (S_ISDIR(st.st_mode))
+            {
+                if (ft_strchr(cmd, '/') != NULL)
+                {
+                    d->exit_status = 126;
+                    print_error("Is a directory", cmd);
+                }
+                else
+                {
+                    d->exit_status = 127;
+                    print_error("command not found", cmd);
+                }
+                return FAILED;
+            }
+
+            // If file exists and is not a directory, but still not executable
+            if (access(cmd, X_OK) != 0)
+            {
+                if (errno == EACCES)
+                {
+                    d->exit_status = 126;
+                    print_error("Permission denied", cmd);
+                }
+                else
+                {
+                    d->exit_status = 127;
+                    print_error("command not found", cmd);
+                }
+                return FAILED;
+            }
+
+            // If none of the above, fallback
             d->exit_status = 127;
-            print_error("command not found", d->commands[*pos][0]);
+            print_error("command not found", cmd);
+            return FAILED;
         }
     }
-    return (SUCCESS);
+    return SUCCESS;
 }
+
 int check_command(char **argv)
 {
     int len = ft_strlen(argv[0]);
@@ -193,59 +263,6 @@ int is_empty(int i, t_data *d)
         d->exit_status = 127;
         print_error("command not found", "!");
         return (FAILED);
-    }
-    return (SUCCESS);
-}
-/*
-0	✅ Succès	Commande exécutée sans erreur
-1	⚠️ Erreur générale	Erreur non spécifique
-2	❌ Mauvaise utilisation de la commande	Mauvais arguments, syntaxe invalide
-126	🚫 Commande trouvée mais non exécutable	Fichier sans droits d'exécution
-127	❓ Commande introuvable	Typo ou commande absente du $PATH
-128	🔒 Fin anormale par signal	Interruption par signal (ex: SIGINT)
-130	⛔ Interruption clavier (Ctrl+C)	Signal SIGINT (128 + 2)
-*/
-
-int do_wehave_perm(char *str, t_data *d)
-{
-    if (access(str, X_OK) != 0)
-    {
-        perror("access");
-        if (errno > 0)
-        {
-            if (errno == EACCES)
-            {
-                print_error("Permission denied", str);
-                d->exit_status = 126;
-            }
-        }
-    }
-    return (SUCCESS);
-}
-
-int do_file_exist(char *str, t_data *d)
-{
-    if (access(str, X_OK) != 0)
-    {
-        if (errno > 0)
-        {
-            if (errno == EACCES)
-            {
-                print_error("Permission denied", str);
-                d->exit_status = 126;
-            }
-            else if (errno == ENOENT)
-            {
-                print_error("No such file or directory", str);
-                d->exit_status = 127;
-            }
-            else if (errno == ENOTDIR)
-            {
-                print_error("A path component is not a directory", str);
-                d->exit_status = 126;
-            }
-            return (FAILED);
-        }
     }
     return (SUCCESS);
 }

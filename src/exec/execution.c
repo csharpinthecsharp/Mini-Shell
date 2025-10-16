@@ -6,24 +6,12 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/16 16:44:16 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/16 17:16:26 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-// CATCH LES ERROR DE EXECVE AVEC ERRNO
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-int is_output_valid(char *str, t_data *d, int redir_type)
-{
-    if (redir_type == LEFT)
-        if (do_file_exist(str, d) == 1)
-        {
-            d->exit_status = 1;
-            return (FAILED);
-        }
-    return (SUCCESS);
-}
 int start_execution(t_data *d)
 {
     int i;
