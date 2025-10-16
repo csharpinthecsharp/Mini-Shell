@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/16 14:54:34 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/16 16:12:24 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,6 +165,11 @@ void run_non_stateful(t_data *d, int N_pipe)
     {
         if (wpid == last_pid)
         {
+            if (WIFSIGNALED(status) && WTERMSIG(status) == SIGPIPE)
+            {
+                print_error("Broken pipe", "!");
+                d->exit_status = 1;
+            }
             if (WIFEXITED(status))
                 d->exit_status = WEXITSTATUS(status);
             else if (WIFSIGNALED(status))

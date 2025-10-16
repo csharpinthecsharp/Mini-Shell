@@ -1,5 +1,6 @@
 #!/bin/bash
 
+git clone https://github.com/LucasKuhn/minishell_tester.git
 cd minishell_tester || exit
 
 echo
@@ -18,3 +19,6 @@ read -p "Enter to continue [Pipes Test]"
 echo
 read -p "Enter to continue [Redirections Test]"
 ./tester redirects
+
+cd ..
+rm -rf minishell_tester
