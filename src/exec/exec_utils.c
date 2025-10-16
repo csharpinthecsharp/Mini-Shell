@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 19:59:55 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/16 16:19:37 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/16 16:44:20 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,21 +18,22 @@ int check_output_ofeach(char **argv, t_data *d)
 
     while (argv[i])
     {
-        // Handle output redirection (> or >>)
-        if ((ft_strncmp(argv[i], ">", 1) == 0 || ft_strncmp(argv[i], ">>", 2) == 0) && argv[i + 1])
+        // Output redirection (> or >>)
+        if (((ft_strncmp(argv[i], ">", ft_strlen(argv[i])) == 0 && argv[i][1] == '\0') ||
+             ft_strncmp(argv[i], ">>", ft_strlen(argv[i])) == 0) && argv[i + 1])
         {
             char *dir = get_directory(argv[i + 1]);
 
-            // 1. Directory must exist
+            // Directory must exist
             if (!dir || access(dir, F_OK) != 0)
             {
                 print_error("No such file or directory", argv[i + 1]);
                 d->exit_status = 1;
                 free(dir);
-                return FAILED;
+                return (FAILED);
             }
 
-            // 2. If file exists but not writable → Permission denied
+            // If file exists but not writable
             if (access(argv[i + 1], F_OK) == 0 && access(argv[i + 1], W_OK) != 0)
             {
                 if (errno == EACCES)
@@ -40,7 +41,7 @@ int check_output_ofeach(char **argv, t_data *d)
                     print_error("Permission denied", argv[i + 1]);
                     d->exit_status = 1;
                     free(dir);
-                    return FAILED;
+                    return (FAILED);
                 }
             }
 
@@ -49,34 +50,35 @@ int check_output_ofeach(char **argv, t_data *d)
             continue;
         }
 
-        // Handle input redirection (<)
-        if (ft_strncmp(argv[i], "<", 1) == 0 && argv[i + 1])
+        // Input redirection (<)
+        if (ft_strncmp(argv[i], "<", ft_strlen(argv[i])) == 0 && argv[i + 1])        
         {
-            // File must exist and be readable
-            if (access(argv[i + 1], F_OK) != 0)
+            const char *path = argv[i + 1];
+
+            if (access(path, F_OK) != 0)
             {
-                print_error("No such file or directory", argv[i + 1]);
+                print_error("No such file or directory", path);
                 d->exit_status = 1;
-                return FAILED;
+                return (FAILED);
             }
-            if (access(argv[i + 1], R_OK) != 0)
+            if (access(path, R_OK) != 0)
             {
                 if (errno == EACCES)
                 {
-                    print_error("Permission denied", argv[i + 1]);
+                    print_error("Permission denied", path);
                     d->exit_status = 1;
-                    return FAILED;
+                    return (FAILED);
                 }
             }
             i += 2;
             continue;
+
         }
 
         i++;
     }
-    return SUCCESS;
+    return (SUCCESS);
 }
-
 
 char *get_directory(const char *path)
 {

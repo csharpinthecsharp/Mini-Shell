@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/16 16:12:24 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/16 16:44:16 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ int start_execution(t_data *d)
                 (check_output_ofeach(d->commands[i], d) == FAILED))
                 return (FAILED);
             d->commands[i] = fix_redir_arg(d, d->commands[i], redir_type, i);
-            is_output_valid(d->output_file[i], d, redir_type);
             if (is_empty(i, d) == 1)
                 return (FAILED);
         }
