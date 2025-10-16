@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 19:59:55 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/16 01:55:25 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/16 14:18:12 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,6 @@ int do_file_exist(char *str, t_data *d)
 {
     if (access(str, X_OK) != 0)
     {
-        perror("access");
         if (errno > 0)
         {
             if (errno == EACCES)

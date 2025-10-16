@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/12 21:49:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/16 02:15:35 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/16 14:19:47 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,7 @@ void redirect_right(t_data *d, int *pos, int fd_out)
     if (fd_out < 0)
     {
         print_error("No such file or directory", d->output_file[*pos]);
-        d->exit_status = 2;
-        exit(2);
+        exit(1);
     }
     else
     {
@@ -34,8 +33,7 @@ void redirect_right_right(t_data *d, int *pos, int fd_out)
     if (fd_out < 0)
     {
         print_error("No such file or directory", d->output_file[*pos]);
-        d->exit_status = 2;
-        exit(2);
+        exit(1);
     }
     else
     {
@@ -48,7 +46,7 @@ void redirect_left(t_data *d, int *pos, int fd_in)
 {
     fd_in = open(d->output_file[*pos], O_RDONLY);
     if (fd_in < 0)
-        exit(2);
+        exit(1);
     else
     {
         dup2(fd_in, STDIN_FILENO);
