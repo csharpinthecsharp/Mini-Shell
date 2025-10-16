@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/16 02:18:55 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/16 14:54:34 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 // CATCH LES ERROR DE EXECVE AVEC ERRNO
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-static int is_output_valid(char *str, t_data *d, int redir_type)
+int is_output_valid(char *str, t_data *d, int redir_type)
 {
     if (redir_type == LEFT)
         if (do_file_exist(str, d) == 1)
@@ -43,6 +43,9 @@ int start_execution(t_data *d)
         if ((redir_type > NOT_FOUND))
         {
             (*d).redirection_state[i] = redir_type;
+            if ((d->cmd_count <= 0) && 
+                (check_output_ofeach(d->commands[i], d) == FAILED))
+                return (FAILED);
             d->commands[i] = fix_redir_arg(d, d->commands[i], redir_type, i);
             is_output_valid(d->output_file[i], d, redir_type);
             if (is_empty(i, d) == 1)

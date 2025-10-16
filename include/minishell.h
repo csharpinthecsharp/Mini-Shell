@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/16 00:51:21 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/16 14:48:02 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,8 @@ int check_pipe_syntax(char *input);
 int check_in_check_pipe(char *input, int *pos);
 int check_redirection_syntax(char *input);
 int do_wehave_perm(char *str, t_data *d);
+int is_output_valid(char *str, t_data *d, int redir_type);
+int check_output_ofeach(char **argv, t_data *d);
 
 // Environment & Path
 char    *getpath(char *buffer, t_data *d);

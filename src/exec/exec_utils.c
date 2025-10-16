@@ -6,12 +6,28 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 19:59:55 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/16 14:18:12 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/16 14:47:57 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
+int check_output_ofeach(char **argv, t_data *d)
+{
+    int i = 0;
+    while (argv[i])
+    {
+        if (ft_strncmp(argv[i], "<", 2) == 0)
+        {
+            if ((argv[i + 1]) &&
+             (is_output_valid(argv[i + 1], d, LEFT) == FAILED))
+            return (FAILED);
+        }
+        i++;
+    }
+    return (SUCCESS);
+
+}
 char **fix_redir_arg(t_data *d, char **argv, int redir_type, int index)
 {
     (void)redir_type;
