@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 00:34:09 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/16 01:53:03 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/17 13:15:49 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ int loop_into_arg(int i, char *s, int k, char *arg, int *j)
     }
     return k;
 }
-
 
 char *get_one_arg(char *s, int *i, int *is_dquote)
 {

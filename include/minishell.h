@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/16 16:51:19 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/17 14:57:22 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,18 +78,22 @@ typedef struct s_data
     char    *input;
     char    **input_splitted;
     char    ***commands;
-    char    **output_file;
     int     *cmd_state;
-    int     *redirection_state;
+    
+    char    ***output_file;
+    int     **redirection_state;
+    int     *N_redir;
+    int     N_redirfull;
+
     int     *cmd_quoted;
     int  cmd_count;
     char    *path;
     char    **envp;
     int     SHLVL;
-    int     N_redir;
     int     last_fork_pid;
     int     exit_status;
     char    *new_path;
+    
 }   t_data;
 
 /* ========================== */
@@ -110,7 +114,7 @@ void heredoc_ctrl_c(int sig);
 int     start_execution(t_data *d);
 int     run_custom_cmd(char **argv, t_data *d);
 void    run_non_stateful(t_data *d, int N_pipe);
-int     is_redirect(char **argv, t_data *d);
+int     is_redirect(char **argv, t_data *d, int *pos, int i);
 void handler_ctrl_c(int sig);
 
 // Parsing & Input
@@ -128,7 +132,7 @@ int check_pipe_syntax(char *input);
 int check_in_check_pipe(char *input, int *pos);
 int check_redirection_syntax(char *input);
 int do_wehave_perm(char *str, t_data *d);
-int check_output_ofeach(char **argv, t_data *d);
+int check_output_ofeach(t_data *d, int index);
 char *get_directory(const char *path);
 
 // Environment & Path
@@ -146,7 +150,7 @@ void    alloc_redir_state(t_data *d);
 void    alloc_cmd_state(t_data *d);
 void    alloc_error_pipe(int N_pipe, int **var_pipe);
 void    close_pipe(int **var_pipe, int N_pipe, int state);
-char    **fix_redir_arg(t_data *d, char **argv, int redir_type, int index);
+char **fix_redir_arg(t_data *d, char **argv, int index);
 void alloc_buffer(char **buffer);
 int put_cmdstate(int type, int *pos, int *is_stateful, t_data *d);
 
@@ -165,10 +169,9 @@ void alloc_parse_args(char ***argv, int len);
 int     check_command(char **argv);
 void    print_error(const char *str, const char *arg);
 int count_cmds(char ***cmds);
-void redirect_left_left(t_data *d, int *pos, int fd_in);
-void redirect_left(t_data *d, int *pos, int fd_in);
-void redirect_right_right(t_data *d, int *pos, int fd_out);
-void redirect_right(t_data *d, int *pos, int fd_out);
+void redirect_left(t_data *d, int *pos, int fd_in, int i);
+void redirect_right_right(t_data *d, int *pos, int fd_out, int i);
+void redirect_right(t_data *d, int *pos, int fd_out, int i);
 int is_numeric(const char *str);
 int global_check(t_data *d);
 char **duplicate_envp(char **envp);
@@ -177,7 +180,7 @@ int isfulls(char *s);
 void select_readline_mode(t_data *d);
 void start_minishell(t_data *d);
 void prepare_heredoc(t_data *d, int *pos);
-void heredoc(t_data *d, int *pos);
+void heredoc(t_data *d, int *pos, int i);
 void exit_ctrl_d(t_data *d, char *buf);
 int is_empty(int i, t_data *d);
 

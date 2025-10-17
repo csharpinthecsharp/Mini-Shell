@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/16 17:16:26 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/17 15:16:40 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,26 +20,33 @@ int start_execution(t_data *d)
     i = 0;
     is_stateful = 0;
     alloc_start_execution(d);
+    d->N_redir = malloc(sizeof (int ) * 64);
+    int count = 0;
+    while ((i <= d->cmd_count))
+    {
+        int pos = 0;
+        count += is_redirect(d->commands[i], d, &pos, i);
+        i++;
+    }
+    if ((d->cmd_count <= 0) && check_output_ofeach(d, i) == FAILED)
+        return (FAILED);
+    d->N_redirfull = count;
+
+    i = 0;
     while (i <= d->cmd_count)
     {
         if (is_empty(i, d) == FAILED)
             return (FAILED);
         int type = check_command(d->commands[i]);
-        int redir_type = is_redirect(d->commands[i], d);
         if (put_cmdstate(type, &i, &is_stateful, d) == FAILED)
                 return (FAILED);
-        if ((redir_type > NOT_FOUND))
-        {
-            (*d).redirection_state[i] = redir_type;
-            if ((d->cmd_count <= 0) && 
-                (check_output_ofeach(d->commands[i], d) == FAILED))
-                return (FAILED);
-            d->commands[i] = fix_redir_arg(d, d->commands[i], redir_type, i);
+
+        if (d->N_redir > 0)
+        {            
+            d->commands[i] = fix_redir_arg(d, d->commands[i], i);
             if (is_empty(i, d) == 1)
                 return (FAILED);
         }
-        else
-            (*d).redirection_state[i] = 0;
         i++;
     }
     if (is_stateful == 0)
@@ -49,8 +56,15 @@ int start_execution(t_data *d)
 
 static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
 {
-    if (d->redirection_state[*pos] == LEFT_LEFT)
-        heredoc(d, pos);
+    int i = 0;
+    while (d->redirection_state[*pos][i])
+    {
+        if (d->redirection_state[*pos][i] == LEFT_LEFT)
+            heredoc(d, pos, i);
+        i++;
+    }
+    
+    i = 0;
     int fd_out = 0;
     int fd_in = 0;
     if (d->cmd_state[*pos] == CUSTOM)
@@ -69,12 +83,18 @@ static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
 
                     close_pipe(var_pipe, N_pipe, 1);
                 }
-                if (d->redirection_state[*pos] == RIGHT)
-                    redirect_right(d, pos, fd_out);
-                else if (d->redirection_state[*pos] == RIGHT_RIGHT)
-                    redirect_right_right(d, pos, fd_out);
-                else if (d->redirection_state[*pos] == LEFT)
-                    redirect_left(d, pos, fd_in);
+                
+                int i = 0;
+                while (d->redirection_state[*pos][i])
+                {
+                    if (d->redirection_state[*pos][i] == RIGHT)
+                        redirect_right(d, pos, fd_out, i);
+                    else if (d->redirection_state[*pos][i] == RIGHT_RIGHT)
+                        redirect_right_right(d, pos, fd_out, i);
+                    else if (d->redirection_state[*pos][i] == LEFT)
+                        redirect_left(d, pos, fd_in, i);
+                    i++;
+                }
                     
                 run_custom_cmd(d->commands[*pos], d);
                 exit(d->exit_status);
@@ -89,8 +109,15 @@ static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
 
 static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
 {
-    if (d->redirection_state[*pos] == LEFT_LEFT)
-        heredoc(d, pos);
+    int i = 0;
+    while (d->redirection_state[*pos][i])
+    {
+        if (d->redirection_state[*pos][i] == LEFT_LEFT)
+            heredoc(d, pos, i);
+        i++;
+    }
+    
+    i = 0;
     int fd_out = 0;
     int fd_in = 0;
     pid_t pid = fork();
@@ -104,12 +131,18 @@ static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
                 dup2(var_pipe[(*pos)][1], STDOUT_FILENO);
             close_pipe(var_pipe, N_pipe, 1);
         }
-        if (d->redirection_state[*pos] == RIGHT)
-            redirect_right(d, pos, fd_out);
-        else if (d->redirection_state[*pos] == RIGHT_RIGHT)
-            redirect_right_right(d, pos, fd_out);
-        else if (d->redirection_state[*pos] == LEFT)
-            redirect_left(d, pos, fd_in);
+        
+        int i = 0;
+        while (d->redirection_state[*pos][i])
+        {
+            if (d->redirection_state[*pos][i] == RIGHT)
+                redirect_right(d, pos, fd_out, i);
+            else if (d->redirection_state[*pos][i] == RIGHT_RIGHT)
+                redirect_right_right(d, pos, fd_out, i);
+            else if (d->redirection_state[*pos][i] == LEFT)
+                redirect_left(d, pos, fd_in, i);
+            i++;
+        }
         
         if (ft_strncmp(d->commands[*pos][0], "/bin/", 5) == 0)
             execve(d->commands[*pos][0], d->commands[*pos], d->envp);

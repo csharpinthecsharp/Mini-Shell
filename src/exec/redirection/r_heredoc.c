@@ -6,16 +6,16 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 16:16:18 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 16:17:27 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/17 14:57:10 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../include/minishell.h"
 
-void heredoc(t_data *d, int *pos)
+void heredoc(t_data *d, int *pos, int i)
 {
     char *res = NULL;
-    char *delimiter = d->output_file[*pos];
+    char *delimiter = d->output_file[*pos][i];
     int heredoc[2];
     int stdin;
     

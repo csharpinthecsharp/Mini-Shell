@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 15:35:24 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 14:14:52 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/17 14:25:20 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void update_data(t_data *d)
 
 void init_data(t_data *d)
 {
+    d->N_redirfull = 0;
     d->kill_execution = 0;
     d->kill_heredoc = 0;
     d->exit_status = 0;

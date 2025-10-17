@@ -6,18 +6,18 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/12 21:49:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/16 14:19:47 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/17 14:56:57 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../include/minishell.h"
 
-void redirect_right(t_data *d, int *pos, int fd_out)
+void redirect_right(t_data *d, int *pos, int fd_out, int i)
 {
-    fd_out = open(d->output_file[*pos], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    fd_out = open(d->output_file[*pos][i], O_WRONLY | O_CREAT | O_TRUNC, 0644);
     if (fd_out < 0)
     {
-        print_error("No such file or directory", d->output_file[*pos]);
+        print_error("No such file or directory", d->output_file[*pos][i]);
         exit(1);
     }
     else
@@ -27,12 +27,12 @@ void redirect_right(t_data *d, int *pos, int fd_out)
     }
 }
 
-void redirect_right_right(t_data *d, int *pos, int fd_out)
+void redirect_right_right(t_data *d, int *pos, int fd_out, int i)
 {
-    fd_out = open(d->output_file[*pos], O_WRONLY | O_CREAT | O_APPEND, 0644);
+    fd_out = open(d->output_file[*pos][i], O_WRONLY | O_CREAT | O_APPEND, 0644);
     if (fd_out < 0)
     {
-        print_error("No such file or directory", d->output_file[*pos]);
+        print_error("No such file or directory", d->output_file[*pos][i]);
         exit(1);
     }
     else
@@ -42,9 +42,9 @@ void redirect_right_right(t_data *d, int *pos, int fd_out)
     }
 }
 
-void redirect_left(t_data *d, int *pos, int fd_in)
+void redirect_left(t_data *d, int *pos, int fd_in, int i)
 {
-    fd_in = open(d->output_file[*pos], O_RDONLY);
+    fd_in = open(d->output_file[*pos][i], O_RDONLY);
     if (fd_in < 0)
         exit(1);
     else
@@ -54,33 +54,36 @@ void redirect_left(t_data *d, int *pos, int fd_in)
     }
 }
 
-int is_redirect(char **argv, t_data *d)
+int is_redirect(char **argv, t_data *d, int *pos, int i)
 {
-    int i = 0;
-    int count_left = 0;
-    int count_right = 0;
-    while (argv[i])
+    int count = 0;
+
+    while (argv[*pos]) 
     {
-        if (ft_strncmp(argv[i], ">>", 3) == 0)
-            count_right=2;
-        else if (ft_strncmp(argv[i], ">", 2) == 0)
-            count_right=1;
-        else if (ft_strncmp(argv[i], "<", 2) == 0)
-            count_left=1;
-        else if (ft_strncmp(argv[i], "<<", 3) == 0)
-            count_left=2;
-        i++;
+        int redir_type = NOT_FOUND;
+
+        if (ft_strncmp(argv[*pos], ">>", 3) == 0)
+            redir_type = RIGHT_RIGHT;
+        else if (ft_strncmp(argv[*pos], ">", 2) == 0)
+            redir_type = RIGHT;
+        else if (ft_strncmp(argv[*pos], "<<", 3) == 0)
+            redir_type = LEFT_LEFT;
+        else if (ft_strncmp(argv[*pos], "<", 2) == 0)
+            redir_type = LEFT;
+
+        if (redir_type != NOT_FOUND && argv[*pos + 1]) 
+        {
+            d->redirection_state[i][count] = redir_type;
+            d->output_file[i][count] = ft_strdup(argv[*pos + 1]); // store filename
+            count++;
+            (*pos) += 2; // skip operator and filename
+        } 
+        else 
+        {
+            (*pos)++;
+        }
     }
-    d->N_redir = (count_left + count_right);
-    
-    if (count_left == 1 && count_right == 0)
-        return (LEFT);
-    else if (count_left == 2 && count_right == 0)
-        return (LEFT_LEFT);
-    else if (count_left == 0 && count_right == 1)
-        return (RIGHT);
-    else if (count_left == 0 && count_right == 2)
-        return (RIGHT_RIGHT);
-    else
-        return (NOT_FOUND);
+    d->N_redir[i] = count;
+    return count;
 }
+
