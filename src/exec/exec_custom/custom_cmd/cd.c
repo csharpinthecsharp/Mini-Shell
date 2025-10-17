@@ -6,18 +6,26 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 12:38:38 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 17:34:08 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/17 15:52:06 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../../include/minishell.h"
+
 
 int handle_cd(char **argv, int count, t_data *d)
 {
     char *target_path;
 
     if (count == 1)
-        target_path = getenv("HOME");
+    {
+        target_path = ft_get_env(d, "HOME");
+        if (!target_path)
+        {
+            d->exit_status = 1;
+            return (FAILED);
+        }
+    }
     else if (count == 2)
         target_path = argv[1];
     else

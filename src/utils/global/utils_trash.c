@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 20:20:39 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 17:43:29 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/17 16:42:39 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,19 +63,39 @@ int ft_isspace(char arg)
     return (0);
 }
 
-int is_numeric(const char *str)
+int is_numeric(const char *str, int strict)
 {
     int i = 0;
-    if (str[0] == '-' || str[0] == '+')
-        i++;
-    while (str[i])
+
+    if (!str || !str[0])
+        return 0;
+
+    // Mode strict : refuse les signes +/-
+    if (strict)
     {
-        if (!ft_isdigit(str[i]))
-            return (0);
-        i++;
+        while (str[i])
+        {
+            if (!ft_isdigit(str[i]))
+                return 0;
+            i++;
+        }
     }
-    return (1);
+    else
+    {
+        // Mode permissif : accepte + ou - en première position
+        if (str[0] == '+' || str[0] == '-')
+            i++;
+        while (str[i])
+        {
+            if (!ft_isdigit(str[i]))
+                return 0;
+            i++;
+        }
+    }
+
+    return 1;
 }
+
 
 int isfulls(char *s)
 {

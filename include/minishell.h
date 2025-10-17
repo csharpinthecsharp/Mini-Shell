@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/17 14:57:22 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/17 17:11:17 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,6 +164,7 @@ void free_beforenewline(t_data *d, char *buffer);
 void alloc_output_file(t_data *d);
 void alloc_start_execution(t_data *d);
 void alloc_parse_args(char ***argv, int len);
+char *ft_get_env(t_data *d, char *requested);
 
 // Misc
 int     check_command(char **argv);
@@ -172,7 +173,7 @@ int count_cmds(char ***cmds);
 void redirect_left(t_data *d, int *pos, int fd_in, int i);
 void redirect_right_right(t_data *d, int *pos, int fd_out, int i);
 void redirect_right(t_data *d, int *pos, int fd_out, int i);
-int is_numeric(const char *str);
+int is_numeric(const char *str, int state);
 int global_check(t_data *d);
 char **duplicate_envp(char **envp);
 char *up_shlvl(char *envp_i);

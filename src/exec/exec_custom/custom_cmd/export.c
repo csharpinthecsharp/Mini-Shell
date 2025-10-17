@@ -6,69 +6,95 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 12:39:16 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 17:34:18 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/17 16:48:43 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../../include/minishell.h"
 
+static int is_valid_identifier(const char *str)
+{
+    if (!str || !str[0])
+        return 0;
+
+    if (!ft_isalpha(str[0]) && str[0] != '_')
+        return 0;
+
+    for (int i = 1; str[i] && str[i] != '='; i++)
+    {
+        if (!ft_isalnum(str[i]) && str[i] != '_')
+            return 0;
+    }
+
+    return 1;
+}
+
 int handle_export(char **argv, int count, t_data *d)
 {
+    int i = 0;
     if (count == 1)
     {
-        int i = 0;
         while (d->envp[i])
         {
             printf("%s\n", d->envp[i]);
             i++;
         }
-        return (0);
+        return 0;
     }
+
     if (count == 2)
     {
-        int p = 0;
-        while (argv[1][p])
+        char *arg = argv[1];
+        char *equal_sign = ft_strchr(arg, '=');
+        
+        if (!equal_sign)
         {
-            if (argv[1][p] == '=')
-                break;
-            if ((argv[1][p] >= 'a' && argv[1][p] <= 'z')
-                || (argv[1][p] >= 'A' && argv[1][p] <= 'Z'))
-                p++;
-            else
+            if (!is_valid_identifier(arg))
             {
-                print_error("not a valid identifier", argv[1]);
-                return (1);
+                print_error("not a valid identifier", arg);
+                return 1;
             }
+            arg = ft_strjoin(arg, "=''");
         }
         
-        if (is_numeric(argv[1]) || argv[1][0] == '=')
+        if (arg[0] == '=' || !is_valid_identifier(arg))
         {
-            print_error("not a valid identifier", argv[1]);
-            return (1);
+            print_error("not a valid identifier", arg);
+            return 1;
         }
-        
+
+        char *equal = ft_strchr(arg, '=');
+        int len = equal - arg;
+        char *key = malloc(len + 1);
+        ft_strlcpy(key, arg, len + 1);
+
+        i = 0;
+        while (d->envp[i])
+        {
+            if (ft_strncmp(d->envp[i], key, ft_strlen(key)) == 0 && d->envp[i][ft_strlen(key)] == '=')
+            {
+                free(d->envp[i]);
+                d->envp[i] = ft_strdup(arg);
+                return 0;
+            }
+            i++;
+        }
+
+        // Ajout sans suppression
         int i = 0;
         while (d->envp[i])
             i++;
+
         char **new_envp = realloc(d->envp, sizeof(char *) * (i + 2));
         if (!new_envp)
-            return (1);
-            
-        d->envp = new_envp;
+            return 1;
 
-        d->envp[i] = malloc(sizeof(char ) * ft_strlen(argv[1]) + 1);
-        if (!d->envp[i])
-            return (1);
-        
-        int j = 0;
-        while (argv[1][j])
-        {
-            d->envp[i][j] = argv[1][j];
-            j++;
-        }
-        d->envp[i][j] = '\0';
-        i += 1;
-        d->envp[i] = NULL;
+        d->envp = new_envp;
+        d->envp[i] = ft_strdup(arg);
+        d->envp[i + 1] = NULL;
     }
-    return (0);
+
+    return 0;
 }
+
+

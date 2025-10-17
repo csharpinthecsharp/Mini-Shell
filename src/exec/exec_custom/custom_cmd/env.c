@@ -6,11 +6,28 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 12:39:38 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 17:34:10 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/17 15:54:59 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../../include/minishell.h"
+
+char *ft_get_env(t_data *d, char *requested)
+{
+    int i = 0;
+
+    while (d->envp[i])
+    {
+        if (ft_strncmp(d->envp[i], requested, ft_strlen(requested)) == 0 &&
+            d->envp[i][ft_strlen(requested)] == '=')
+        {
+            return d->envp[i] + ft_strlen(requested) + 1;
+        }
+        i++;
+    }
+    return NULL;
+}
+
 
 int handle_env(char **argv, int count, t_data *d)
 {

@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 12:37:54 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 17:34:13 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/17 16:33:34 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int handle_exit(char **argv, int count)
     if (!argv[1])
         exit(0);
 
-    if (!is_numeric(argv[1]))
+    if (!(is_numeric(argv[1], 0)))
     {
         print_error("numeric argument required", argv[1]);
         exit(2);
