@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 19:59:55 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/18 03:21:01 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/18 22:36:55 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,34 +14,38 @@
 
 int check_output_ofeach(t_data *d, int index)
 {
+    //for (int j = 0; d->output_file[index][j]; j++)
+      //  printf("OUTPUTFILE: %s\n", d->output_file[index][j]);
     int i = 0;
     while (i < d->N_redir[index]) 
     {
         int type = d->redirection_state[index][i];
         char *file = d->output_file[index][i];
         char *dir = get_directory(file);
-
         if ((type == RIGHT || type == RIGHT_RIGHT) && file)
         {
             if (!dir || access(dir, F_OK) != 0)
             {
                 if (i == d->N_redir[index])
-                {
-                    print_error("No such file or directory", file);
                     return FAILED;
+
+                if (d->error_state == 0)
+                {  
+                    print_error("No such file or directory", file);   
+                    d->error_state = 1;
                 }
-                print_error("No such file or directory", file);      
             }
             if (access(file, F_OK) == 0 && access(file, W_OK) != 0) 
             {
                 if (errno == EACCES) 
                 {
                     if (i == d->N_redir[index])
-                    {
-                        print_error("Permission denied", file);
                         return FAILED;
+                    if (d->error_state == 0)
+                    {  
+                        print_error("Permission denied", file);   
+                        d->error_state = 1;
                     }
-                    print_error("Permission denied", file);
                 }
             }
             free(dir); 
@@ -51,23 +55,24 @@ int check_output_ofeach(t_data *d, int index)
             if (access(file, F_OK) != 0) 
             {
                 if (i == d->N_redir[index])
-                {
-                    print_error("No such file or directory", file);
                     return FAILED;
+                if (d->error_state == 0)
+                {  
+                    print_error("No such file or directory", file);   
+                    d->error_state = 1;
                 }
-                print_error("No such file or directory", file);
-
             }
             if (access(file, R_OK) != 0) 
             {
                 if (errno == EACCES)
                 {
                     if (i == d->N_redir[index])
-                    {
-                        print_error("Permission denied", file);
                         return FAILED;
-                    }
-                    print_error("Permission denied", file);
+                    if (d->error_state == 0)
+                    {  
+                        print_error("Permission denied", file);   
+                        d->error_state = 1;
+                    }                
                 }
             }
         }
@@ -99,6 +104,8 @@ char *get_directory(const char *path)
 
 char **fix_redir_arg(t_data *d, char **argv, int index)
 {
+    (void)d;
+    (void)index;
     int i = 0;
     int j = 0;
     char **dup = malloc(sizeof(char *) * 256); 
@@ -110,13 +117,11 @@ char **fix_redir_arg(t_data *d, char **argv, int index)
 
     while (argv[i])
     {
-        if ((ft_strncmp(argv[i], ">>", 2) == 0) ||
-            (ft_strncmp(argv[i], "<<", 2) == 0) ||
+        if ((ft_strncmp(argv[i], ">>", 3) == 0) ||
+            (ft_strncmp(argv[i], "<<", 3) == 0) ||
             (ft_strncmp(argv[i], ">", 2) == 0) ||
             (ft_strncmp(argv[i], "<", 2) == 0))
         {
-            if (argv[i + 1])
-                (*d).output_file[index][i] = strdup(argv[i + 1]);
             i += 2;
             continue;
         }

@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/18 02:38:22 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/18 21:48:45 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ typedef struct s_data
     int     **redirection_state;
     int     *N_redir;
     int     N_redirfull;
+    int     error_state;
 
     int     *cmd_quoted;
     int  cmd_count;

@@ -1,8 +1,0 @@
-include
-libft
-Makefile
-minishell
-outfiles
-README.md
-src
-start_test.sh

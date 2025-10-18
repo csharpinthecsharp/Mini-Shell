@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/18 03:21:09 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/18 22:31:32 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,12 +230,12 @@ void run_non_stateful(t_data *d, int N_pipe)
     int pos = 0;
     while (pos <= N_pipe)
     {
+        if (check_output_ofeach(d, pos) == FAILED)
+            exit(d->exit_status);
         if ((*d).cmd_state[pos] == CUSTOM)
             exec_custom_inpipe(var_pipe, d, N_pipe, &pos);
         else if ((*d).cmd_state[pos] == BIN)
             exec_built_inpipe(var_pipe, d, N_pipe, &pos);
-        if (check_output_ofeach(d, pos) == FAILED)
-            exit(d->exit_status);
         last_pid = d->last_fork_pid;
         pos++;
     }
