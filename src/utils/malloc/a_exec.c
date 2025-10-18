@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 15:12:13 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/17 15:13:30 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/18 01:34:12 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,16 +57,16 @@ void alloc_redir_state(t_data *d)
 
 void alloc_output_file(t_data *d)
 {
-    d->output_file = malloc(sizeof(char **) * 10000);
+    d->output_file = malloc(sizeof(char **) * MAX_CMDS);
     if (!d->output_file)
     {
         perror("malloc failed");
         exit(EXIT_FAILURE);
     }
 
-    for (int i = 0; i < MAX_CMDS; i++)
+    for (int i = 0; i < MAX_FILENAME_LEN; i++)
     {
-        d->output_file[i] = malloc(sizeof(char *) * 10000);
+        d->output_file[i] = malloc(sizeof(char *) * MAX_FILENAME_LEN);
         if (!d->output_file[i])
         {
             perror("malloc failed");
@@ -75,7 +75,7 @@ void alloc_output_file(t_data *d)
 
         for (int j = 0; j < MAX_REDIRS; j++)
         {
-            d->output_file[i][j] = malloc(sizeof(char) * (10000 + 1));
+            d->output_file[i][j] = malloc(sizeof(char) * (MAX_REDIRS + 1));
             if (!d->output_file[i][j])
             {
                 perror("malloc failed");

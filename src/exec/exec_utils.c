@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 19:59:55 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/17 17:15:23 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/18 03:21:01 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,35 +21,53 @@ int check_output_ofeach(t_data *d, int index)
         char *file = d->output_file[index][i];
         char *dir = get_directory(file);
 
-        if ((type == RIGHT || type == RIGHT_RIGHT) && file) {
-            if (!dir || access(dir, F_OK) != 0) {
-                print_error("No such file or directory", file);
-                d->exit_status = 1;
-                free(dir);
-                return (FAILED);
+        if ((type == RIGHT || type == RIGHT_RIGHT) && file)
+        {
+            if (!dir || access(dir, F_OK) != 0)
+            {
+                if (i == d->N_redir[index])
+                {
+                    print_error("No such file or directory", file);
+                    return FAILED;
+                }
+                print_error("No such file or directory", file);      
             }
-            if (access(file, F_OK) == 0 && access(file, W_OK) != 0) {
-                if (errno == EACCES) {
+            if (access(file, F_OK) == 0 && access(file, W_OK) != 0) 
+            {
+                if (errno == EACCES) 
+                {
+                    if (i == d->N_redir[index])
+                    {
+                        print_error("Permission denied", file);
+                        return FAILED;
+                    }
                     print_error("Permission denied", file);
-                    d->exit_status = 1;
-                    free(dir);
-                    return (FAILED);
                 }
             }
-            free(dir);
+            free(dir); 
         }
-
-        if ((type == LEFT || type == LEFT_LEFT) && file) {
-            if (access(file, F_OK) != 0) {
+        if ((type == LEFT || type == LEFT_LEFT) && file) 
+        {
+            if (access(file, F_OK) != 0) 
+            {
+                if (i == d->N_redir[index])
+                {
+                    print_error("No such file or directory", file);
+                    return FAILED;
+                }
                 print_error("No such file or directory", file);
-                d->exit_status = 1;
-                return (FAILED);
+
             }
-            if (access(file, R_OK) != 0) {
-                if (errno == EACCES) {
+            if (access(file, R_OK) != 0) 
+            {
+                if (errno == EACCES)
+                {
+                    if (i == d->N_redir[index])
+                    {
+                        print_error("Permission denied", file);
+                        return FAILED;
+                    }
                     print_error("Permission denied", file);
-                    d->exit_status = 1;
-                    return (FAILED);
                 }
             }
         }

@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/17 17:11:17 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/18 02:38:22 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ int     run_custom_cmd(char **argv, t_data *d);
 void    run_non_stateful(t_data *d, int N_pipe);
 int     is_redirect(char **argv, t_data *d, int *pos, int i);
 void handler_ctrl_c(int sig);
+void apply_output_redirections(t_data *d, int cmd_index);
 
 // Parsing & Input
 int start_point_parsing(t_data *d);

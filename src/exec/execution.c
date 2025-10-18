@@ -6,9 +6,49 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/17 17:14:05 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/18 03:21:09 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+
+/* ************************************************************************** */
+/*                           TODO POUR 100% TESTEUR                           */
+/*                                                                            */
+/* - Boucles d’index :                                                        */
+/*   -> Utiliser i < d->cmd_count (et pas <=)                                 */
+/*   -> Dans run_non_stateful : pos < N_pipe + 1                              */
+/*                                                                            */
+/* - Redirections :                                                           */
+/*   -> Vérifier et appliquer les redirections dans chaque enfant (pid == 0)  */
+/*   -> Toujours traiter les entrées (<) avant les sorties (>, >>)            */
+/*   -> Appliquer dup2 uniquement sur la DERNIÈRE redirection de chaque type  */
+/*   -> Ouvrir les précédentes juste pour créer/vider le fichier              */
+/*                                                                            */
+/* - Erreurs :                                                                */
+/*   -> Toujours afficher l’erreur (No such file / Permission denied)         */
+/*   -> exit_status = 1 uniquement si :                                       */
+/*        * c’est la dernière commande du pipeline                            */
+/*        * et la redirection fautive est la dernière effective               */
+/*   -> Ne pas créer de fichier de sortie si une redirection d’entrée échoue  */
+/*                                                                            */
+/* - check_output_ofeach :                                                    */
+/*   -> Utiliser i == d->N_redir[index] - 1 (pas i == d->N_redir[index])      */
+/*   -> Ne retourner FAILED que pour la dernière commande                     */
+/*                                                                            */
+/* - Divers :                                                                 */
+/*   -> Supprimer ft_strdup(ft_strjoin(...)), utiliser seulement ft_strjoin   */
+/*   -> Corriger if (d->N_redir > 0) -> if (d->N_redir[i] > 0)                */
+/*   -> Messages d’erreur cohérents avec Bash (ENOENT, EACCES, etc.)          */
+/*                                                                            */
+/* Résumé :                                                                   */
+/*   Respecter l’ordre et la logique de Bash :                                */
+/*   - Entrées avant sorties                                                  */
+/*   - Dernière redirection appliquée                                         */
+/*   - Erreurs toujours affichées                                             */
+/*   - Code de sortie correct uniquement si dernière commande                 */
+/*                                                                            */
+/* ************************************************************************** */
+
 
 #include "../../include/minishell.h"
 
@@ -20,16 +60,14 @@ int start_execution(t_data *d)
     i = 0;
     is_stateful = 0;
     alloc_start_execution(d);
-    d->N_redir = malloc(sizeof (int ) * 64);
     int count = 0;
+    d->N_redir = ft_calloc(64, sizeof(int));
     while ((i <= d->cmd_count))
     {
         int pos = 0;
         count += is_redirect(d->commands[i], d, &pos, i);
         i++;
     }
-    if ((d->cmd_count <= 0) && check_output_ofeach(d, i) == FAILED)
-        return (FAILED);
     d->N_redirfull = count;
 
     i = 0;
@@ -106,7 +144,23 @@ static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
             run_custom_cmd(d->commands[*pos], d);
     }
 }
-
+static void execve_error(char *cmd)
+{
+    if (errno == ENOENT)
+        print_error("Command or file not found", cmd);
+    else if (errno == EACCES)
+        print_error("Permission denied", cmd);
+    else if (errno == ENOMEM)
+        print_error("Not enough memory", cmd);
+    else if (errno == EFAULT)
+        print_error("Invalid pointer", cmd);
+    else if (errno == EINVAL)
+        print_error("Invalid argument", cmd);
+    else if (errno == ENOTDIR)
+        print_error("A path component is not a directory", cmd);
+    else
+        print_error("Execution failed", cmd);
+}
 static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
 {
     int i = 0;
@@ -145,12 +199,18 @@ static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
         }
         
         if (ft_strncmp(d->commands[*pos][0], "/bin/", 5) == 0)
+        {
             execve(d->commands[*pos][0], d->commands[*pos], d->envp);
+            execve_error(d->commands[*pos][0]);
+        }
         else
         {
             char *tmp_cmd = ft_strdup(ft_strjoin("/bin/", d->commands[*pos][0]));
             execve(tmp_cmd, d->commands[*pos], d->envp);
+            execve_error(tmp_cmd);
+            free(tmp_cmd);
         }
+
         exit(127);
     }
     else if (pid > 0)
@@ -174,6 +234,8 @@ void run_non_stateful(t_data *d, int N_pipe)
             exec_custom_inpipe(var_pipe, d, N_pipe, &pos);
         else if ((*d).cmd_state[pos] == BIN)
             exec_built_inpipe(var_pipe, d, N_pipe, &pos);
+        if (check_output_ofeach(d, pos) == FAILED)
+            exit(d->exit_status);
         last_pid = d->last_fork_pid;
         pos++;
     }
