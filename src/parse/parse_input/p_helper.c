@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 15:32:50 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/17 15:38:50 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/20 00:19:28 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static char *get_env_string(t_data *d, char *s)
         if (ft_strncmp(d->envp[j], arg, ft_strlen(arg)) == 0
         && d->envp[j][ft_strlen(arg)] == '=')
         {
-            return (ft_strdup(getenv(arg)));
+            return (ft_strdup(ft_get_env(d, arg)));
         }
         j++;
     }
@@ -80,14 +80,17 @@ char *replace_envvar(char *s, t_data *d, int *is_dquote)
         else if (s[i] == '$' && *is_dquote == 0)
         {
             char *env_value = get_env_string(d, s + i);
+            if (!env_value)
+                return(NULL);
             int k = 0;
+
             while (env_value[k])
             {
                 arg[j++] = env_value[k];
                 k++;
             }
             if (env_value[0] != '\0')
-                i++; // skip $
+                i++;
             while (s[i] && !ft_isspace(s[i]) && s[i] != '$')
                 i++; 
             free(env_value);

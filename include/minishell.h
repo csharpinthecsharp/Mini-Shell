@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/18 21:48:45 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/20 00:02:52 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,11 @@
 # define RIGHT_RIGHT     7
 # define ERROR           8
 # define REDIRECTION     9
+# define ALONE_RR       10
+# define ALONE_LL       11
+# define ALONE_R        12
+# define ALONE_L        13
+# define ALONE_REDIR    14
 
 /* ========================== */
 /*        DEPENDENCIES        */
@@ -64,6 +69,7 @@
 # include <termcap.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <stdbool.h>
 
 /* ========================== */
 /*       DATA STRUCTURES      */
@@ -86,6 +92,7 @@ typedef struct s_data
     int     N_redirfull;
     int     error_state;
 
+    int     curr_alone_r;
     int     *cmd_quoted;
     int  cmd_count;
     char    *path;
@@ -169,7 +176,7 @@ void alloc_parse_args(char ***argv, int len);
 char *ft_get_env(t_data *d, char *requested);
 
 // Misc
-int     check_command(char **argv);
+int     check_command(char **argv, t_data *d);
 void    print_error(const char *str, const char *arg);
 int count_cmds(char ***cmds);
 void redirect_left(t_data *d, int *pos, int fd_in, int i);
@@ -185,6 +192,6 @@ void start_minishell(t_data *d);
 void prepare_heredoc(t_data *d, int *pos);
 void heredoc(t_data *d, int *pos, int i);
 void exit_ctrl_d(t_data *d, char *buf);
-int is_empty(int i, t_data *d);
+int is_empty(int i, t_data *d, int state);
 
 #endif /* MINISHELL_H */

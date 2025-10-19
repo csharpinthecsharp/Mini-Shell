@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/05 00:07:31 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/17 17:11:27 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/19 21:24:36 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int run_custom_cmd(char **argv, t_data *d)
         d->exit_status = handle_unset(argv, count, d);
     else
     {
-        print_error("builtin command not found", argv[0]);
+        print_error("command not found", argv[0]);
         d->exit_status = 126;
     }
     return (SUCCESS);

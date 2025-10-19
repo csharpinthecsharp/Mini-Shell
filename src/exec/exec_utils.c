@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 19:59:55 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/18 22:40:18 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/20 00:12:42 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,25 +27,32 @@ int check_output_ofeach(t_data *d, int index)
             if (!dir || access(dir, F_OK) != 0)
             {
                 if (i == d->N_redir[index])
+                {
                     return FAILED;
-
-                if (d->error_state == 0)
-                {  
-                    print_error("No such file or directory", file);   
-                    d->error_state = 1;
                 }
+                else if (isatty(STDIN_FILENO))
+                    print_error("No such file or directory", file); 
+                else if (d->error_state == 0 && !isatty(STDIN_FILENO))
+                {
+                    print_error("No such file or directory", file); 
+                    d->error_state = 1;
+                }           
             }
             if (access(file, F_OK) == 0 && access(file, W_OK) != 0) 
             {
                 if (errno == EACCES) 
                 {
                     if (i == d->N_redir[index])
+                    {
                         return FAILED;
-                    if (d->error_state == 0)
-                    {  
-                        print_error("Permission denied", file);   
-                        d->error_state = 1;
                     }
+                    else if (isatty(STDIN_FILENO))
+                        print_error("Permission denied", file); 
+                    else if (d->error_state == 0 && !isatty(STDIN_FILENO))
+                    {
+                        print_error("Permission denied", file); 
+                        d->error_state = 1;
+                    }          
                 }
             }
             free(dir); 
@@ -55,24 +62,32 @@ int check_output_ofeach(t_data *d, int index)
             if (access(file, F_OK) != 0) 
             {
                 if (i == d->N_redir[index])
+                {
                     return FAILED;
-                if (d->error_state == 0)
-                {  
-                    print_error("No such file or directory", file);   
-                    d->error_state = 1;
                 }
+                else if (isatty(STDIN_FILENO))
+                    print_error("No such file or directory", file); 
+                else if (d->error_state == 0 && !isatty(STDIN_FILENO))
+                {
+                    print_error("No such file or directory", file); 
+                    d->error_state = 1;
+                }           
             }
             if (access(file, R_OK) != 0) 
             {
                 if (errno == EACCES)
                 {
                     if (i == d->N_redir[index])
+                    {
                         return FAILED;
-                    if (d->error_state == 0)
-                    {  
-                        print_error("Permission denied", file);   
+                    }
+                    else if (isatty(STDIN_FILENO))
+                        print_error("Permission denied", file); 
+                    else if (d->error_state == 0 && !isatty(STDIN_FILENO))
+                    {
+                        print_error("Permission denied", file); 
                         d->error_state = 1;
-                    }                
+                    }               
                 }
             }
         }
@@ -130,7 +145,7 @@ char **fix_redir_arg(t_data *d, char **argv, int index)
     }
 
     dup[j] = NULL;
-
+    
     if (j == 0)
     {
         dup[0] = NULL;
@@ -144,6 +159,10 @@ int put_cmdstate(int type, int *pos, int *is_stateful, t_data *d)
     if (type == CUSTOM)
     {
         d->cmd_state[*pos] = CUSTOM;
+    }
+    else if (type == ALONE_REDIR)
+    {
+        d->cmd_state[*pos] = ALONE_REDIR;
     }
     else if (type == STATEFUL)
     {
@@ -162,6 +181,11 @@ int put_cmdstate(int type, int *pos, int *is_stateful, t_data *d)
     {
         char *cmd = d->commands[*pos][0];
 
+        if (ft_strncmp(cmd, "", 2) == 0)
+        {
+            d->exit_status = 0;
+            return (FAILED);
+        }
         if (do_cmd_exist(cmd, d) == SUCCESS)
         {
             d->cmd_state[*pos] = BIN;
@@ -236,8 +260,54 @@ int put_cmdstate(int type, int *pos, int *is_stateful, t_data *d)
     return SUCCESS;
 }
 
-int check_command(char **argv)
+static bool check_alone_redir(char **argv)
 {
+    int i = 0;
+    if (argv[i] + 1)
+        return (true);
+    return (false);
+}
+
+static bool is_alone_redir(char **argv, t_data *d)
+{
+    (void)d;
+    if (ft_strncmp(argv[0], ">", 2) == 0
+        && check_alone_redir(argv) == true)
+    {
+        d->curr_alone_r = ALONE_R;
+        return (true);
+    }
+    else if (ft_strncmp(argv[0], ">>", 3) == 0
+        && check_alone_redir(argv) == true)
+    {
+        d->curr_alone_r = ALONE_RR;
+        return (true);
+    }
+    else if (ft_strncmp(argv[0], "<", 2) == 0
+        && check_alone_redir(argv) == true)
+    {
+        d->curr_alone_r = ALONE_L;
+        return (true);
+    }
+    else if (ft_strncmp(argv[0], "<<", 3) == 0
+        && check_alone_redir(argv) == true)
+    {
+        d->curr_alone_r = ALONE_LL;
+        return (true);
+    }
+    return (false);
+}
+
+int check_command(char **argv, t_data *d)
+{
+    (void)d;
+    bool res;
+    
+    res = is_alone_redir(argv, d);
+    if (res == true)
+        return (ALONE_REDIR);
+    else
+        d->curr_alone_r = 0;
     int len = ft_strlen(argv[0]);
     if (ft_strncmp(argv[0], "pwd", len) == 0)
         return (CUSTOM);
@@ -257,12 +327,15 @@ int check_command(char **argv)
         return (BIN);
 }
 
-int is_empty(int i, t_data *d)
+int is_empty(int i, t_data *d, int state)
 {
+    (void)state;
+    if (d->cmd_state[i] == ALONE_REDIR)
+        return (SUCCESS);
     if (!d->commands[i] || !d->commands[i][0])
     {
         d->exit_status = 127;
-        print_error("command not found", "!");
+        print_error("command not found ", "!");
         return (FAILED);
     }
     return (SUCCESS);

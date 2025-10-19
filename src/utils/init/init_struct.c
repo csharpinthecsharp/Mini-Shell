@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 15:35:24 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/18 21:49:10 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/19 21:16:52 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 void update_data(t_data *d)
 {
+    d->curr_alone_r = 0;
     d->error_state = 0;
     d->kill_heredoc = 0;
     d->in_heredoc = 0;
@@ -30,6 +31,7 @@ void update_data(t_data *d)
 
 void init_data(t_data *d)
 {
+    d->curr_alone_r = 0;
     d->error_state = 0;
     d->N_redirfull = 0;
     d->kill_execution = 0;

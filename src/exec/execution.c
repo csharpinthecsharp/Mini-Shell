@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/18 22:31:32 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/20 00:11:01 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@
 
 int start_execution(t_data *d)
 {
-    int i;
+    int i = 0;
     int is_stateful;
 
     i = 0;
@@ -73,16 +73,16 @@ int start_execution(t_data *d)
     i = 0;
     while (i <= d->cmd_count)
     {
-        if (is_empty(i, d) == FAILED)
+        if (is_empty(i, d, 0) == FAILED)
             return (FAILED);
-        int type = check_command(d->commands[i]);
+        int type = check_command(d->commands[i], d);
         if (put_cmdstate(type, &i, &is_stateful, d) == FAILED)
                 return (FAILED);
 
         if (d->N_redir > 0)
         {            
             d->commands[i] = fix_redir_arg(d, d->commands[i], i);
-            if (is_empty(i, d) == 1)
+            if (is_empty(i, d, 0) == 1)
                 return (FAILED);
         }
         i++;
@@ -90,6 +90,55 @@ int start_execution(t_data *d)
     if (is_stateful == 0)
         run_non_stateful(d, d->cmd_count);
     return (SUCCESS);
+}
+
+static void exec_alone_redir_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
+{
+    int i = 0;
+    while (d->redirection_state[*pos][i])
+    {
+        if (d->redirection_state[*pos][i] == LEFT_LEFT)
+            heredoc(d, pos, i);
+        i++;
+    }
+    
+    i = 0;
+    int fd_out = 0;
+    int fd_in = 0;
+    if (d->cmd_state[*pos] == ALONE_REDIR)
+    {
+        if (N_pipe > 0 || d->N_redir > 0)
+        {
+            pid_t pid = fork();
+            if (pid == 0)
+            {
+                if (N_pipe > 0)
+                {
+                    if (*pos > 0)
+                        dup2(var_pipe[*pos - 1][0], STDIN_FILENO);
+                    if (*pos < N_pipe)
+                        dup2(var_pipe[*pos][1], STDOUT_FILENO);
+
+                    close_pipe(var_pipe, N_pipe, 1);
+                }
+                
+                int i = 0;
+                while (d->redirection_state[*pos][i])
+                {
+                    if (d->redirection_state[*pos][i] == RIGHT)
+                        redirect_right(d, pos, fd_out, i);
+                    else if (d->redirection_state[*pos][i] == RIGHT_RIGHT)
+                        redirect_right_right(d, pos, fd_out, i);
+                    else if (d->redirection_state[*pos][i] == LEFT)
+                        redirect_left(d, pos, fd_in, i);
+                    i++;
+                } 
+                exit(d->exit_status);
+            }
+            else if (pid > 0)
+                d->last_fork_pid = pid;
+        }
+    }
 }
 
 static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
@@ -236,6 +285,8 @@ void run_non_stateful(t_data *d, int N_pipe)
             exec_custom_inpipe(var_pipe, d, N_pipe, &pos);
         else if ((*d).cmd_state[pos] == BIN)
             exec_built_inpipe(var_pipe, d, N_pipe, &pos);
+        else if ((*d).cmd_state[pos] == ALONE_REDIR)
+            exec_alone_redir_inpipe(var_pipe, d, N_pipe, &pos);
         last_pid = d->last_fork_pid;
         pos++;
     }
