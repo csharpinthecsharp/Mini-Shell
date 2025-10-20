@@ -6,98 +6,109 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 16:16:18 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/20 12:24:11 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/20 16:24:36 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../include/minishell.h"
 
-void heredoc_error_handler(int *heredoc, int *stdin)
+static pid_t	heredoc_pid_create(int *heredoc, int *stdin)
 {
-    if (pipe(heredoc) == -1)
-    {
-        perror("pipe");
-        exit(EXIT_FAILURE);
-    }
-    
-    *stdin = dup(STDIN_FILENO);
-    if (*stdin == -1)
-    {
-        perror("dup");
-        close(heredoc[0]);
-        close(heredoc[1]);
-        return ;
-    }
+	int	pid;
+
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		close(heredoc[0]);
+		close(heredoc[1]);
+		close(*stdin);
+		exit(EXIT_FAILURE);
+	}
+	return (pid);
 }
 
-void heredoc(t_data *d, int *pos, int i)
+static void	heredoc_error_handler(int *heredoc, int *stdin)
 {
-    char *res = NULL;
-    char *delimiter = d->output_file[*pos][i];
-    int heredoc[2];
-    int stdin;
-    
-    heredoc_error_handler(heredoc, &stdin); 
-    int pid = fork();
-    if (pid == -1)
-    {
-        perror("fork");
-        close(heredoc[0]);
-        close(heredoc[1]);
-        close(stdin);
-        exit(EXIT_FAILURE);
-    }
-    
-    if (pid == 0)
-    {
-        close(heredoc[0]);
-        close(stdin);
-        signal(SIGINT, heredoc_ctrl_c);
-        
-        while (1)
-        {
-            res = readline("> ");
-            if (!res)
-            {
-                print_error("here-document delimited by end-of-file", "warning");
-                d->exit_status = 0;
-                break;
-            }
-            if (strcmp(res, delimiter) == 0)
-            {
-                free(res);
-                break;
-            }
-            ft_putstr_fd(res, heredoc[1]);
-            ft_putstr_fd("\n", heredoc[1]);
-            free(res);
-        }
-        close(heredoc[1]);
-        exit(0);
-    }
-    else
-    {
-        close(heredoc[1]);
-        
-        int status;
-        signal(SIGINT, SIG_IGN);
-        waitpid(pid, &status, 0);
-        
-        if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
-        {
-            close(heredoc[0]);
-            close(stdin);
+	if (pipe(heredoc) == -1)
+	{
+		perror("pipe");
+		exit(EXIT_FAILURE);
+	}
+	*stdin = dup(STDIN_FILENO);
+	if (*stdin == -1)
+	{
+		perror("dup");
+		close(heredoc[0]);
+		close(heredoc[1]);
+		return ;
+	}
+}
 
-            rl_on_new_line();
-            rl_replace_line("", 0);
-            
-            signal(SIGINT, handler_ctrl_c);
-            return;
-        }
-        signal(SIGINT, handler_ctrl_c);
-        dup2(heredoc[0], STDIN_FILENO);
-        close(heredoc[0]);
+static void	child_heredoc(int *heredoc, char *delimiter, int *stdin)
+{
+	char	*res;
 
-        d->stdin_back = stdin;
-    }
+	res = NULL;
+	close(heredoc[0]);
+	close(*stdin);
+	signal(SIGINT, heredoc_ctrl_c);
+	while (1)
+	{
+		res = readline("> ");
+		if (!res)
+		{
+			print_error("here-document delimited by end-of-file", "warning");
+			break ;
+		}
+		if (strcmp(res, delimiter) == 0)
+		{
+			free(res);
+			break ;
+		}
+		ft_putstr_fd(res, heredoc[1]);
+		ft_putstr_fd("\n", heredoc[1]);
+		free(res);
+	}
+	close(heredoc[1]);
+	exit(0);
+}
+
+static void	parent_error_heredoc(int *heredoc, int *stdin, t_data *d, pid_t pid)
+{
+	int	status;
+
+	close(heredoc[1]);
+	signal(SIGINT, SIG_IGN);
+	waitpid(pid, &status, 0);
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+	{
+		close(heredoc[0]);
+		close(*stdin);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		signal(SIGINT, handler_ctrl_c);
+		return ;
+	}
+	signal(SIGINT, handler_ctrl_c);
+	dup2(heredoc[0], STDIN_FILENO);
+	close(heredoc[0]);
+	d->stdin_back = *stdin;
+}
+
+void	heredoc(t_data *d, int *pos, int i)
+{
+	int		heredoc[2];
+	int		stdin;
+	pid_t	pid;
+	char	*delimiter;
+
+	delimiter = ft_strdup(d->output_file[*pos][i]);
+	pid = -1;
+	heredoc_error_handler(heredoc, &stdin);
+	pid = heredoc_pid_create(heredoc, &stdin);
+	if (pid == 0)
+		child_heredoc(heredoc, delimiter, &stdin);
+	else
+		parent_error_heredoc(heredoc, &stdin, d, pid);
 }
