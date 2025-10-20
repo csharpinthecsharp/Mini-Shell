@@ -6,41 +6,71 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 00:41:34 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/15 17:58:58 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/20 17:29:10 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../include/minishell.h"
 
-void free_all(t_data *d, char *buffer)
+static void	free_cmds(t_data *d)
 {
-    if (d->cmd_state)
-        free(d->cmd_state);
+	int	i;
+	int	j;
 
-    if (d->commands)
-    {
-        for (int i = 0; d->commands[i]; i++)
-        {
-            for (int j = 0; d->commands[i][j]; j++)
-                free(d->commands[i][j]);
-            free(d->commands[i]);
-        }
-        free(d->commands);
-    }
-    if (d->input)
-        free(d->input);
-    if (d->envp)
-    {
-        for (int i = 0; d->envp[i]; i++)
-            free(d->envp[i]);
-        free(d->envp);
-    }
-    if (d->input_splitted) {
-        for (int i = 0; d->input_splitted[i]; i++)
-            free(d->input_splitted[i]);
-        free(d->input_splitted);
-    }
-    rl_clear_history();
-    free(d->path);
-    free(buffer);
+	i = 0;
+	while (d->commands[i])
+	{
+		j = 0;
+		while (d->commands[i][j])
+		{
+			free(d->commands[i][j]);
+			j++;
+		}
+		free(d->commands[i]);
+		i++;
+	}
+	free(d->commands);
+}
+
+static void	free_envp(t_data *d)
+{
+	int	i;
+
+	i = 0;
+	while (d->envp[i])
+	{
+		free(d->envp[i]);
+		i++;
+	}
+	free(d->envp);
+}
+
+static void	free_splitted(t_data *d)
+{
+	int	i;
+
+	i = 0;
+	while (d->input_splitted[i])
+	{
+		free(d->input_splitted[i]);
+		i++;
+	}
+	free(d->input_splitted);
+}
+
+void	free_all(t_data *d, char *buffer)
+{
+	if (d->cmd_state)
+		free(d->cmd_state);
+	if (d->commands)
+		free_cmds(d);
+	if (d->input)
+		free(d->input);
+	if (d->envp)
+		free_envp(d);
+	if (d->input_splitted)
+		free_splitted(d);
+	rl_clear_history();
+	free(d->path);
+	free(buffer);
 }

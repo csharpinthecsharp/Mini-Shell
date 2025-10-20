@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/20 17:15:50 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/20 17:58:43 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,9 +135,7 @@ int     ft_countword(char **spli_args);
 int loop_into_arg(int i, char *s, int k, char *arg, int *j);
 int count_args(char **argv, int start);
 int check_pipe_syntax(char *input);
-int check_in_check_pipe(char *input, int *pos);
 int check_redirection_syntax(char *input);
-int do_wehave_perm(char *str, t_data *d);
 int check_output_ofeach(t_data *d, int index);
 char *get_directory(const char *path);
 
