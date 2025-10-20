@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 19:59:55 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/20 12:16:57 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/20 22:06:58 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,6 +156,51 @@ char **fix_redir_arg(t_data *d, char **argv, int index)
 
 int put_cmdstate(int type, int *pos, int *is_stateful, t_data *d)
 {
+    int i = 0;
+    while (1)
+    {
+        if (d->commands[*pos][i][0] == '$' && d->commands[*pos][i][1])
+        {
+            char *env = ft_get_env(d, d->commands[*pos][i]);
+            if (!env)
+            {
+                int j = 0;
+                while (j <= i)
+                {
+                    free(d->commands[*pos][j]);
+                    d->commands[*pos][j] = NULL;
+                    j++;
+                }
+
+                int k = 0;
+                while (d->commands[*pos][j])
+                {
+                    d->commands[*pos][k] = d->commands[*pos][j];
+                    d->commands[*pos][j] = NULL;
+                    k++;
+                    j++;
+                }
+                d->commands[*pos][k] = NULL;
+
+                if (!d->commands[*pos][0])
+                    return FAILED;
+
+                type = check_command(d->commands[*pos], d);
+                i = 0;
+                continue;
+            }
+        }
+        else
+            break;
+        i++;
+    }
+
+    if (!d->commands[*pos][i])
+    {
+        if (d->cmd_count)
+            d->cmd_count -= 1;
+    }
+   
     if (type == CUSTOM)
     {
         d->cmd_state[*pos] = CUSTOM;
@@ -244,11 +289,6 @@ int put_cmdstate(int type, int *pos, int *is_stateful, t_data *d)
                 }
                 return FAILED;
             }
-
-            // If none of the above, fallback
-            d->exit_status = 127;
-            print_error("command not found", cmd);
-            return FAILED;
         }
     }
     return SUCCESS;
