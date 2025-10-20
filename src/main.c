@@ -13,29 +13,30 @@
 #include "../include/minishell.h"
 #include "../include/template.h"
 
-
-int main(int ac, char *av[], char *envp[])
+int	main(int ac, char *av[], char *envp[])
 {
-    (void)av;
-    if (ac != 1)
-        return (EXIT_FAILURE);
-    char *buf = NULL;
-    alloc_buffer(&buf);
-    t_data data;
-    t_data *d = &data;
-    init_data(d);
-    prepare_signals();
-    d->envp = duplicate_envp(envp);
-    while (1)
-    {
-        update_data(d);
-        d->path = getpath(buf, d);
-        select_readline_mode(d);
-        exit_ctrl_d(d, buf);
-        start_minishell(d);
-        free_beforenewline(d, buf);
-    }
-    free_all(d, buf);
-    return (EXIT_SUCCESS);
-}
+	char	*buf;
+	t_data	data;
+	t_data	*d;
 
+	(void)av;
+	if (ac != 1)
+		return (EXIT_FAILURE);
+	buf = NULL;
+	alloc_buffer(&buf);
+	d = &data;
+	init_data(d);
+	prepare_signals();
+	d->envp = duplicate_envp(envp);
+	while (1)
+	{
+		update_data(d);
+		d->path = getpath(buf, d);
+		select_readline_mode(d);
+		exit_ctrl_d(d, buf);
+		start_minishell(d);
+		free_beforenewline(d, buf);
+	}
+	free_all(d, buf);
+	return (EXIT_SUCCESS);
+}
