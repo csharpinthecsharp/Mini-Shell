@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 13:56:09 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/20 16:36:06 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/20 17:20:20 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	select_readline_mode(t_data *d)
 
 	if (isatty(STDIN_FILENO))
 	{
-		res = get_promptpath(d->path, d);
+		res = get_promptpath(d);
 		d->input = readline(res);
 		free(res);
 	}

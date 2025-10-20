@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/20 16:46:26 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/20 17:15:50 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 /* ========================== */
 
 // Buffer & Quote
-# define BUFFER_SIZE     42
+# define BUFFER_SIZE     1000
 # define CAT_SIZE        3
 # define QUOTE_TRUE      1
 # define QUOTE_FALSE     0
@@ -143,7 +143,7 @@ char *get_directory(const char *path);
 
 // Environment & Path
 char    *getpath(char *buffer, t_data *d);
-char    *get_promptpath(char *buffer, t_data *d);
+char    *get_promptpath(t_data *d);
 char    *replace_envvar(char *s, t_data *d, int *is_dquote);
 void     update_data(t_data *d);
 void     init_data(t_data *d);
