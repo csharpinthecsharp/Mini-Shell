@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/20 16:20:28 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/20 16:46:26 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,9 +77,6 @@
 
 typedef struct s_data
 {
-    int in_heredoc;
-    int kill_heredoc;
-    int kill_execution;
     int stdin_back;
     char    *input;
     char    **input_splitted;
