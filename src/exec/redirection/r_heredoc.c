@@ -6,11 +6,29 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 16:16:18 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/19 20:46:16 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/20 12:23:31 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../include/minishell.h"
+
+void heredoc_error_handler(int *heredoc, int *stdin)
+{
+    if (pipe(heredoc) == -1)
+    {
+        perror("pipe");
+        exit(EXIT_FAILURE);
+    }
+    
+    *stdin = dup(STDIN_FILENO);
+    if (*stdin == -1)
+    {
+        perror("dup");
+        close(heredoc[0]);
+        close(heredoc[1]);
+        return ;
+    }
+}
 
 void heredoc(t_data *d, int *pos, int i)
 {
@@ -19,20 +37,7 @@ void heredoc(t_data *d, int *pos, int i)
     int heredoc[2];
     int stdin;
     
-    if (pipe(heredoc) == -1)
-    {
-        perror("pipe");
-        exit(EXIT_FAILURE);
-    }
-    
-    stdin = dup(STDIN_FILENO);
-    if (stdin == -1)
-    {
-        perror("dup");
-        close(heredoc[0]);
-        close(heredoc[1]);
-        return ;
-    }
+    heredoc_error_handler(heredoc, &stdin); 
     int pid = fork();
     if (pid == -1)
     {

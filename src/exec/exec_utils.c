@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 19:59:55 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/20 00:12:42 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/20 12:16:57 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int check_output_ofeach(t_data *d, int index)
             }
             free(dir); 
         }
-        if ((type == LEFT || type == LEFT_LEFT) && file) 
+        if ((type == LEFT) && file) 
         {
             if (access(file, F_OK) != 0) 
             {
@@ -180,12 +180,6 @@ int put_cmdstate(int type, int *pos, int *is_stateful, t_data *d)
     else if (type == BIN)
     {
         char *cmd = d->commands[*pos][0];
-
-        if (ft_strncmp(cmd, "", 2) == 0)
-        {
-            d->exit_status = 0;
-            return (FAILED);
-        }
         if (do_cmd_exist(cmd, d) == SUCCESS)
         {
             d->cmd_state[*pos] = BIN;
