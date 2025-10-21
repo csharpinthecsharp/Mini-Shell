@@ -1,9 +1,0 @@
-dzd
-include
-libft
-Makefile
-minishell
-minishell_tester
-src
-start_test.sh
-test
