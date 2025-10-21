@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/12 21:49:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/21 15:30:06 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/22 01:12:44 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,28 +47,6 @@ void	redirect_left(t_data *d, int *pos, int fd_in, int i)
 		close(fd_in);
 	}
 }
-
-int count_redir(char **argv)
-{
-    int i = 0;
-    int count = 0;
-
-    while (argv[i])
-    {
-        if (!ft_strncmp(argv[i], ">>", 3) ||
-            !ft_strncmp(argv[i], ">", 2)  ||
-            !ft_strncmp(argv[i], "<<", 3) ||
-            !ft_strncmp(argv[i], "<", 2))
-        {
-            count++;
-            if (argv[i + 1])
-                i++;
-        }
-        i++;
-    }
-    return count;
-}
-
 
 bool put_redir(t_data *d, int cmd_index, int arg_index, int redir_index)
 {

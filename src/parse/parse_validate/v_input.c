@@ -6,13 +6,13 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 12:46:28 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/20 17:59:08 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/22 01:30:25 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../include/minishell.h"
 
-static int	handle_quote_state(char *input, int *pos, char *quote)
+int	handle_quote_state(char *input, int *pos, char *quote)
 {
 	if (*quote == 0 && (input[*pos] == '\'' || input[*pos] == '"'))
 	{
@@ -34,64 +34,7 @@ static int	handle_quote_state(char *input, int *pos, char *quote)
 	return (-1);
 }
 
-static int	check_in_check_redir(char *input, int *pos, char *quote)
-{
-	int	type;
-
-	if (handle_quote_state(input, pos, quote) != -1)
-		return (SUCCESS);
-	if (input[*pos] == '>' || input[*pos] == '<')
-	{
-		type = input[(*pos)++];
-		if (input[*pos] == type)
-			(*pos)++;
-		while (input[*pos] && input[*pos] == ' ')
-			(*pos)++;
-		if (!input[*pos])
-		{
-			print_error("syntax error near unexpected token `newline'", "!");
-			return (FAILED);
-		}
-		if (input[*pos] == '>' || input[*pos] == '<' || input[*pos] == '|')
-		{
-			print_error("syntax error near unexpected token", "operator");
-			return (FAILED);
-		}
-	}
-	else
-		(*pos)++;
-	return (SUCCESS);
-}
-
-static int	check_in_check_pipe(char *input, char *quote, int *pos)
-{
-	int	j;
-
-	if (*quote)
-	{
-		(*pos)++;
-		return (2);
-	}
-	if (input[(*pos)] == '|' && input[(*pos) + 1] == '|')
-	{
-		print_error("syntax error near unexpected token `||'", "!");
-		return (FAILED);
-	}
-	if (input[*pos] == '|' && input[(*pos) + 1])
-	{
-		j = (*pos) + 1;
-		while (input[j] == ' ')
-			j++;
-		if (input[j] == '|')
-		{
-			print_error("syntax error near unexpected token `|'", "!");
-			return (FAILED);
-		}
-	}
-	return (SUCCESS);
-}
-
-int	check_redirection_syntax(char *input)
+int	redirection_syntax(char *input)
 {
 	int		i;
 	char	quote;
@@ -111,7 +54,7 @@ int	check_redirection_syntax(char *input)
 	return (SUCCESS);
 }
 
-int	check_pipe_syntax(char *input)
+int	pipe_syntax(char *input)
 {
 	int		i;
 	char	quote;

@@ -6,6 +6,7 @@ CFLAGS	= -Wall -Wextra -Werror -g
 
 SRCS	= src/main.c \
 		  src/utils/global/utility.c \
+		  src/utils/global/h_utility.c \
 		  src/utils/global/path.c \
 		  src/parse/parse_input/p_cmds.c \
 		  src/parse/parse_input/p_helper.c \
@@ -15,26 +16,31 @@ SRCS	= src/main.c \
 		  src/utils/init/init_struct.c \
 		  src/utils/init/init_envp.c \
 		  src/utils/main/readline.c \
-		  src/exec/exec_custom/run_custom.c \
-		  src/exec/exec_custom/custom_cmd/cd.c \
-		  src/exec/exec_custom/custom_cmd/echo.c \
-		  src/exec/exec_custom/custom_cmd/env.c \
-		  src/exec/exec_custom/custom_cmd/exit.c \
-		  src/exec/exec_custom/custom_cmd/export.c \
-		  src/exec/exec_custom/custom_cmd/pwd.c \
-		  src/exec/exec_custom/custom_cmd/unset.c \
+		  src/exec/exec_custom/select.c \
+		  src/exec/exec_custom/cmd_list/cd.c \
+		  src/exec/exec_custom/cmd_list/echo.c \
+		  src/exec/exec_custom/cmd_list/env.c \
+		  src/exec/exec_custom/cmd_list/exit.c \
+		  src/exec/exec_custom/cmd_list/export.c \
+		  src/exec/exec_custom/cmd_list/pwd.c \
+		  src/exec/exec_custom/cmd_list/unset.c \
 		  src/parse/handle_input.c \
-		  src/exec/pre_exec.c \
-		  src/exec/exec.c \
+		  src/exec/exec_main/pre_exec.c \
+		  src/exec/exec_helper/h_pre_exec.c \
+		  src/exec/exec_helper/h_exec.c \
+		  src/exec/exec_main/execute.c \
 		  src/exec/redirection/r_basic.c \
 		  src/exec/redirection/r_heredoc.c \
-		  src/exec/exec_utils.c \
 		  src/signal/init_signal.c \
 		  src/utils/malloc/a_pipe.c \
 		  src/utils/malloc/a_parse.c \
 		  src/utils/free/exit.c \
 		  src/utils/free/newline.c \
-		  src/utils/error/send_error.c
+		  src/utils/error/send_error.c \
+		  src/checker/c_exec/check_x.c \
+		  src/checker/c_exec/is_x.c\
+		  src/checker/c_parse/check_x.c \
+		  src/checker/c_parse/is_x.c
 
 OBJS	= $(SRCS:.c=.o)
 LIBFT 	= libft/libft.a

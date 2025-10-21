@@ -1,28 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   v_start.c                                          :+:      :+:    :+:   */
+/*   h_exec.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/13 12:46:28 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/22 01:23:54 by ltrillar         ###   ########.fr       */
+/*   Created: 2025/10/21 16:48:56 by ltrillar          #+#    #+#             */
+/*   Updated: 2025/10/22 01:18:14 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../include/minishell.h"
 
-int	syntax_validation(t_data *d)
+void close_pipe(int **var_pipe, int N_pipe, int state)
 {
-	if (pipe_syntax(d->input) == FAILED)
-	{
-		d->exit_status = 2;
-		return (FAILED);
-	}
-	if (redirection_syntax(d->input) == FAILED)
-	{
-		d->exit_status = 2;
-		return (FAILED);
-	}
-	return (SUCCESS);
+    int i = 0; 
+    while (i < N_pipe)
+    {
+        close(var_pipe[i][0]);
+        close(var_pipe[i][1]);
+        if (state != 1)
+            free(var_pipe[i]);
+        i++;
+    }
+    if (state != 1)
+        free(var_pipe);
 }

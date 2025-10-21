@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/21 16:28:23 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/22 01:30:35 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,12 +123,13 @@ int     handle_env(char **argv, int count, t_data *d);
 void heredoc_ctrl_c(int sig);
 int count_redir(char **argv);
 // Command & Execution
-int     start_execution(t_data *d);
-int     run_custom_cmd(char **argv, t_data *d);
-void    run_non_stateful(t_data *d);
+int     pre_execution(t_data *d);
+void     start_execution(t_data *d);
 bool put_redir(t_data *d, int cmd_index, int arg_index, int redir_index);
 void handler_ctrl_c(int sig);
 void apply_output_redirections(t_data *d, int cmd_index);
+int run_custom_cmd(char **argv, t_data *d);
+int	handle_quote_state(char *input, int *pos, char *quote);
 
 // Parsing & Input
 int start_point_parsing(t_data *d);
@@ -141,8 +142,8 @@ int     ft_isspace(char arg);
 int     ft_countword(char **spli_args);
 int loop_into_arg(int i, char *s, int k, char *arg, int *j);
 int count_args(char **argv, int start);
-int check_pipe_syntax(char *input);
-int check_redirection_syntax(char *input);
+int pipe_syntax(char *input);
+int redirection_syntax(char *input);
 int check_output_ofeach(t_cmd *cmd, t_data *d);
 char *get_directory(const char *path);
 
@@ -153,8 +154,9 @@ char    *replace_envvar(char *s, t_data *d, int *is_dquote);
 void     update_data(t_data *d);
 void     init_data(t_data *d);
 
-int do_cmd_exist(char *str, t_data *d);
-int do_file_exist(char *str, t_data *d);
+int is_available(char *str, t_data *d);
+void execve_error(char *cmd);
+bool check_alone_redir(char **argv);
 
 // Redirection & Pipes
 void    alloc_redir_state(t_data *d);
@@ -164,6 +166,7 @@ void    close_pipe(int **var_pipe, int N_pipe, int state);
 char **fix_redir_arg(t_cmd *cmd);
 void alloc_buffer(char **buffer);
 int put_cmdstate(int type, int *is_stateful, t_cmd *cmd, t_data *d);
+bool is_alone_redir(char **argv, t_data *d);
 
 // Signals & Terminal
 void    prepare_signals(void);
@@ -176,6 +179,9 @@ void alloc_output_file(t_data *d);
 void alloc_start_execution(t_data *d);
 void alloc_parse_args(char ***argv, int len);
 char *ft_get_env(t_data *d, char *requested);
+int check_non_bin(t_cmd *cmd, int type, int *is_stateful, t_data *d);
+int	check_in_check_redir(char *input, int *pos, char *quote);
+int	check_in_check_pipe(char *input, char *quote, int *pos);
 
 // Misc
 int     check_command(char **argv, t_data *d);
@@ -185,7 +191,7 @@ void redirect_left(t_data *d, int *pos, int fd_in, int i);
 void redirect_right_right(t_data *d, int *pos, int fd_out, int i);
 void redirect_right(t_data *d, int *pos, int fd_out, int i);
 int is_numeric(const char *str, int state);
-int global_check(t_data *d);
+int syntax_validation(t_data *d);
 char **duplicate_envp(char **envp);
 char *up_shlvl(char *envp_i);
 int isfulls(char *s);

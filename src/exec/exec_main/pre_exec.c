@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execution.c                                        :+:      :+:    :+:   */
+/*   pre_exec.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/21 16:22:31 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/22 01:19:00 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
-#include "../../include/minishell.h"
+#include "../../../include/minishell.h"
 
 static int allocate_t_arguments(t_cmd *cmd)
 {
@@ -65,7 +65,7 @@ static int cut_redirection_command(t_cmd *cmd)
     return (SUCCESS);
 }
 
-int start_execution(t_data *d)
+int pre_execution(t_data *d)
 {
     int is_stateful = 0;
 
@@ -76,7 +76,6 @@ int start_execution(t_data *d)
             return (ERROR);
         if (fill_arguments(d, &d->cmd[i], i) == FAILED)
             return (ERROR);
-
         if (cut_redirection_command(&d->cmd[i]) == FAILED)
             return (ERROR);
         if (is_empty(d, i, 0) == FAILED)
@@ -88,6 +87,6 @@ int start_execution(t_data *d)
         i++;
     }
     if (is_stateful == 0)
-        run_non_stateful(d);
+        start_execution(d);
     return SUCCESS;
 }

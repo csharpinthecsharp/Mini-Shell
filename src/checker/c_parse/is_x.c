@@ -1,28 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   v_start.c                                          :+:      :+:    :+:   */
+/*   is_x.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/13 12:46:28 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/22 01:23:54 by ltrillar         ###   ########.fr       */
+/*   Created: 2025/10/22 01:22:52 by ltrillar          #+#    #+#             */
+/*   Updated: 2025/10/22 01:25:45 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../include/minishell.h"
 
-int	syntax_validation(t_data *d)
+int	is_numeric(const char *str, int strict)
 {
-	if (pipe_syntax(d->input) == FAILED)
+	int	i;
+
+	if (!str || !str[0])
+		return (0);
+	i = 0;
+	if (!strict && (str[0] == '+' || str[0] == '-'))
+		i++;
+	while (str[i])
 	{
-		d->exit_status = 2;
-		return (FAILED);
+		if (!ft_isdigit(str[i]))
+			return (0);
+		i++;
 	}
-	if (redirection_syntax(d->input) == FAILED)
-	{
-		d->exit_status = 2;
-		return (FAILED);
-	}
-	return (SUCCESS);
+	return (1);
+}
+
+int	isfulls(char *s)
+{
+	size_t	i;
+
+	i = 0;
+	while (ft_isspace(s[i]))
+		i++;
+	if (ft_strlen(s) == i)
+		return (1);
+	else
+		return (0);
 }

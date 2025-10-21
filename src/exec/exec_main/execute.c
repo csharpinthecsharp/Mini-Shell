@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec.c                                             :+:      :+:    :+:   */
+/*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 16:22:20 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/21 16:23:57 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/22 01:18:55 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "../../../include/minishell.h"
 
 static void exec_alone_redir_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
 {
@@ -123,23 +123,7 @@ static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
             run_custom_cmd(d->cmd[*pos].arg, d);
     }
 }
-static void execve_error(char *cmd)
-{
-    if (errno == ENOENT)
-        print_error("Command or file not found", cmd);
-    else if (errno == EACCES)
-        print_error("Permission denied", cmd);
-    else if (errno == ENOMEM)
-        print_error("Not enough memory", cmd);
-    else if (errno == EFAULT)
-        print_error("Invalid pointer", cmd);
-    else if (errno == EINVAL)
-        print_error("Invalid argument", cmd);
-    else if (errno == ENOTDIR)
-        print_error("A path component is not a directory", cmd);
-    else
-        print_error("Execution failed", cmd);
-}
+
 static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
 {
     int i = 0;
@@ -203,7 +187,7 @@ static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
     }
 }
 
-void run_non_stateful(t_data *d)
+void start_execution(t_data *d)
 {
     int **var_pipe = malloc(sizeof(int *) * (d->nb_cmd - 1));
     pid_t last_pid = -1;
