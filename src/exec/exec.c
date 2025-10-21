@@ -1,110 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execution.c                                        :+:      :+:    :+:   */
+/*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/21 16:01:55 by ltrillar         ###   ########.fr       */
+/*   Created: 2025/10/21 16:22:20 by ltrillar          #+#    #+#             */
+/*   Updated: 2025/10/21 16:23:57 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "../../include/minishell.h"
-
-int start_execution(t_data *d)
-{
-    int is_stateful = 0;
-
-    for (int i = 0; i < d->nb_cmd; i++) 
-    {
-        // printf("[DEBUG] Command %d: nb_arg=%d\n", i, d->cmd[i].nb_arg);
-
-        // 1. Count redirections
-        int nb_redir = count_redir(d->cmd[i].arg);
-        d->cmd[i].nb_redir = nb_redir;
-        // printf("[DEBUG] -> count_redir found %d redirections\n", nb_redir);
-
-        // 2. Allocate arguments[]
-        if (nb_redir > 0) 
-        {
-            d->cmd[i].arguments = calloc(nb_redir, sizeof *d->cmd[i].arguments);
-            if (!d->cmd[i].arguments)
-                return FAILED;
-            // printf("[DEBUG] -> allocated arguments[%d]\n", nb_redir);
-        } 
-        else 
-        {
-            d->cmd[i].arguments = NULL;
-            // printf("[DEBUG] -> no redirections, arguments=NULL\n");
-        }
-
-        // 3. Fill arguments[]
-        if (nb_redir > 0)
-        {
-            int k = 0;
-            for (int j = 0; j < d->cmd[i].nb_arg; j++) 
-            {
-                if (put_redir(d, i, j, k)) {
-                    // printf("[DEBUG] put_redir: arg[%d]=\"%s\" -> redir[%d] type=%d file=\"%s\"\n",
-                    //     j,
-                    //     d->cmd[i].arg[j],
-                    //     k,
-                    //     d->cmd[i].arguments[k].state_redir,
-                    //     d->cmd[i].arguments[k].file);
-                    k++;
-                }
-            }
-            d->cmd[i].nb_redir = k;
-            // printf("[DEBUG] -> final nb_redir=%d\n", k);
-        }
-
-        // 4. Clean argv
-        if (d->cmd[i].nb_redir > 0) 
-        {
-            // printf("[DEBUG] Cleaning argv for command %d\n", i);
-            char **old = d->cmd[i].arg;
-            char **clean = fix_redir_arg(&d->cmd[i]);
-
-            // free each string in old argv
-            for (int j = 0; old[j]; j++) {
-                // printf("[DEBUG] freeing old arg[%d]=\"%s\"\n", j, old[j]);
-                free(old[j]);
-            }
-            free(old);
-
-            d->cmd[i].arg = clean;
-
-            // print cleaned argv
-            for (int j = 0; d->cmd[i].arg[j]; j++) {
-                // printf("[DEBUG] cleaned arg[%d]=\"%s\"\n", j, d->cmd[i].arg[j]);
-            }
-        }
-
-        // 5. Check emptiness and state
-        if (is_empty(d, i, 0) == FAILED) {
-            // printf("[DEBUG] Command %d is empty after cleaning\n", i);
-            return FAILED;
-        }
-        int type = check_command(d->cmd[i].arg, d);
-        // printf("[DEBUG] check_command returned type=%d\n", type);
-        if (put_cmdstate(type, &is_stateful, &d->cmd[i], d) == FAILED) {
-            // printf("[DEBUG] put_cmdstate failed for command %d\n", i);
-            return FAILED;
-        }
-    }
-
-    if (is_stateful == 0) {
-        // printf("[DEBUG] No stateful command, running non-stateful pipeline\n");
-        run_non_stateful(d);
-    }
-
-    return SUCCESS;
-}
-
-
-
 
 static void exec_alone_redir_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
 {

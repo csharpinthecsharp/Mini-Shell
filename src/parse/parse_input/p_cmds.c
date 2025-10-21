@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/21 15:58:58 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/21 16:24:31 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,8 @@ static int count_arg(char **argv, int i)
 
 int split_commands(char **argv, t_data *d)
 {
-    int arg_index = 0; // index in argv
-    int cmd_index = 0; // command index
+    int arg_index = 0;
+    int cmd_index = 0;
 
     d->nb_cmd = count_commands(argv);
     d->cmd = malloc(sizeof(t_cmd) * d->nb_cmd);
@@ -77,7 +77,7 @@ int split_commands(char **argv, t_data *d)
     {
         int j = 0;
 
-        d->cmd[cmd_index].nb_arg = count_arg(argv, arg_index); // must count until next '|'
+        d->cmd[cmd_index].nb_arg = count_arg(argv, arg_index); 
         d->cmd[cmd_index].arg = malloc(sizeof(char *) * (d->cmd[cmd_index].nb_arg + 1));
         if (!d->cmd[cmd_index].arg)
             return (-1);
@@ -85,10 +85,8 @@ int split_commands(char **argv, t_data *d)
         while (argv[arg_index] && ft_strncmp(argv[arg_index], "|", 2) != 0)
             d->cmd[cmd_index].arg[j++] = ft_strdup(argv[arg_index++]);
 
-        // Null-terminate without incrementing j
         d->cmd[cmd_index].arg[j] = NULL;
 
-        // Skip the pipe token if present
         if (argv[arg_index] && ft_strncmp(argv[arg_index], "|", 2) == 0)
             arg_index++;
 
@@ -102,8 +100,6 @@ int split_commands(char **argv, t_data *d)
     }
     return SUCCESS;
 }
-
-
 
 char **split(t_data *d)
 {

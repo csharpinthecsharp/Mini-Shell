@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/21 15:31:07 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/21 16:28:23 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 // Status
 # define FAILED          1
 # define SUCCESS         0
+# define ERROR           -1
 
 // Command Type
 # define BIN             0
@@ -42,7 +43,6 @@
 # define RIGHT           5
 # define LEFT_LEFT       6
 # define RIGHT_RIGHT     7
-# define ERROR           8
 # define REDIRECTION     9
 # define ALONE_RR       10
 # define ALONE_LL       11
@@ -95,38 +95,17 @@ typedef struct s_data
 {
     int nb_cmd;
     t_cmd *cmd;
-
-
-
-
-
-
-
-
-
-    
     int stdin_back;
     char    *input;
     char    **input_splitted;
-    char    ***commands;
-    int     *cmd_state;
-    
-    char    ***output_file;
-    int     **redirection_state;
-    int     *N_redir;
-    int     N_redirfull;
     int     error_state;
-
     int     curr_alone_r;
-    int     *cmd_quoted;
-    int  cmd_count;
     char    *path;
     char    **envp;
     int     SHLVL;
     int     last_fork_pid;
     int     exit_status;
     char    *new_path;
-    
 }   t_data;
 
 /* ========================== */

@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 16:16:18 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/20 16:25:06 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/21 16:29:48 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ void	heredoc(t_data *d, int *pos, int i)
 	pid_t	pid;
 	char	*delimiter;
 
-	delimiter = ft_strdup(d->output_file[*pos][i]);
+	delimiter = ft_strdup(d->cmd[*pos].arguments[i].file);
 	pid = -1;
 	heredoc_error_handler(heredoc, &stdin);
 	pid = heredoc_pid_create(heredoc, &stdin);

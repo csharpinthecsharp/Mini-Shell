@@ -24,13 +24,13 @@ SRCS	= src/main.c \
 		  src/exec/exec_custom/custom_cmd/pwd.c \
 		  src/exec/exec_custom/custom_cmd/unset.c \
 		  src/parse/handle_input.c \
-		  src/exec/execution.c \
+		  src/exec/pre_exec.c \
+		  src/exec/exec.c \
 		  src/exec/redirection/r_basic.c \
 		  src/exec/redirection/r_heredoc.c \
 		  src/exec/exec_utils.c \
 		  src/signal/init_signal.c \
-		  src/utils/malloc/allocation.c \
-		  src/utils/malloc/a_exec.c \
+		  src/utils/malloc/a_pipe.c \
 		  src/utils/malloc/a_parse.c \
 		  src/utils/free/exit.c \
 		  src/utils/free/newline.c \
