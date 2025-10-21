@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/05 20:19:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/20 17:07:47 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/21 02:02:58 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,10 @@ int	start_point_parsing(t_data *d)
 	d->input_splitted = split(d);
 	if (d->input_splitted == NULL)
 		return (FAILED);
-	d->commands = split_commands(d->input_splitted);
-	if (d->commands == NULL)
+
+	if (split_commands(d->input_splitted, d) == -1)
 		return (FAILED);
+	
 	if (start_execution(d) == FAILED)
 		return (FAILED);
 	return (SUCCESS);

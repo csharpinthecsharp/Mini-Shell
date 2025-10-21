@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/20 21:46:04 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/21 15:31:07 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,36 @@
 /*       DATA STRUCTURES      */
 /* ========================== */
 
+typedef struct s_arguments
+{
+    int state_redir;
+    char *file;
+} t_arguments;
+
+typedef struct s_cmd
+{
+    char **arg;
+    int nb_redir;
+    int state_cmd;
+    int nb_arg;
+
+    t_arguments *arguments;
+} t_cmd;
+
 typedef struct s_data
 {
+    int nb_cmd;
+    t_cmd *cmd;
+
+
+
+
+
+
+
+
+
+    
     int stdin_back;
     char    *input;
     char    **input_splitted;
@@ -114,19 +142,19 @@ int     handle_cd(char **argv, int count, t_data *d);
 int     handle_unset(char **argv, int count, t_data *d);
 int     handle_env(char **argv, int count, t_data *d);
 void heredoc_ctrl_c(int sig);
-
+int count_redir(char **argv);
 // Command & Execution
 int     start_execution(t_data *d);
 int     run_custom_cmd(char **argv, t_data *d);
-void    run_non_stateful(t_data *d, int N_pipe);
-int     is_redirect(char **argv, t_data *d, int *pos, int i);
+void    run_non_stateful(t_data *d);
+bool put_redir(t_data *d, int cmd_index, int arg_index, int redir_index);
 void handler_ctrl_c(int sig);
 void apply_output_redirections(t_data *d, int cmd_index);
 
 // Parsing & Input
 int start_point_parsing(t_data *d);
 char    **split(t_data *d);
-char    ***split_commands(char **argv);
+int     split_commands(char **argv, t_data *d);
 char    **get_args(char *s, t_data *d);
 char    *get_one_arg(char *s, int *i, int *is_dquote);
 int     get_arg_length(const char *s, int *i, int *is_dquote);
@@ -136,7 +164,7 @@ int loop_into_arg(int i, char *s, int k, char *arg, int *j);
 int count_args(char **argv, int start);
 int check_pipe_syntax(char *input);
 int check_redirection_syntax(char *input);
-int check_output_ofeach(t_data *d, int index);
+int check_output_ofeach(t_cmd *cmd, t_data *d);
 char *get_directory(const char *path);
 
 // Environment & Path
@@ -154,9 +182,9 @@ void    alloc_redir_state(t_data *d);
 void    alloc_cmd_state(t_data *d);
 void    alloc_error_pipe(int N_pipe, int **var_pipe);
 void    close_pipe(int **var_pipe, int N_pipe, int state);
-char **fix_redir_arg(t_data *d, char **argv, int index);
+char **fix_redir_arg(t_cmd *cmd);
 void alloc_buffer(char **buffer);
-int put_cmdstate(int type, int *pos, int *is_stateful, t_data *d);
+int put_cmdstate(int type, int *is_stateful, t_cmd *cmd, t_data *d);
 
 // Signals & Terminal
 void    prepare_signals(void);
@@ -187,6 +215,6 @@ void start_minishell(t_data *d);
 void prepare_heredoc(t_data *d, int *pos);
 void heredoc(t_data *d, int *pos, int i);
 void exit_ctrl_d(t_data *d, char *buf);
-int is_empty(int i, t_data *d, int state);
+int is_empty(t_data *d, int cmd_index, int arg_index);
 
 #endif /* MINISHELL_H */

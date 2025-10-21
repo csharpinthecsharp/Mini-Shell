@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/20 16:45:03 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/21 15:58:58 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,60 +36,74 @@ char **get_args(char *s, t_data *d)
     return argv;
 }
 
-char ***split_commands(char **argv)
+static int count_commands(char **argv)
 {
-    int i = 0, cmds_i = 0, arg_i = 0;
+    int i;
+    int count;
 
-    // tableau de commandes (NULL-terminé)
-    char ***cmds = malloc(sizeof(char **) * 2);
-    if (!cmds) return NULL;
-
-    // tableau d'arguments pour la première commande
-    int arg_cap = 4; // capacité initiale
-    cmds[cmds_i] = malloc(sizeof(char *) * arg_cap);
-    if (!cmds[cmds_i]) return NULL;
-
+    i = 0;
+    count = 0;
     while (argv[i])
     {
-        if (strcmp(argv[i], "|") == 0)
-        {
-            // fin de la commande courante
-            cmds[cmds_i][arg_i] = NULL;
-            cmds_i++;
-            arg_i = 0;
-
-            // agrandir le tableau de commandes
-            char ***tmp = realloc(cmds, sizeof(char **) * (cmds_i + 2));
-            if (!tmp) return NULL;
-            cmds = tmp;
-
-            // nouvelle commande
-            arg_cap = 4;
-            cmds[cmds_i] = malloc(sizeof(char *) * arg_cap);
-            if (!cmds[cmds_i]) return NULL;
-        }
-        else
-        {
-            // agrandir si nécessaire
-            if (arg_i >= arg_cap - 1)
-            {
-                arg_cap *= 2;
-                char **tmp = realloc(cmds[cmds_i], sizeof(char *) * arg_cap);
-                if (!tmp) return NULL;
-                cmds[cmds_i] = tmp;
-            }
-            cmds[cmds_i][arg_i] = strdup(argv[i]);
-            arg_i++;
-        }
+        if (ft_strncmp(argv[i], "|", 2) == 0)
+            count++;
         i++;
     }
-
-    // terminer la dernière commande
-    cmds[cmds_i][arg_i] = NULL;
-    cmds[cmds_i + 1] = NULL;
-
-    return cmds;
+    return (count + 1);
 }
+
+static int count_arg(char **argv, int i)
+{
+    int count = 0;
+    while (argv[i] && ft_strncmp(argv[i], "|", 2) != 0)
+    {
+        count++;
+        i++;
+    }
+    return count;
+}
+
+int split_commands(char **argv, t_data *d)
+{
+    int arg_index = 0; // index in argv
+    int cmd_index = 0; // command index
+
+    d->nb_cmd = count_commands(argv);
+    d->cmd = malloc(sizeof(t_cmd) * d->nb_cmd);
+    if (!d->cmd)
+        return (-1);
+
+    while (cmd_index < d->nb_cmd)
+    {
+        int j = 0;
+
+        d->cmd[cmd_index].nb_arg = count_arg(argv, arg_index); // must count until next '|'
+        d->cmd[cmd_index].arg = malloc(sizeof(char *) * (d->cmd[cmd_index].nb_arg + 1));
+        if (!d->cmd[cmd_index].arg)
+            return (-1);
+
+        while (argv[arg_index] && ft_strncmp(argv[arg_index], "|", 2) != 0)
+            d->cmd[cmd_index].arg[j++] = ft_strdup(argv[arg_index++]);
+
+        // Null-terminate without incrementing j
+        d->cmd[cmd_index].arg[j] = NULL;
+
+        // Skip the pipe token if present
+        if (argv[arg_index] && ft_strncmp(argv[arg_index], "|", 2) == 0)
+            arg_index++;
+
+        cmd_index++;
+    }
+
+    if (argv) {
+        for (int a = 0; argv[a]; a++)
+            free(argv[a]);
+        free(argv);
+    }
+    return SUCCESS;
+}
+
+
 
 char **split(t_data *d)
 {

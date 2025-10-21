@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 15:12:13 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/20 16:43:12 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/21 13:01:50 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void alloc_start_execution(t_data *d)
 {
-    d->cmd_count = count_cmds(d->commands);
     alloc_cmd_state(d);
     alloc_redir_state(d);
     alloc_output_file(d);

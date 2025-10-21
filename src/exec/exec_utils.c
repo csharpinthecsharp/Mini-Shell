@@ -6,27 +6,32 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 19:59:55 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/20 22:06:58 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/21 16:00:41 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int check_output_ofeach(t_data *d, int index)
+int check_output_ofeach(t_cmd *cmd, t_data *d)
 {
     //for (int j = 0; d->output_file[index][j]; j++)
       //  printf("OUTPUTFILE: %s\n", d->output_file[index][j]);
     int i = 0;
-    while (i < d->N_redir[index]) 
+    while (i < cmd->nb_redir)
     {
-        int type = d->redirection_state[index][i];
-        char *file = d->output_file[index][i];
+        int type = cmd->arguments[i].state_redir;
+        char *file = cmd->arguments[i].file;
+        if (file == NULL)
+        {
+            i += 1;   
+            continue;
+        }
         char *dir = get_directory(file);
         if ((type == RIGHT || type == RIGHT_RIGHT) && file)
         {
             if (!dir || access(dir, F_OK) != 0)
             {
-                if (i == d->N_redir[index])
+                if (i == cmd->nb_redir)
                 {
                     return FAILED;
                 }
@@ -42,7 +47,7 @@ int check_output_ofeach(t_data *d, int index)
             {
                 if (errno == EACCES) 
                 {
-                    if (i == d->N_redir[index])
+                    if (i == cmd->nb_redir)
                     {
                         return FAILED;
                     }
@@ -61,7 +66,7 @@ int check_output_ofeach(t_data *d, int index)
         {
             if (access(file, F_OK) != 0) 
             {
-                if (i == d->N_redir[index])
+                if (i == cmd->nb_redir)
                 {
                     return FAILED;
                 }
@@ -77,7 +82,7 @@ int check_output_ofeach(t_data *d, int index)
             {
                 if (errno == EACCES)
                 {
-                    if (i == d->N_redir[index])
+                    if (i == cmd->nb_redir)
                     {
                         return FAILED;
                     }
@@ -99,7 +104,7 @@ int check_output_ofeach(t_data *d, int index)
 
 char *get_directory(const char *path)
 {
-    int len = strlen(path);
+    int len = ft_strlen(path);
     int i = len - 1;
 
     while (i >= 0 && path[i] != '/')
@@ -117,75 +122,89 @@ char *get_directory(const char *path)
     return dir;
 }
 
-char **fix_redir_arg(t_data *d, char **argv, int index)
+char **fix_redir_arg(t_cmd *cmd)
 {
-    (void)d;
-    (void)index;
     int i = 0;
-    int j = 0;
-    char **dup = malloc(sizeof(char *) * 256); 
-    if (!dup)
+    int arg_count = 0;
+
+    // First pass: count only non-redirection args
+    while (i < cmd->nb_arg)
     {
-        perror("malloc failed");
-        return NULL;
+        if ((!ft_strncmp(cmd->arg[i], ">>", 3) ||
+             !ft_strncmp(cmd->arg[i], "<<", 3) ||
+             !ft_strncmp(cmd->arg[i], ">", 2)  ||
+             !ft_strncmp(cmd->arg[i], "<", 2)) &&
+            cmd->arg[i + 1]) // make sure filename exists
+        {
+            i += 2; // skip operator + filename
+        }
+        else {
+            arg_count++;
+            i++;
+        }
     }
 
-    while (argv[i])
+    char **dup = malloc(sizeof(char *) * (arg_count + 1));
+    if (!dup)
+        return NULL;
+
+    // Second pass: copy only non-redirection args
+    i = 0;
+    int arg_j = 0;
+    while (i < cmd->nb_arg)
     {
-        if ((ft_strncmp(argv[i], ">>", 3) == 0) ||
-            (ft_strncmp(argv[i], "<<", 3) == 0) ||
-            (ft_strncmp(argv[i], ">", 2) == 0) ||
-            (ft_strncmp(argv[i], "<", 2) == 0))
+        if ((!ft_strncmp(cmd->arg[i], ">>", 3) ||
+             !ft_strncmp(cmd->arg[i], "<<", 3) ||
+             !ft_strncmp(cmd->arg[i], ">", 2)  ||
+             !ft_strncmp(cmd->arg[i], "<", 2)) &&
+            cmd->arg[i + 1])
         {
             i += 2;
             continue;
         }
-        dup[j++] = ft_strdup(argv[i]);
+        dup[arg_j++] = ft_strdup(cmd->arg[i]);
         i++;
     }
+    dup[arg_j] = NULL;
 
-    dup[j] = NULL;
-    
-    if (j == 0)
-    {
-        dup[0] = NULL;
-        return (dup);
-    }
-    return (dup);
+    // update nb_arg to new count
+    cmd->nb_arg = arg_count;
+
+    return dup;
 }
 
-int put_cmdstate(int type, int *pos, int *is_stateful, t_data *d)
+
+int put_cmdstate(int type, int *is_stateful, t_cmd *cmd, t_data *d)
 {
     int i = 0;
     while (1)
     {
-        if (d->commands[*pos][i][0] == '$' && d->commands[*pos][i][1])
+        if (cmd[i].arg[0][0] == '$' && cmd[i].arg[0][1])
         {
-            char *env = ft_get_env(d, d->commands[*pos][i]);
+            char *env = ft_get_env(d, cmd[i].arg[0]);
             if (!env)
             {
                 int j = 0;
                 while (j <= i)
                 {
-                    free(d->commands[*pos][j]);
-                    d->commands[*pos][j] = NULL;
+                    free(cmd[j].arg);
+                    cmd[j].arg = NULL;
                     j++;
                 }
 
                 int k = 0;
-                while (d->commands[*pos][j])
+                while (cmd[j].arg)
                 {
-                    d->commands[*pos][k] = d->commands[*pos][j];
-                    d->commands[*pos][j] = NULL;
+                    cmd[k].arg = cmd[j].arg;
+                    cmd[j].arg = NULL;
                     k++;
                     j++;
                 }
-                d->commands[*pos][k] = NULL;
+                cmd[k].arg = NULL;
 
-                if (!d->commands[*pos][0])
+                if (!cmd[0].arg)
                     return FAILED;
-
-                type = check_command(d->commands[*pos], d);
+                type = check_command(cmd[i].arg, d);
                 i = 0;
                 continue;
             }
@@ -195,26 +214,26 @@ int put_cmdstate(int type, int *pos, int *is_stateful, t_data *d)
         i++;
     }
 
-    if (!d->commands[*pos][i])
+    if (!cmd[i].arg)
     {
-        if (d->cmd_count)
-            d->cmd_count -= 1;
+        if (d->nb_cmd)
+            d->nb_cmd -= 1;
     }
    
     if (type == CUSTOM)
     {
-        d->cmd_state[*pos] = CUSTOM;
+        cmd->state_cmd = CUSTOM;
     }
     else if (type == ALONE_REDIR)
     {
-        d->cmd_state[*pos] = ALONE_REDIR;
+        cmd->state_cmd = ALONE_REDIR;
     }
     else if (type == STATEFUL)
     {
         *is_stateful = 1;
-        if (d->cmd_count == 0)
+        if (d->nb_cmd == 1)
         {
-            run_custom_cmd(d->commands[*pos], d);
+            run_custom_cmd(cmd[i].arg, d);
         }
         else
         {
@@ -224,68 +243,69 @@ int put_cmdstate(int type, int *pos, int *is_stateful, t_data *d)
     }
     else if (type == BIN)
     {
-        char *cmd = d->commands[*pos][0];
-        if (do_cmd_exist(cmd, d) == SUCCESS)
+        char *tmp = ft_strdup(cmd->arg[0]);
+        if (do_cmd_exist(tmp, d) == SUCCESS)
         {
-            d->cmd_state[*pos] = BIN;
+            cmd->state_cmd = BIN;
+            free(tmp);
         }
         else
         {
-            if (ft_strchr(cmd, '/') == NULL)
+            if (ft_strchr(tmp, '/') == NULL)
             {
                 d->exit_status = 127;
-                print_error("command not found", cmd);
+                print_error("command not found", tmp);
                 return FAILED;
             }
             
             struct stat st;
-            if (stat(cmd, &st) == -1)
+            if (stat(tmp, &st) == -1)
             {
-                if (errno == ENOENT && ft_strchr(cmd, '/') != NULL)
+                if (errno == ENOENT && ft_strchr(tmp, '/') != NULL)
                 {
                     d->exit_status = 127;
-                    print_error("No such file or directory", cmd);
+                    print_error("No such file or directory", tmp);
                 }
                 else if (errno == EACCES)
                 {
                     d->exit_status = 126;
-                    print_error("Permission denied", cmd);
+                    print_error("Permission denied", tmp);
                 }
                 else
                 {
                     d->exit_status = 127;
-                    print_error("command not found", cmd);
+                    print_error("command not found", tmp);
                 }
                 return FAILED;
             }
 
             if (S_ISDIR(st.st_mode))
             {
-                if (ft_strchr(cmd, '/') != NULL)
+                if (ft_strchr(tmp, '/') != NULL)
                 {
                     d->exit_status = 126;
-                    print_error("Is a directory", cmd);
+                    print_error("Is a directory", tmp);
                 }
                 else
                 {
                     d->exit_status = 127;
-                    print_error("command not found", cmd);
+                    print_error("command not found", tmp);
                 }
                 return FAILED;
             }
 
             // If file exists and is not a directory, but still not executable
-            if (access(cmd, X_OK) != 0)
+            if (access(tmp, X_OK) != 0)
             {
                 if (errno == EACCES)
                 {
                     d->exit_status = 126;
-                    print_error("Permission denied", cmd);
+                    print_error("Permission denied", tmp);
                 }
                 else
                 {
                     d->exit_status = 127;
-                    print_error("command not found", cmd);
+                    print_error("command not found", tmp);
                 }
                 return FAILED;
             }
@@ -361,19 +381,28 @@ int check_command(char **argv, t_data *d)
         return (BIN);
 }
 
-int is_empty(int i, t_data *d, int state)
+int is_empty(t_data *d, int cmd_index, int arg_index)
 {
-    (void)state;
-    if (d->cmd_state[i] == ALONE_REDIR)
-        return (SUCCESS);
-    if (!d->commands[i] || !d->commands[i][0])
+    // If this argument slot was a redirection-only placeholder
+    if (d->cmd[cmd_index].nb_redir > 0 &&
+        d->cmd[cmd_index].arguments &&
+        d->cmd[cmd_index].arguments[arg_index].state_redir == ALONE_REDIR)
+    {
+        return SUCCESS;
+    }
+
+    // If there is no actual command/argument at this index
+    if (d->cmd[cmd_index].arg == NULL ||
+        d->cmd[cmd_index].arg[arg_index] == NULL)
     {
         d->exit_status = 127;
         print_error("command not found ", "!");
-        return (FAILED);
+        return FAILED;
     }
-    return (SUCCESS);
+
+    return SUCCESS;
 }
+
 
 int do_cmd_exist(char *str, t_data *d)
 {

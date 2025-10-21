@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/12 21:49:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/20 16:31:35 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/21 15:30:06 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	redirect_right(t_data *d, int *pos, int fd_out, int i)
 {
-	fd_out = open(d->output_file[*pos][i], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	fd_out = open(d->cmd[*pos].arguments[i].file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd_out < 0)
 		exit(1);
 	else
@@ -26,7 +26,7 @@ void	redirect_right(t_data *d, int *pos, int fd_out, int i)
 
 void	redirect_right_right(t_data *d, int *pos, int fd_out, int i)
 {
-	fd_out = open(d->output_file[*pos][i], O_WRONLY | O_CREAT | O_APPEND, 0644);
+	fd_out = open(d->cmd[*pos].arguments[i].file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd_out < 0)
 		exit(1);
 	else
@@ -38,7 +38,7 @@ void	redirect_right_right(t_data *d, int *pos, int fd_out, int i)
 
 void	redirect_left(t_data *d, int *pos, int fd_in, int i)
 {
-	fd_in = open(d->output_file[*pos][i], O_RDONLY);
+	fd_in = open(d->cmd[*pos].arguments[i].file, O_RDONLY);
 	if (fd_in < 0)
 		exit(1);
 	else
@@ -48,31 +48,53 @@ void	redirect_left(t_data *d, int *pos, int fd_in, int i)
 	}
 }
 
-int	is_redirect(char **argv, t_data *d, int *pos, int i)
+int count_redir(char **argv)
 {
-	int	count;
-	int	redir_type;
+    int i = 0;
+    int count = 0;
 
-	count = 0;
-	while (argv[*pos])
-	{
-		redir_type = NOT_FOUND;
-		if (ft_strncmp(argv[*pos], ">>", 3) == 0)
-			redir_type = RIGHT_RIGHT;
-		else if (ft_strncmp(argv[*pos], ">", 2) == 0)
-			redir_type = RIGHT;
-		else if (ft_strncmp(argv[*pos], "<<", 3) == 0)
-			redir_type = LEFT_LEFT;
-		else if (ft_strncmp(argv[*pos], "<", 2) == 0)
-			redir_type = LEFT;
-		if (redir_type != NOT_FOUND && argv[*pos + 1])
-		{
-			d->redirection_state[i][count] = redir_type;
-			d->output_file[i][count++] = ft_strdup(argv[*pos + 1]);
-			(*pos)++;
-		}
-		(*pos)++;
-	}
-	d->N_redir[i] = count;
-	return (count);
+    while (argv[i])
+    {
+        if (!ft_strncmp(argv[i], ">>", 3) ||
+            !ft_strncmp(argv[i], ">", 2)  ||
+            !ft_strncmp(argv[i], "<<", 3) ||
+            !ft_strncmp(argv[i], "<", 2))
+        {
+            count++;
+            if (argv[i + 1])
+                i++;
+        }
+        i++;
+    }
+    return count;
 }
+
+
+bool put_redir(t_data *d, int cmd_index, int arg_index, int redir_index)
+{
+    char *str = d->cmd[cmd_index].arg[arg_index];
+    int redir_type = NOT_FOUND;
+
+    if (!str)
+        return false;
+
+    if (!ft_strncmp(str, ">>", 3))
+        redir_type = RIGHT_RIGHT;
+    else if (!ft_strncmp(str, ">", 2))
+        redir_type = RIGHT;
+    else if (!ft_strncmp(str, "<<", 3))
+        redir_type = LEFT_LEFT;
+    else if (!ft_strncmp(str, "<", 2))
+        redir_type = LEFT;
+
+    if (redir_type != NOT_FOUND && d->cmd[cmd_index].arg[arg_index + 1])
+    {
+        d->cmd[cmd_index].arguments[redir_index].state_redir = redir_type;
+        d->cmd[cmd_index].arguments[redir_index].file =
+            ft_strdup(d->cmd[cmd_index].arg[arg_index + 1]);
+        return true;
+    }
+    return false;
+}
+
+

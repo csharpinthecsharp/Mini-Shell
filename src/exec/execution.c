@@ -6,46 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/20 21:46:11 by ltrillar         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-
-/* ************************************************************************** */
-/*                           TODO POUR 100% TESTEUR                           */
-/*                                                                            */
-/* - Boucles d’index :                                                        */
-/*   -> Utiliser i < d->cmd_count (et pas <=)                                 */
-/*   -> Dans run_non_stateful : pos < N_pipe + 1                              */
-/*                                                                            */
-/* - Redirections :                                                           */
-/*   -> Vérifier et appliquer les redirections dans chaque enfant (pid == 0)  */
-/*   -> Toujours traiter les entrées (<) avant les sorties (>, >>)            */
-/*   -> Appliquer dup2 uniquement sur la DERNIÈRE redirection de chaque type  */
-/*   -> Ouvrir les précédentes juste pour créer/vider le fichier              */
-/*                                                                            */
-/* - Erreurs :                                                                */
-/*   -> Toujours afficher l’erreur (No such file / Permission denied)         */
-/*   -> exit_status = 1 uniquement si :                                       */
-/*        * c’est la dernière commande du pipeline                            */
-/*        * et la redirection fautive est la dernière effective               */
-/*   -> Ne pas créer de fichier de sortie si une redirection d’entrée échoue  */
-/*                                                                            */
-/* - check_output_ofeach :                                                    */
-/*   -> Utiliser i == d->N_redir[index] - 1 (pas i == d->N_redir[index])      */
-/*   -> Ne retourner FAILED que pour la dernière commande                     */
-/*                                                                            */
-/* - Divers :                                                                 */
-/*   -> Supprimer ft_strdup(ft_strjoin(...)), utiliser seulement ft_strjoin   */
-/*   -> Corriger if (d->N_redir > 0) -> if (d->N_redir[i] > 0)                */
-/*   -> Messages d’erreur cohérents avec Bash (ENOENT, EACCES, etc.)          */
-/*                                                                            */
-/* Résumé :                                                                   */
-/*   Respecter l’ordre et la logique de Bash :                                */
-/*   - Entrées avant sorties                                                  */
-/*   - Dernière redirection appliquée                                         */
-/*   - Erreurs toujours affichées                                             */
-/*   - Code de sortie correct uniquement si dernière commande                 */
+/*   Updated: 2025/10/21 16:01:55 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,50 +15,103 @@
 
 int start_execution(t_data *d)
 {
-    int i = 0;
-    int is_stateful;
+    int is_stateful = 0;
 
-    i = 0;
-    is_stateful = 0;
-    alloc_start_execution(d);
-    int count = 0;
-    d->N_redir = ft_calloc(64, sizeof(int));
-    while ((i <= d->cmd_count))
+    for (int i = 0; i < d->nb_cmd; i++) 
     {
-        int pos = 0;
-        count += is_redirect(d->commands[i], d, &pos, i);
-        i++;
-    }
-    d->N_redirfull = count;
+        // printf("[DEBUG] Command %d: nb_arg=%d\n", i, d->cmd[i].nb_arg);
 
-    i = 0;
-    while (i <= d->cmd_count)
-    {
-        if (is_empty(i, d, 0) == FAILED)
-            return (FAILED);
-        int type = check_command(d->commands[i], d);
-        if (put_cmdstate(type, &i, &is_stateful, d) == FAILED)
-                return (FAILED);
+        // 1. Count redirections
+        int nb_redir = count_redir(d->cmd[i].arg);
+        d->cmd[i].nb_redir = nb_redir;
+        // printf("[DEBUG] -> count_redir found %d redirections\n", nb_redir);
 
-        if (d->N_redir > 0)
-        {            
-            d->commands[i] = fix_redir_arg(d, d->commands[i], i);
-            if (is_empty(i, d, 0) == 1)
-                return (FAILED);
+        // 2. Allocate arguments[]
+        if (nb_redir > 0) 
+        {
+            d->cmd[i].arguments = calloc(nb_redir, sizeof *d->cmd[i].arguments);
+            if (!d->cmd[i].arguments)
+                return FAILED;
+            // printf("[DEBUG] -> allocated arguments[%d]\n", nb_redir);
+        } 
+        else 
+        {
+            d->cmd[i].arguments = NULL;
+            // printf("[DEBUG] -> no redirections, arguments=NULL\n");
         }
-        i++;
+
+        // 3. Fill arguments[]
+        if (nb_redir > 0)
+        {
+            int k = 0;
+            for (int j = 0; j < d->cmd[i].nb_arg; j++) 
+            {
+                if (put_redir(d, i, j, k)) {
+                    // printf("[DEBUG] put_redir: arg[%d]=\"%s\" -> redir[%d] type=%d file=\"%s\"\n",
+                    //     j,
+                    //     d->cmd[i].arg[j],
+                    //     k,
+                    //     d->cmd[i].arguments[k].state_redir,
+                    //     d->cmd[i].arguments[k].file);
+                    k++;
+                }
+            }
+            d->cmd[i].nb_redir = k;
+            // printf("[DEBUG] -> final nb_redir=%d\n", k);
+        }
+
+        // 4. Clean argv
+        if (d->cmd[i].nb_redir > 0) 
+        {
+            // printf("[DEBUG] Cleaning argv for command %d\n", i);
+            char **old = d->cmd[i].arg;
+            char **clean = fix_redir_arg(&d->cmd[i]);
+
+            // free each string in old argv
+            for (int j = 0; old[j]; j++) {
+                // printf("[DEBUG] freeing old arg[%d]=\"%s\"\n", j, old[j]);
+                free(old[j]);
+            }
+            free(old);
+
+            d->cmd[i].arg = clean;
+
+            // print cleaned argv
+            for (int j = 0; d->cmd[i].arg[j]; j++) {
+                // printf("[DEBUG] cleaned arg[%d]=\"%s\"\n", j, d->cmd[i].arg[j]);
+            }
+        }
+
+        // 5. Check emptiness and state
+        if (is_empty(d, i, 0) == FAILED) {
+            // printf("[DEBUG] Command %d is empty after cleaning\n", i);
+            return FAILED;
+        }
+        int type = check_command(d->cmd[i].arg, d);
+        // printf("[DEBUG] check_command returned type=%d\n", type);
+        if (put_cmdstate(type, &is_stateful, &d->cmd[i], d) == FAILED) {
+            // printf("[DEBUG] put_cmdstate failed for command %d\n", i);
+            return FAILED;
+        }
     }
-    if (is_stateful == 0)
-        run_non_stateful(d, d->cmd_count);
-    return (SUCCESS);
+
+    if (is_stateful == 0) {
+        // printf("[DEBUG] No stateful command, running non-stateful pipeline\n");
+        run_non_stateful(d);
+    }
+
+    return SUCCESS;
 }
+
+
+
 
 static void exec_alone_redir_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
 {
     int i = 0;
-    while (d->redirection_state[*pos][i])
+    while (i < d->cmd[*pos].nb_redir)
     {
-        if (d->redirection_state[*pos][i] == LEFT_LEFT)
+        if (d->cmd[*pos].arguments[i].state_redir == LEFT_LEFT)
             heredoc(d, pos, i);
         i++;
     }
@@ -105,9 +119,9 @@ static void exec_alone_redir_inpipe(int **var_pipe, t_data *d, int N_pipe, int *
     i = 0;
     int fd_out = 0;
     int fd_in = 0;
-    if (d->cmd_state[*pos] == ALONE_REDIR)
+    if (d->cmd[*pos].state_cmd == ALONE_REDIR)
     {
-        if (N_pipe > 0 || d->N_redir > 0)
+        if (d->nb_cmd > 1 || d->cmd[*pos].nb_redir > 0)
         {
             pid_t pid = fork();
             if (pid == 0)
@@ -123,13 +137,13 @@ static void exec_alone_redir_inpipe(int **var_pipe, t_data *d, int N_pipe, int *
                 }
                 
                 int i = 0;
-                while (d->redirection_state[*pos][i])
+                while (d->cmd[*pos].arguments[i].state_redir)
                 {
-                    if (d->redirection_state[*pos][i] == RIGHT)
+                    if (d->cmd[*pos].arguments[i].state_redir == RIGHT)
                         redirect_right(d, pos, fd_out, i);
-                    else if (d->redirection_state[*pos][i] == RIGHT_RIGHT)
+                    else if (d->cmd[*pos].arguments[i].state_redir == RIGHT_RIGHT)
                         redirect_right_right(d, pos, fd_out, i);
-                    else if (d->redirection_state[*pos][i] == LEFT)
+                    else if (d->cmd[*pos].arguments[i].state_redir == LEFT)
                         redirect_left(d, pos, fd_in, i);
                     i++;
                 } 
@@ -137,6 +151,11 @@ static void exec_alone_redir_inpipe(int **var_pipe, t_data *d, int N_pipe, int *
             }
             else if (pid > 0)
                 d->last_fork_pid = pid;
+            else
+            {
+                perror("fork failed");
+                exit(EXIT_FAILURE);
+            }
         }
     }
 }
@@ -144,9 +163,9 @@ static void exec_alone_redir_inpipe(int **var_pipe, t_data *d, int N_pipe, int *
 static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
 {
     int i = 0;
-    while (d->redirection_state[*pos][i])
+    while (i < d->cmd[*pos].nb_redir)
     {
-        if (d->redirection_state[*pos][i] == LEFT_LEFT)
+        if (d->cmd[*pos].arguments[i].state_redir == LEFT_LEFT)
             heredoc(d, pos, i);
         i++;
     }
@@ -154,9 +173,9 @@ static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
     i = 0;
     int fd_out = 0;
     int fd_in = 0;
-    if (d->cmd_state[*pos] == CUSTOM)
+    if (d->cmd[*pos].state_cmd == CUSTOM)
     {
-        if (N_pipe > 0 || d->N_redir > 0)
+        if (d->nb_cmd > 1 || d->cmd[*pos].nb_redir > 0)
         {
             pid_t pid = fork();
             if (pid == 0)
@@ -172,25 +191,30 @@ static void exec_custom_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
                 }
                 
                 int i = 0;
-                while (d->redirection_state[*pos][i])
+                while (i < d->cmd[*pos].nb_redir)
                 {
-                    if (d->redirection_state[*pos][i] == RIGHT)
+                    if (d->cmd[*pos].arguments[i].state_redir == RIGHT)
                         redirect_right(d, pos, fd_out, i);
-                    else if (d->redirection_state[*pos][i] == RIGHT_RIGHT)
+                    else if (d->cmd[*pos].arguments[i].state_redir == RIGHT_RIGHT)
                         redirect_right_right(d, pos, fd_out, i);
-                    else if (d->redirection_state[*pos][i] == LEFT)
+                    else if (d->cmd[*pos].arguments[i].state_redir == LEFT)
                         redirect_left(d, pos, fd_in, i);
                     i++;
                 }
                     
-                run_custom_cmd(d->commands[*pos], d);
+                run_custom_cmd(d->cmd[*pos].arg, d);
                 exit(d->exit_status);
             }
             else if (pid > 0)
                 d->last_fork_pid = pid;
+            else
+            {
+                perror("fork failed");
+                exit(EXIT_FAILURE);
+            }
         }
         else
-            run_custom_cmd(d->commands[*pos], d);
+            run_custom_cmd(d->cmd[*pos].arg, d);
     }
 }
 static void execve_error(char *cmd)
@@ -213,9 +237,9 @@ static void execve_error(char *cmd)
 static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
 {
     int i = 0;
-    while (d->redirection_state[*pos][i])
+    while (i < d->cmd[*pos].nb_redir)
     {
-        if (d->redirection_state[*pos][i] == LEFT_LEFT)
+        if (d->cmd[*pos].arguments[i].state_redir == LEFT_LEFT)
             heredoc(d, pos, i);
         i++;
     }
@@ -226,7 +250,7 @@ static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
     pid_t pid = fork();
     if (pid == 0)
     {
-        if (N_pipe > 0)
+        if (d->nb_cmd > 1)
         {
             if ((*pos) > 0)
                 dup2(var_pipe[(*pos) - 1][0], STDIN_FILENO);
@@ -236,61 +260,68 @@ static void exec_built_inpipe(int **var_pipe, t_data *d, int N_pipe, int *pos)
         }
         
         int i = 0;
-        while (d->redirection_state[*pos][i])
+        while (i < d->cmd[*pos].nb_redir)
         {
-            if (d->redirection_state[*pos][i] == RIGHT)
+            if (d->cmd[*pos].arguments[i].state_redir == RIGHT)
                 redirect_right(d, pos, fd_out, i);
-            else if (d->redirection_state[*pos][i] == RIGHT_RIGHT)
+            else if (d->cmd[*pos].arguments[i].state_redir == RIGHT_RIGHT)
                 redirect_right_right(d, pos, fd_out, i);
-            else if (d->redirection_state[*pos][i] == LEFT)
+            else if (d->cmd[*pos].arguments[i].state_redir == LEFT)
                 redirect_left(d, pos, fd_in, i);
             i++;
         }
         
-        if (ft_strncmp(d->commands[*pos][0], "/bin/", 5) == 0)
+        if (ft_strncmp(d->cmd[*pos].arg[0], "/bin/", 5) == 0)
         {
-            execve(d->commands[*pos][0], d->commands[*pos], d->envp);
-            execve_error(d->commands[*pos][0]);
+            execve(d->cmd[*pos].arg[0], d->cmd[*pos].arg, d->envp);
+            execve_error(d->cmd[*pos].arg[0]);
         }
-        else
+        else if (d->cmd[*pos].arg[0])
         {
-            char *tmp_cmd = ft_strdup(ft_strjoin("/bin/", d->commands[*pos][0]));
-            execve(tmp_cmd, d->commands[*pos], d->envp);
-            execve_error(tmp_cmd);
-            free(tmp_cmd);
+            char *tmp_cmd = ft_strdup(ft_strjoin("/bin/", d->cmd[*pos].arg[0]));
+            if (tmp_cmd) {
+                execve(tmp_cmd, d->cmd[*pos].arg, d->envp);
+                execve_error(tmp_cmd);
+                free(tmp_cmd);
+            }
         }
 
         exit(127);
     }
     else if (pid > 0)
         d->last_fork_pid = pid;
+    else
+    {
+        perror("fork failed");
+        exit(EXIT_FAILURE);
+    }
 }
 
-void run_non_stateful(t_data *d, int N_pipe)
+void run_non_stateful(t_data *d)
 {
-    int **var_pipe = malloc(sizeof(int *) * N_pipe);
+    int **var_pipe = malloc(sizeof(int *) * (d->nb_cmd - 1));
     pid_t last_pid = -1;
     if (!var_pipe)
     {
         perror("malloc failed");
         exit(EXIT_FAILURE);
     }
-    alloc_error_pipe(N_pipe, var_pipe);
+    alloc_error_pipe(d->nb_cmd - 1, var_pipe);
     int pos = 0;
-    while (pos <= N_pipe)
+    while (pos < d->nb_cmd)
     {
-        if (check_output_ofeach(d, pos) == FAILED)
+        if (check_output_ofeach(&d->cmd[pos], d) == FAILED)
             exit(d->exit_status);
-        if ((*d).cmd_state[pos] == CUSTOM)
-            exec_custom_inpipe(var_pipe, d, N_pipe, &pos);
-        else if ((*d).cmd_state[pos] == BIN)
-            exec_built_inpipe(var_pipe, d, N_pipe, &pos);
-        else if ((*d).cmd_state[pos] == ALONE_REDIR)
-            exec_alone_redir_inpipe(var_pipe, d, N_pipe, &pos);
+        if (d->cmd[pos].state_cmd == CUSTOM)
+            exec_custom_inpipe(var_pipe, d, d->nb_cmd - 1, &pos);
+        else if (d->cmd[pos].state_cmd == BIN)
+            exec_built_inpipe(var_pipe, d, d->nb_cmd - 1, &pos);
+        else if (d->cmd[pos].state_cmd == ALONE_REDIR)
+            exec_alone_redir_inpipe(var_pipe, d, d->nb_cmd - 1, &pos);
         last_pid = d->last_fork_pid;
         pos++;
     }
-    close_pipe(var_pipe, N_pipe, 0);
+    close_pipe(var_pipe, d->nb_cmd - 1, 0);
     int status;
     pid_t wpid;
     pos = 0;
