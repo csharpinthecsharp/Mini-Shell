@@ -62,11 +62,9 @@ banner:
 	@echo "\033[0;34m  ██║ ╚═╝ ██║██║██║ ╚████║██║███████║██║  ██║███████╗███████╗███████╗\033[0m"
 	@echo "\033[0;34m  ╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝\033[0m"
 	@echo ""
-	@echo "Type ./minishell to run the shell"
+	@echo "\033[1;32m   	=== Type ./minishell to run the shell ===\033[0m"
 	@echo ""
-	@echo "You can run commands located in '/bin/' and,"
-	@echo " echo, cd, env, export, unset, pwd."
-	@echo ""
+
 
 clean:
 	rm -f $(OBJS)
