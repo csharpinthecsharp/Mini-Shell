@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/22 01:30:35 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/22 14:55:59 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,9 @@ typedef struct s_data
 {
     int nb_cmd;
     t_cmd *cmd;
+
+    int fd_in;
+    int fd_out;
     int stdin_back;
     char    *input;
     char    **input_splitted;
