@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/05 00:07:31 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/22 01:27:49 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/22 23:01:04 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int run_custom_cmd(char **argv, t_data *d)
     if (ft_strncmp(argv[0], "pwd", 3) == 0)
         d->exit_status = handle_pwd(argv[0], count, d->path);
     else if (ft_strncmp(argv[0], "exit", 4) == 0)
-        d->exit_status = handle_exit(argv, count);
+        d->exit_status = handle_exit(d, argv, count);
     else if (ft_strncmp(argv[0], "echo", 4) == 0)
         d->exit_status = handle_echo(argv, count);
     else if (ft_strncmp(argv[0], "cd", 2) == 0)

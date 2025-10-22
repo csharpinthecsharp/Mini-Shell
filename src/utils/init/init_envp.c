@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 18:59:03 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/22 16:21:43 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/22 23:36:21 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,7 @@ char	*up_shlvl(char *envp_i)
 		free(new_lvl);
 		return (res);
 	}
-	else
-		return (ft_strdup(envp_i));
+    return (ft_strdup(envp_i));
 }
 
 char	**duplicate_envp(char **envp)

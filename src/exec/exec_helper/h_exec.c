@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 16:48:56 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/22 15:34:39 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/23 00:13:50 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,23 +27,50 @@ void handle_heredocs(t_data *d, int *pos)
 
 void handle_bin(t_cmd *cmd, t_data *d)
 {
+    char    **paths;
     char    *tmp_cmd;
-    if (ft_strncmp(cmd->arg[0], "/bin/", 5) == 0)
+    int     i;
+
+    if (!cmd->arg[0])
+        return;
+
+    if (ft_strchr(cmd->arg[0], '/'))
     {
         execve(cmd->arg[0], cmd->arg, d->envp);
         execve_error(cmd->arg[0]);
+        return ;
     }
-    else if (cmd->arg[0])
+
+    char *PATH = ft_get_env(d, "PATH");
+    if (!PATH)
+        return;
+
+    paths = ft_split(PATH, ':');
+    if (!paths)
+        return;
+
+    i = 0;
+    while (paths[i])
     {
-        tmp_cmd = ft_strjoin("/bin/", cmd->arg[0]);
+        char *dir_slash = ft_strjoin(paths[i], "/");
+        tmp_cmd = ft_strjoin(dir_slash, cmd->arg[0]);
+        free(dir_slash);
+
         if (tmp_cmd)
         {
             execve(tmp_cmd, cmd->arg, d->envp);
-            execve_error(tmp_cmd);
             free(tmp_cmd);
         }
+        i++;
     }
+    execve_error(cmd->arg[0]);
+
+    i = 0;
+    while (paths[i])
+        free(paths[i++]);
+    free(paths);
 }
+
 
 void handle_redirections(t_data *d, int *pos, int *fd_out, int *fd_in)
 {

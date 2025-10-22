@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 13:56:09 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/20 17:23:24 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/22 23:33:15 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,12 @@ void	start_minishell(t_data *d)
 	}
 }
 
-void	exit_ctrl_d(t_data *d, char *buf)
+void	exit_ctrl_d(t_data *d)
 {
 	if (!d->input)
 	{
 		printf("exit\n");
-		free_all(d, buf);
+		free_all(d);
 		exit(d->exit_status);
 	}
 }

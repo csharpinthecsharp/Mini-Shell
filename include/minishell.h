@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/22 16:43:46 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/23 00:34:15 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,7 @@
 /* ========================== */
 
 // Buffer & Quote
-# define BUFFER_SIZE     1028
-# define QUOTE_TRUE      1
-# define QUOTE_FALSE     0
+# define BUFFER_SIZE     1024
 # define PIPE            '|'
 # define QUOTE           '\''
 # define BIG_QUOTE       '\"'
@@ -116,7 +114,7 @@ typedef struct s_data
 
 // Builtins
 int     handle_pwd(char *argv, int count, char *path);
-int     handle_exit(char **argv, int count);
+int     handle_exit(t_data *d, char **argv, int count);
 int     handle_echo(char **argv, int count);
 int     handle_export(char **argv, int count, t_data *d);
 int     handle_cd(char **argv, int count, t_data *d);
@@ -162,7 +160,7 @@ int check_output_ofeach(t_cmd *cmd, t_data *d);
 char *get_directory(const char *path);
 
 // Environment & Path
-char    *getpath(char *buffer, t_data *d);
+char    *get_path(t_data *d);
 char    *get_promptpath(t_data *d);
 char    *replace_envvar(char *s, t_data *d, int *is_dquote);
 void     update_data(t_data *d);
@@ -184,8 +182,8 @@ void    prepare_signals(void);
 void    handler_ctrl_bs(int sig);
 
 // Memory & Cleanup
-void free_all(t_data *d, char *buffer);
-void free_beforenewline(t_data *d, char *buffer);
+void free_all(t_data *d);
+void free_beforenewline(t_data *d);
 void alloc_output_file(t_data *d);
 void alloc_start_execution(t_data *d);
 void alloc_parse_args(char ***argv, int len);
@@ -210,7 +208,7 @@ void select_readline_mode(t_data *d);
 void start_minishell(t_data *d);
 void prepare_heredoc(t_data *d, int *pos);
 void heredoc(t_data *d, int *pos, int i);
-void exit_ctrl_d(t_data *d, char *buf);
+void exit_ctrl_d(t_data *d);
 int is_empty(t_data *d, int cmd_index, int arg_index);
 
 #endif /* MINISHELL_H */

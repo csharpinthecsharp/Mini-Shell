@@ -42,15 +42,3 @@ fi
 
 cd ..
 rm -rf minishell_tester
-
-# Ask if the user wants to check for leaks
-echo
-read -p "$(echo -e ${YELLOW}Do you want to check for leaks with Valgrind? [Y/N]:${NC} ) " leak_answer
-echo
-
-if [[ "$leak_answer" == "Y" || "$leak_answer" == "y" ]]; then
-    echo -e "${GREEN}Running Valgrind leak check on minishell...${NC}"
-    valgrind --suppressions=readline.supp --leak-check=full --show-leak-kinds=all ./minishell
-else
-    echo -e "${RED}Skipping leak check.${NC}"
-fi

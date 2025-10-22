@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/22 01:19:00 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/23 00:18:22 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,5 +88,7 @@ int pre_execution(t_data *d)
     }
     if (is_stateful == 0)
         start_execution(d);
+    else
+        printf("i leave now, im stateful");
     return SUCCESS;
 }

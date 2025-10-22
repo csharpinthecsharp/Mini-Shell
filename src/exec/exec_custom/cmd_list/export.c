@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 12:39:16 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/17 16:48:43 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/23 00:16:46 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,6 @@ int handle_export(char **argv, int count, t_data *d)
             i++;
         }
 
-        // Ajout sans suppression
         int i = 0;
         while (d->envp[i])
             i++;
@@ -93,7 +92,6 @@ int handle_export(char **argv, int count, t_data *d)
         d->envp[i] = ft_strdup(arg);
         d->envp[i + 1] = NULL;
     }
-
     return 0;
 }
 

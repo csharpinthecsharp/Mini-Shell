@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:18:23 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/22 16:45:23 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/23 00:10:38 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,28 +15,23 @@
 
 int	main(int ac, char *av[], char *envp[])
 {
-	char	*buf;
 	t_data	data;
 	t_data	*d;
 
 	(void)av;
 	if (ac != 1)
 		return (FAILED);
-	buf = malloc(sizeof(char) * BUFFER_SIZE);
-	if (!buf)
-		return (ERROR);
 	d = &data;
 	init_data(d);
 	prepare_signals();
 	d->envp = duplicate_envp(envp);
 	while (1)
 	{
-		update_data(d);
-		d->path = getpath(buf, d);
+		d->path = get_path(d);
 		select_readline_mode(d);
-		exit_ctrl_d(d, buf);
+		exit_ctrl_d(d);
 		start_minishell(d);
-		free_beforenewline(d, buf);
+		update_data(d);
 	}
 	return (SUCCESS);
 }

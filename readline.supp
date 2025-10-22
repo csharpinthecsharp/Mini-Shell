@@ -1,26 +1,19 @@
 {
-   readline_reachable
+   <insert_a_suppression_name_here>
    Memcheck:Leak
-   match-leak-kinds: reachable
    ...
-   obj:/usr/lib/x86_64-linux-gnu/libreadline.so.*
-   ...
+   fun:readline
 }
-
 {
-   ncurses_reachable
+   <insert_a_suppression_name_here>
    Memcheck:Leak
-   match-leak-kinds: reachable
    ...
-   obj:/usr/lib/x86_64-linux-gnu/libtinfo.so.*
-   ...
+   fun:add_history
 }
-
 {
-   libc_locale_reachable
+   <insert_a_suppression_name_here>
    Memcheck:Leak
-   match-leak-kinds: reachable
    ...
-   obj:/usr/lib/x86_64-linux-gnu/libc.so.*
+   obj:/*/bin/*
    ...
 }
