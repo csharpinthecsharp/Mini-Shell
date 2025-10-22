@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:18:23 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/20 17:12:31 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/22 16:45:23 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,10 @@ int	main(int ac, char *av[], char *envp[])
 
 	(void)av;
 	if (ac != 1)
-		return (EXIT_FAILURE);
-	buf = NULL;
-	alloc_buffer(&buf);
+		return (FAILED);
+	buf = malloc(sizeof(char) * BUFFER_SIZE);
+	if (!buf)
+		return (ERROR);
 	d = &data;
 	init_data(d);
 	prepare_signals();
@@ -37,5 +38,5 @@ int	main(int ac, char *av[], char *envp[])
 		start_minishell(d);
 		free_beforenewline(d, buf);
 	}
-	return (EXIT_SUCCESS);
+	return (SUCCESS);
 }

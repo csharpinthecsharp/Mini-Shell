@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   allocation.c                                       :+:      :+:    :+:   */
+/*   a_pipe.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 00:38:50 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/21 13:43:59 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/22 16:43:10 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,5 @@ void alloc_error_pipe(int N_pipe, int **var_pipe)
             exit(EXIT_FAILURE);
         }
         i++;
-    }
-}
-
-void alloc_buffer(char **buffer)
-{
-    *buffer = malloc(sizeof(char) * BUFFER_SIZE);
-    if (!buffer)
-    {
-        perror("malloc failed");
-        exit(EXIT_FAILURE);
     }
 }

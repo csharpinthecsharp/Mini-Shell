@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/22 16:13:28 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/22 16:43:46 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,7 @@
 /* ========================== */
 
 // Buffer & Quote
-# define BUFFER_SIZE     1000
-# define CAT_SIZE        3
+# define BUFFER_SIZE     1028
 # define QUOTE_TRUE      1
 # define QUOTE_FALSE     0
 # define PIPE            '|'
@@ -174,12 +173,9 @@ void execve_error(char *cmd);
 bool check_alone_redir(char **argv);
 
 // Redirection & Pipes
-void    alloc_redir_state(t_data *d);
-void    alloc_cmd_state(t_data *d);
 void    alloc_error_pipe(int N_pipe, int **var_pipe);
 void    close_pipe(int **var_pipe, int N_pipe, int state);
 char **fix_redir_arg(t_cmd *cmd);
-void alloc_buffer(char **buffer);
 int put_cmdstate(int type, int *is_stateful, t_cmd *cmd, t_data *d);
 bool is_alone_redir(char **argv, t_data *d);
 
