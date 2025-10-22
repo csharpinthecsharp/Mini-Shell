@@ -33,9 +33,9 @@ SRCS	= src/main.c \
 		  src/exec/redirection/r_heredoc.c \
 		  src/signal/init_signal.c \
 		  src/utils/malloc/a_pipe.c \
-		  src/utils/malloc/a_parse.c \
 		  src/utils/free/exit.c \
 		  src/utils/free/newline.c \
+		  src/utils/free/in_readline.c \
 		  src/utils/error/send_error.c \
 		  src/checker/c_exec/check_x.c \
 		  src/checker/c_exec/is_x.c\
@@ -55,14 +55,18 @@ before:
 	@echo "\033[0;32mCompiling..\033[0m"
 banner:
 	@echo ""
-	@echo "\033[0;32m		.__       .__       .__           .__  .__   \033[0m"
-	@echo "\033[0;32m	  _____ |__| ____ |__| _____|  |__   ____ |  | |  |  \033[0m"
-	@echo "\033[0;32m	 /     \|  |/    \|  |/  ___/  |  \_/ __ \|  | |  |  \033[0m"
-	@echo "\033[0;32m	|  Y Y  \  |   |  \  |\___ \|   Y  \  ___/|  |_|  |__\033[0m"
-	@echo "\033[0;32m	|__|_|  /__|___|  /__/____  >___|  /\___  >____/____/\033[0m"
-	@echo "\033[0;32m	      \/        \/        \/     \/     \/          \033[0m"
+	@echo "\033[0;34m  ███╗   ███╗██╗███╗   ██╗██╗███████╗██╗  ██╗███████╗██╗     ██╗     \033[0m"
+	@echo "\033[0;34m  ████╗ ████║██║████╗  ██║██║██╔════╝██║  ██║██╔════╝██║     ██║     \033[0m"
+	@echo "\033[0;34m  ██╔████╔██║██║██╔██╗ ██║██║███████╗███████║█████╗  ██║     ██║     \033[0m"
+	@echo "\033[0;34m  ██║╚██╔╝██║██║██║╚██╗██║██║╚════██║██╔══██║██╔══╝  ██║     ██║     \033[0m"
+	@echo "\033[0;34m  ██║ ╚═╝ ██║██║██║ ╚████║██║███████║██║  ██║███████╗███████╗███████╗\033[0m"
+	@echo "\033[0;34m  ╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝\033[0m"
 	@echo ""
-
+	@echo "Type ./minishell to run the shell"
+	@echo ""
+	@echo "You can run commands located in '/bin/' and,"
+	@echo " echo, cd, env, export, unset, pwd."
+	@echo ""
 
 clean:
 	rm -f $(OBJS)

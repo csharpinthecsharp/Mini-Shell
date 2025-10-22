@@ -6,19 +6,33 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 00:34:09 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/22 01:25:03 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/22 15:52:34 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../include/minishell.h"
 
-static int skip_quoted(const char *s, int *i, char quote_char)
+static void skip_quoted(const char *s, int *i, char quote_char)
 {
     (*i)++;
     while (s[*i] && s[*i] != quote_char)
         (*i)++;
     (*i)++;
-    return 0;
+}
+
+static void handle_quote(const char *s, int *i, int *is_dquote)
+{
+    while (s[*i] && !ft_isspace(s[*i]) && s[*i] != '|' && s[*i] != '<' && s[*i] != '>')
+    {
+        if (s[*i] == '\'' || s[*i] == '"')
+        {
+            if (s[*i] == '\'')
+                (*is_dquote) = 1;
+            skip_quoted(s, i, s[*i]);
+        }
+        else
+            (*i)++;
+    }
 }
 
 int get_arg_length(const char *s, int *i, int *is_dquote)
@@ -40,17 +54,7 @@ int get_arg_length(const char *s, int *i, int *is_dquote)
             (*i)+=1;
         return 1;
     }
-    while (s[*i] && !ft_isspace(s[*i]) && s[*i] != '|' && s[*i] != '<' && s[*i] != '>')
-    {
-        if (s[*i] == '\'' || s[*i] == '"')
-        {
-            if (s[*i] == '\'')
-                (*is_dquote) = 1;
-            skip_quoted(s, i, s[*i]);
-        }
-        else
-            (*i)++;
-    }
+    handle_quote(s, i, is_dquote);
     return *i - start;
 }
 

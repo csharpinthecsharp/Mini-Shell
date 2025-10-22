@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/21 16:24:31 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/22 16:18:35 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,9 @@ char **get_args(char *s, t_data *d)
     int is_dquote = 0;
     int len = ft_strlen(s);
     char **argv;
-    argv = NULL;
-    alloc_parse_args(&argv, len);
+    argv = malloc(sizeof(char *) * (len + 1));
+    if (!argv)
+        return (NULL);
     while (s[i])
     {
         char *raw_arg = get_one_arg(s, &i, &is_dquote);
@@ -33,34 +34,7 @@ char **get_args(char *s, t_data *d)
         argv[k++] = arg;
     }
     argv[k] = NULL;
-    return argv;
-}
-
-static int count_commands(char **argv)
-{
-    int i;
-    int count;
-
-    i = 0;
-    count = 0;
-    while (argv[i])
-    {
-        if (ft_strncmp(argv[i], "|", 2) == 0)
-            count++;
-        i++;
-    }
-    return (count + 1);
-}
-
-static int count_arg(char **argv, int i)
-{
-    int count = 0;
-    while (argv[i] && ft_strncmp(argv[i], "|", 2) != 0)
-    {
-        count++;
-        i++;
-    }
-    return count;
+    return (argv);
 }
 
 int split_commands(char **argv, t_data *d)
@@ -72,33 +46,22 @@ int split_commands(char **argv, t_data *d)
     d->cmd = malloc(sizeof(t_cmd) * d->nb_cmd);
     if (!d->cmd)
         return (-1);
-
     while (cmd_index < d->nb_cmd)
     {
         int j = 0;
-
         d->cmd[cmd_index].nb_arg = count_arg(argv, arg_index); 
         d->cmd[cmd_index].arg = malloc(sizeof(char *) * (d->cmd[cmd_index].nb_arg + 1));
         if (!d->cmd[cmd_index].arg)
             return (-1);
-
         while (argv[arg_index] && ft_strncmp(argv[arg_index], "|", 2) != 0)
             d->cmd[cmd_index].arg[j++] = ft_strdup(argv[arg_index++]);
-
         d->cmd[cmd_index].arg[j] = NULL;
-
         if (argv[arg_index] && ft_strncmp(argv[arg_index], "|", 2) == 0)
             arg_index++;
-
         cmd_index++;
     }
-
-    if (argv) {
-        for (int a = 0; argv[a]; a++)
-            free(argv[a]);
-        free(argv);
-    }
-    return SUCCESS;
+    free_split(argv);
+    return (SUCCESS);
 }
 
 char **split(t_data *d)

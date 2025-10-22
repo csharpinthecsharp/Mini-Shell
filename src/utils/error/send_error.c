@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 14:02:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/22 01:19:19 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/22 16:14:58 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,14 @@ void execve_error(char *cmd)
         print_error("A path component is not a directory", cmd);
     else
         print_error("Execution failed", cmd);
+}
+
+int handle_error_malloc(char *s)
+{
+    if (s == NULL)
+    {
+        perror("malloc failed");
+        return (FAILED);
+    }
+    return (SUCCESS);
 }

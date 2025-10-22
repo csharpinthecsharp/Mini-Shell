@@ -6,36 +6,29 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 15:32:50 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/20 15:38:01 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/22 16:18:41 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../include/minishell.h"
 
-int count_args(char **argv, int start)
-{
-    int count = 0;
-    while (argv[start] && !(argv[start][0] == '|' && argv[start][1] == '\0'))
-    {
-        count++;
-        start++;
-    }
-    return (count);
-}
-
 static char *get_env_string(t_data *d, char *s)
 {
-    char *arg = malloc(sizeof(char) * 1000);
-    int i = 0;
-    int j = 0;
+    int i;
+    int j;
     
+    char *arg = malloc(sizeof(char) * 256);
+    if (handle_error_malloc(arg) == FAILED)
+        return (NULL);
+    
+    i = 0;
+    j = 0;
     if (s[i] == '$')
         i++;
     while (s[i] && !ft_isspace(s[i]) && s[i] != '$')
         arg[j++] = s[i++];
     arg[j] = '\0';
-    
-    j = 0;
+
     while (d->envp[j])
     {
         if (ft_strncmp(d->envp[j], arg, ft_strlen(arg)) == 0
@@ -45,29 +38,23 @@ static char *get_env_string(t_data *d, char *s)
         }
         j++;
     }
-    free(arg);
-    return (ft_strdup(""));
+    return (free(arg), ft_strdup(""));
 }
 
 char *replace_envvar(char *s, t_data *d, int *is_dquote)
 {
-    int i = 0;
-    int j = 0;
+    int i;
+    int j;
+    
     char *envvar = ft_itoa(d->exit_status);
-    if (envvar == NULL)
-    {
-        perror("failed to allocate envvar");
-        free(envvar);
+    if (handle_error_malloc(envvar) == FAILED)
         return (NULL);
-    }
     char *arg = malloc(sizeof(char) * ft_strlen(s) + ft_strlen(envvar) + 256);
-    if (!arg)
-    {
-        perror("failed to allocate");
-        free(envvar);
+    if (handle_error_malloc(arg) == FAILED)
         return (NULL);
-    }
 
+    i = 0;
+    j = 0;
     while (s[i])
     {
         if (s[i] == '$' && s[i + 1] == '?' && *is_dquote == 0)
@@ -98,6 +85,5 @@ char *replace_envvar(char *s, t_data *d, int *is_dquote)
         arg[j++] = s[i++];
     }
     arg[j] = '\0';
-    free(envvar);
-    return (arg);
+    return (free(envvar), arg);
 }

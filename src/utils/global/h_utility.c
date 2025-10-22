@@ -6,11 +6,38 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 01:02:00 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/22 01:19:44 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/22 15:36:29 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../include/minishell.h"
+
+int count_commands(char **argv)
+{
+    int i;
+    int count;
+
+    i = 0;
+    count = 0;
+    while (argv[i])
+    {
+        if (ft_strncmp(argv[i], "|", 2) == 0)
+            count++;
+        i++;
+    }
+    return (count + 1);
+}
+
+int count_arg(char **argv, int i)
+{
+    int count = 0;
+    while (argv[i] && ft_strncmp(argv[i], "|", 2) != 0)
+    {
+        count++;
+        i++;
+    }
+    return count;
+}
 
 int count_cmds(char ***cmds)
 {

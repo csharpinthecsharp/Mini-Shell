@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 18:59:03 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/20 16:36:49 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/22 16:21:43 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*up_shlvl(char *envp_i)
 	char	*new_lvl;
 	char	*res;
 
-	if (ft_strncmp(envp_i, "SHLVL=1", 9) == 0)
+	if (ft_strncmp(envp_i, "SHLVL=", 6) == 0)
 	{
 		lvl = ft_atoi(envp_i + 6);
 		lvl++;

@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/22 14:55:59 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/22 16:13:28 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,14 +125,27 @@ int     handle_unset(char **argv, int count, t_data *d);
 int     handle_env(char **argv, int count, t_data *d);
 void heredoc_ctrl_c(int sig);
 int count_redir(char **argv);
-// Command & Execution
+void exec_built_inpipe(int **pipe, t_data *d, int n_pipe, int *pos);
+void exec_custom_inpipe(int **pipe, t_data *d, int n_pipe, int *pos);
+void exec_alone_redir_inpipe(int **pipe, t_data *d, int n_pipe, int *pos);
+void handle_pipe(int **pipe, int *pos, int n_pipe);
+void handle_redirections(t_data *d, int *pos, int *fd_out, int *fd_in);
+void handle_heredocs(t_data *d, int *pos);
+void execute_command_by_type(int **pipe, t_data *d, int n_pipe, int *pos);
+void handle_bin(t_cmd *cmd, t_data *d);
+int count_commands(char **argv);
+void restore_stdin(t_data *d);
+void wait_for_children(t_data *d, pid_t last_pid);
+void handle_child_status(t_data *d, pid_t wpid, int status, pid_t last_pid);
 int     pre_execution(t_data *d);
 void     start_execution(t_data *d);
 bool put_redir(t_data *d, int cmd_index, int arg_index, int redir_index);
 void handler_ctrl_c(int sig);
-void apply_output_redirections(t_data *d, int cmd_index);
 int run_custom_cmd(char **argv, t_data *d);
 int	handle_quote_state(char *input, int *pos, char *quote);
+int count_arg(char **argv, int i);
+void free_split(char **argv);
+int handle_error_malloc(char *s);
 
 // Parsing & Input
 int start_point_parsing(t_data *d);
@@ -144,7 +157,6 @@ int     get_arg_length(const char *s, int *i, int *is_dquote);
 int     ft_isspace(char arg);
 int     ft_countword(char **spli_args);
 int loop_into_arg(int i, char *s, int k, char *arg, int *j);
-int count_args(char **argv, int start);
 int pipe_syntax(char *input);
 int redirection_syntax(char *input);
 int check_output_ofeach(t_cmd *cmd, t_data *d);
