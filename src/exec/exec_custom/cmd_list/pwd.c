@@ -12,10 +12,10 @@
 
 #include "../../../../include/minishell.h"
 
-int handle_pwd(char *argv, int count, char *path)
+int	handle_pwd(char *argv, int count, char *path)
 {
-    (void)count;
-    (void)argv;
-    printf("%s\n", path);
-    return (0);
+	(void)count;
+	(void)argv;
+	printf("%s\n", path);
+	return (0);
 }

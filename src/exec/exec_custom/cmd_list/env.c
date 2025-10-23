@@ -12,34 +12,34 @@
 
 #include "../../../../include/minishell.h"
 
-char *ft_get_env(t_data *d, char *requested)
+char	*ft_get_env(t_data *d, char *requested)
 {
-    int i = 0;
+	int	i;
 
-    while (d->envp[i])
-    {
-        if (ft_strncmp(d->envp[i], requested, ft_strlen(requested)) == 0 &&
-            d->envp[i][ft_strlen(requested)] == '=')
-        {
-            return d->envp[i] + ft_strlen(requested) + 1;
-        }
-        i++;
-    }
-    return NULL;
+	i = 0;
+	while (d->envp[i])
+	{
+		if (ft_strncmp(d->envp[i], requested, ft_strlen(requested)) == 0
+			&& d->envp[i][ft_strlen(requested)] == '=')
+		{
+			return (d->envp[i] + ft_strlen(requested) + 1);
+		}
+		i++;
+	}
+	return (NULL);
 }
 
-
-int handle_env(char **argv, int count, t_data *d)
+int	handle_env(char **argv, int count, t_data *d)
 {
-    (void)argv;
-    if (count == 1)
-    {
-        int i = 0;
-        while (d->envp[i])
-        {
-            printf("%s\n", d->envp[i]);
-            i++;
-        }
-    }
-    return (0);
+	(void)argv;
+	if (count == 1)
+	{
+		int i = 0;
+		while (d->envp[i])
+		{
+			printf("%s\n", d->envp[i]);
+			i++;
+		}
+	}
+	return (0);
 }

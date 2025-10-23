@@ -6,29 +6,24 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 17:13:46 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/23 16:08:11 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/23 19:56:22 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../include/minishell.h"
 #include "../../../include/template.h"
 
-char	*get_path(t_data *d)
+char *get_path(t_data *d)
 {
-	char *cwd;
-	char *res;
-	
-	cwd = getcwd(NULL, 0);
-	if (!cwd)
-		return (NULL);	
+    (void)d;
+    char *cwd;
 
-	if (!d->new_path)
-		return (cwd);
-		
-	res = ft_strjoin(cwd, d->new_path);
-	free(cwd);
-	return (res);
+    cwd = getcwd(NULL, 0);
+    if (!cwd)
+        return (NULL);
+    return cwd;
 }
+
 
 char	*get_promptpath(t_data *d)
 {

@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 16:22:20 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/23 17:46:28 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/23 19:43:44 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,23 +97,6 @@ void execute_command_by_type(int **pipe, t_data *d, int n_pipe, int *pos)
     else if (d->cmd[*pos].state_cmd == ALONE_REDIR)
         exec_alone_redir_inpipe(pipe, d, n_pipe, pos);
 }
-
-static int pipe_init(int N_pipe, int **var_pipe)
-{
-    int i = 0;
-
-    while (i < N_pipe)
-    {
-        var_pipe[i] = malloc(sizeof(int) * 2);
-        if (!var_pipe[i])
-            return (FAILED);
-        if (pipe(var_pipe[i]) == -1)
-            return (FAILED);
-        i++;
-    }
-    return (SUCCESS);
-}
-
 
 void    start_execution(t_data *d)
 {

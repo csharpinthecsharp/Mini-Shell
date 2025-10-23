@@ -12,27 +12,25 @@
 
 #include "../../../../include/minishell.h"
 
-int handle_exit(t_data *d, char **argv, int count)
+int	handle_exit(t_data *d, char **argv, int count)
 {
-    (void)d;
-    (void)count;
-    long status;
-    if (!argv[1])
-        exit(EXIT_SUCCESS);
+	long	status;
 
-    if (!(is_numeric(argv[1], 0)))
-    {
-        print_error("numeric argument required", argv[1]);
-        exit(2);
-    }
-
-    if (argv[2])
-    {
-        print_error("too many arguments", argv[0]);
-        return (FAILED);
-    }
-    
-    status = ft_atoi(argv[1]);
-    printf("exit\n");
-    exit((unsigned char)status);
+	(void)d;
+	(void)count;
+	if (!argv[1])
+		exit(EXIT_SUCCESS);
+	if (!(is_numeric(argv[1], 0)))
+	{
+		print_error("numeric argument required", argv[1]);
+		exit(2);
+	}
+	if (argv[2])
+	{
+		print_error("too many arguments", argv[0]);
+		return (FAILED);
+	}
+	status = ft_atoi(argv[1]);
+	printf("exit\n");
+	exit((unsigned char)status);
 }
