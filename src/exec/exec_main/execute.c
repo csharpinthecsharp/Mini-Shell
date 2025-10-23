@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 16:22:20 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/23 00:27:44 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/23 17:46:28 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,24 +98,45 @@ void execute_command_by_type(int **pipe, t_data *d, int n_pipe, int *pos)
         exec_alone_redir_inpipe(pipe, d, n_pipe, pos);
 }
 
+static int pipe_init(int N_pipe, int **var_pipe)
+{
+    int i = 0;
+
+    while (i < N_pipe)
+    {
+        var_pipe[i] = malloc(sizeof(int) * 2);
+        if (!var_pipe[i])
+            return (FAILED);
+        if (pipe(var_pipe[i]) == -1)
+            return (FAILED);
+        i++;
+    }
+    return (SUCCESS);
+}
+
+
 void    start_execution(t_data *d)
 {
     int     **pipe;
     int     pos;
     pid_t   last_pid;
 
-    pipe = malloc(sizeof(int *) * (d->nb_cmd - 1));
-    if (!pipe)
-        perror("malloc failed");
-    alloc_error_pipe(d->nb_cmd - 1, pipe);
     pos = 0;
+    int pipe_len = d->nb_cmd - 1;
+    pipe = malloc(sizeof(int *) * pipe_len);
+
+    if (!pipe || pipe_init(pipe_len, pipe) == FAILED)
+    {
+        close_pipe(pipe, pipe_len, 0);
+        exit(FAILED);
+    }
     while (pos < d->nb_cmd)
     {
-        execute_command_by_type(pipe, d, d->nb_cmd - 1, &pos);
+        execute_command_by_type(pipe, d, pipe_len, &pos);
         last_pid = d->last_fork_pid;
         pos++;
     }
-    close_pipe(pipe, d->nb_cmd - 1, 0);
+    close_pipe(pipe, pipe_len, 0);
     wait_for_children(d, last_pid);
     restore_stdin(d);
 }

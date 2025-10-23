@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 00:41:34 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/22 23:58:56 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/23 17:31:41 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,16 +83,13 @@ void free_all(t_data *d)
         free_splitted(d);
     if (d->cmd)
         free_cmds(d);
-
-    rl_clear_history();
-
     free(d->path);
     free(d->new_path);
-
     if (d->fd_in > 2)
         close(d->fd_in);
     if (d->fd_out > 2)
         close(d->fd_out);
     if (d->stdin_back > 2)
         close(d->stdin_back);
+    rl_clear_history();
 }

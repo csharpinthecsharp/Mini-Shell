@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 16:47:20 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/22 01:28:27 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/23 17:38:20 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,7 +160,10 @@ int put_cmdstate(int type, int *is_stateful, t_cmd *cmd, t_data *d)
         else
         {
             if (error_h(d, tmp) == FAILED)
+            {
+                free(tmp);
                 return (FAILED);
+            }
         }
     }
     return (SUCCESS);

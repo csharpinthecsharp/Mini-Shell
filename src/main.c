@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:18:23 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/23 00:10:38 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/23 17:33:27 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	main(int ac, char *av[], char *envp[])
 		select_readline_mode(d);
 		exit_ctrl_d(d);
 		start_minishell(d);
-		update_data(d);
+		free_beforenewline(d);
 	}
 	return (SUCCESS);
 }

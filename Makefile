@@ -26,13 +26,13 @@ SRCS	= src/main.c \
 		  src/exec/exec_custom/cmd_list/unset.c \
 		  src/parse/handle_input.c \
 		  src/exec/exec_main/pre_exec.c \
+		  src/exec/exec_main/handle_exec.c \
 		  src/exec/exec_helper/h_pre_exec.c \
 		  src/exec/exec_helper/h_exec.c \
 		  src/exec/exec_main/execute.c \
 		  src/exec/redirection/r_basic.c \
 		  src/exec/redirection/r_heredoc.c \
 		  src/signal/init_signal.c \
-		  src/utils/malloc/a_pipe.c \
 		  src/utils/free/exit.c \
 		  src/utils/free/newline.c \
 		  src/utils/free/in_readline.c \
@@ -54,6 +54,7 @@ $(NAME): $(LIBFT) $(OBJS)
 before:
 	@echo "\033[0;32mCompiling..\033[0m"
 banner:
+	@clear
 	@echo ""
 	@echo "\033[0;34m  ███╗   ███╗██╗███╗   ██╗██╗███████╗██╗  ██╗███████╗██╗     ██╗     \033[0m"
 	@echo "\033[0;34m  ████╗ ████║██║████╗  ██║██║██╔════╝██║  ██║██╔════╝██║     ██║     \033[0m"

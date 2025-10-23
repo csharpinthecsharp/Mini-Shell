@@ -49,4 +49,4 @@ valgrind \
   ./minishell "${@}" 2>&1
 
 echo
-echo -e "${GREEN}Valgrind run complete.${NC}"
+echo -e "${GREEN}Tester run complete.${NC}"

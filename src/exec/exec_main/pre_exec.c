@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/23 00:18:22 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/23 17:40:20 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,16 +79,14 @@ int pre_execution(t_data *d)
         if (cut_redirection_command(&d->cmd[i]) == FAILED)
             return (ERROR);
         if (is_empty(d, i, 0) == FAILED)
-            return FAILED;
+            return (FAILED);
         int type = check_command(d->cmd[i].arg, d);
         if (put_cmdstate(type, &is_stateful, &d->cmd[i], d) == FAILED) {
-            return FAILED;
+            return (FAILED);
         }
         i++;
     }
     if (is_stateful == 0)
         start_execution(d);
-    else
-        printf("i leave now, im stateful");
-    return SUCCESS;
+    return (SUCCESS);
 }
