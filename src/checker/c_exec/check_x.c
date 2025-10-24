@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 01:07:11 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/23 00:15:29 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/24 04:29:25 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,85 @@ int check_non_bin(t_cmd *cmd, int type, int *is_stateful, t_data *d)
     return (SUCCESS);
 }
 
+static int check_dir_left(t_cmd *cmd, t_data *d, char *file, int type, int i)
+{
+    if ((type == LEFT) && file) 
+    {
+        if (access(file, F_OK) != 0) 
+        {
+            if (i == cmd->nb_redir)
+            {
+                return FAILED;
+            }
+            else if (isatty(STDIN_FILENO))
+                print_error("No such file or directory", file); 
+            else if (d->error_state == 0 && !isatty(STDIN_FILENO))
+            {
+                print_error("No such file or directory", file); 
+                d->error_state = 1;
+            }           
+        }
+        if (access(file, R_OK) != 0) 
+        {
+            if (errno == EACCES)
+            {
+                if (i == cmd->nb_redir)
+                {
+                    return FAILED;
+                }
+                else if (isatty(STDIN_FILENO))
+                    print_error("Permission denied", file); 
+                else if (d->error_state == 0 && !isatty(STDIN_FILENO))
+                {
+                    print_error("Permission denied", file); 
+                    d->error_state = 1;
+                }               
+            }
+        }
+    }
+    return (SUCCESS);
+}
+
+static int check_dir_right(t_cmd *cmd, t_data *d, char *dir, char *file, int type, int i)
+{
+    if ((type == RIGHT || type == RIGHT_RIGHT) && file)
+    {
+        if (!dir || access(dir, F_OK) != 0)
+        {
+            if (i == cmd->nb_redir)
+            {
+                return FAILED;
+            }
+            else if (isatty(STDIN_FILENO))
+                print_error("No such file or directory", file); 
+            else if (d->error_state == 0 && !isatty(STDIN_FILENO))
+            {
+                print_error("No such file or directory", file); 
+                d->error_state = 1;
+            }           
+        }
+        if (access(file, F_OK) == 0 && access(file, W_OK) != 0) 
+        {
+            if (errno == EACCES) 
+            {
+                if (i == cmd->nb_redir)
+                {
+                    return FAILED;
+                }
+                else if (isatty(STDIN_FILENO))
+                    print_error("Permission denied", file); 
+                else if (d->error_state == 0 && !isatty(STDIN_FILENO))
+                {
+                    print_error("Permission denied", file); 
+                    d->error_state = 1;
+                }          
+            }
+        }
+        free(dir); 
+    }
+    return (SUCCESS);
+}
+
 int check_output_ofeach(t_cmd *cmd, t_data *d)
 {
     int i = 0;
@@ -82,75 +161,10 @@ int check_output_ofeach(t_cmd *cmd, t_data *d)
             continue;
         }
         char *dir = get_directory(file);
-        if ((type == RIGHT || type == RIGHT_RIGHT) && file)
-        {
-            if (!dir || access(dir, F_OK) != 0)
-            {
-                if (i == cmd->nb_redir)
-                {
-                    return FAILED;
-                }
-                else if (isatty(STDIN_FILENO))
-                    print_error("No such file or directory", file); 
-                else if (d->error_state == 0 && !isatty(STDIN_FILENO))
-                {
-                    print_error("No such file or directory", file); 
-                    d->error_state = 1;
-                }           
-            }
-            if (access(file, F_OK) == 0 && access(file, W_OK) != 0) 
-            {
-                if (errno == EACCES) 
-                {
-                    if (i == cmd->nb_redir)
-                    {
-                        return FAILED;
-                    }
-                    else if (isatty(STDIN_FILENO))
-                        print_error("Permission denied", file); 
-                    else if (d->error_state == 0 && !isatty(STDIN_FILENO))
-                    {
-                        print_error("Permission denied", file); 
-                        d->error_state = 1;
-                    }          
-                }
-            }
-            free(dir); 
-        }
-        if ((type == LEFT) && file) 
-        {
-            if (access(file, F_OK) != 0) 
-            {
-                if (i == cmd->nb_redir)
-                {
-                    return FAILED;
-                }
-                else if (isatty(STDIN_FILENO))
-                    print_error("No such file or directory", file); 
-                else if (d->error_state == 0 && !isatty(STDIN_FILENO))
-                {
-                    print_error("No such file or directory", file); 
-                    d->error_state = 1;
-                }           
-            }
-            if (access(file, R_OK) != 0) 
-            {
-                if (errno == EACCES)
-                {
-                    if (i == cmd->nb_redir)
-                    {
-                        return FAILED;
-                    }
-                    else if (isatty(STDIN_FILENO))
-                        print_error("Permission denied", file); 
-                    else if (d->error_state == 0 && !isatty(STDIN_FILENO))
-                    {
-                        print_error("Permission denied", file); 
-                        d->error_state = 1;
-                    }               
-                }
-            }
-        }
+        if (check_dir_right(cmd, d, dir, file, type, i) == FAILED)
+            return (FAILED);
+        if (check_dir_left(cmd, d, file, type, i) == FAILED)
+            return (FAILED);
         i++;
     }
     return (SUCCESS);
