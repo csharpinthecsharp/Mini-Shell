@@ -38,6 +38,7 @@ SRC = ft_atoi.c \
       ft_printf_utils_convert.c \
       ft_ptr.c \
       ft_hex.c \
+      ft_realloc.c \
 	  ft_utoa.c
 
 OBJ = $(SRC:.c=.o)

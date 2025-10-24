@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 01:22:52 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/24 13:55:01 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/24 14:01:11 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ int	is_numeric(const char *str, int strict)
 	}
 	return (FAILED);
 }
+
 
 int	isfulls(char *s)
 {

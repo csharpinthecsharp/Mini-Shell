@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 12:39:38 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/22 16:04:26 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/24 14:01:56 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,5 +41,5 @@ int	handle_env(char **argv, int count, t_data *d)
 			i++;
 		}
 	}
-	return (0);
+	return (SUCCESS);
 }

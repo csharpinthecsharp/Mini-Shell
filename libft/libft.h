@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 12:32:27 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/08/20 15:30:34 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/24 14:24:27 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 
+void	*ft_realloc(void *ptr, size_t old_size, size_t new_size);
 void	ft_bzero(void *s, size_t n);
 int		ft_isalpha(int c);
 int		ft_isascii(int c);
