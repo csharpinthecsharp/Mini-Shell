@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 01:07:11 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/24 04:29:25 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/24 13:59:46 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,17 @@ int check_non_bin(t_cmd *cmd, int type, int *is_stateful, t_data *d)
     return (SUCCESS);
 }
 
+static void check_status_error(t_data *d, char *file, char *error_s)
+{
+    if (isatty(STDIN_FILENO))
+        print_error(error_s, file); 
+    else if (d->error_state == 0 && !isatty(STDIN_FILENO))
+    {
+        print_error(error_s, file); 
+        d->error_state = 1;
+    }  
+}
+
 static int check_dir_left(t_cmd *cmd, t_data *d, char *file, int type, int i)
 {
     if ((type == LEFT) && file) 
@@ -77,15 +88,10 @@ static int check_dir_left(t_cmd *cmd, t_data *d, char *file, int type, int i)
         {
             if (i == cmd->nb_redir)
             {
-                return FAILED;
-            }
-            else if (isatty(STDIN_FILENO))
-                print_error("No such file or directory", file); 
-            else if (d->error_state == 0 && !isatty(STDIN_FILENO))
-            {
-                print_error("No such file or directory", file); 
-                d->error_state = 1;
-            }           
+                return (FAILED);
+            }   
+            else
+                check_status_error(d, file, "No such file or directory");
         }
         if (access(file, R_OK) != 0) 
         {
@@ -95,13 +101,8 @@ static int check_dir_left(t_cmd *cmd, t_data *d, char *file, int type, int i)
                 {
                     return FAILED;
                 }
-                else if (isatty(STDIN_FILENO))
-                    print_error("Permission denied", file); 
-                else if (d->error_state == 0 && !isatty(STDIN_FILENO))
-                {
-                    print_error("Permission denied", file); 
-                    d->error_state = 1;
-                }               
+                else
+                    check_status_error(d, file, "Permission denied");           
             }
         }
     }
@@ -118,13 +119,8 @@ static int check_dir_right(t_cmd *cmd, t_data *d, char *dir, char *file, int typ
             {
                 return FAILED;
             }
-            else if (isatty(STDIN_FILENO))
-                print_error("No such file or directory", file); 
-            else if (d->error_state == 0 && !isatty(STDIN_FILENO))
-            {
-                print_error("No such file or directory", file); 
-                d->error_state = 1;
-            }           
+            else
+                check_status_error(d, file, "No such file or directory");       
         }
         if (access(file, F_OK) == 0 && access(file, W_OK) != 0) 
         {
@@ -132,18 +128,12 @@ static int check_dir_right(t_cmd *cmd, t_data *d, char *dir, char *file, int typ
             {
                 if (i == cmd->nb_redir)
                 {
-                    return FAILED;
+                    return (FAILED);
                 }
-                else if (isatty(STDIN_FILENO))
-                    print_error("Permission denied", file); 
-                else if (d->error_state == 0 && !isatty(STDIN_FILENO))
-                {
-                    print_error("Permission denied", file); 
-                    d->error_state = 1;
-                }          
+                else
+                    check_status_error(d, file, "Permission denied");
             }
         }
-        free(dir); 
     }
     return (SUCCESS);
 }
@@ -153,18 +143,25 @@ int check_output_ofeach(t_cmd *cmd, t_data *d)
     int i = 0;
     while (i < cmd->nb_redir)
     {
-        int type = cmd->arguments[i].state_redir;
-        char *file = cmd->arguments[i].file;
-        if (file == NULL)
+        if (cmd->arguments[i].file == NULL)
         {
             i += 1;   
             continue;
         }
-        char *dir = get_directory(file);
-        if (check_dir_right(cmd, d, dir, file, type, i) == FAILED)
+        char *dir = get_directory(cmd->arguments[i].file);
+        if (!dir)
             return (FAILED);
-        if (check_dir_left(cmd, d, file, type, i) == FAILED)
+        if (check_dir_right(cmd, d, dir, cmd->arguments[i].file, cmd->arguments[i].state_redir, i) == FAILED)
+        {
+            free(dir);
             return (FAILED);
+        }
+        else if (check_dir_left(cmd, d, cmd->arguments[i].file, cmd->arguments[i].state_redir, i) == FAILED)
+        {
+            free(dir); 
+            return (FAILED);
+        }
+        free(dir);
         i++;
     }
     return (SUCCESS);
