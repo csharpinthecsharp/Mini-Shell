@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/23 19:44:11 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/25 02:15:10 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,5 +211,6 @@ void prepare_heredoc(t_data *d, int *pos);
 void heredoc(t_data *d, int *pos, int i);
 void exit_ctrl_d(t_data *d);
 int is_empty(t_data *d, int cmd_index, int arg_index);
+char **remove_empty_var(char **tokens);
 
 #endif /* MINISHELL_H */

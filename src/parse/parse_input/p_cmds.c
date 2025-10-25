@@ -6,11 +6,30 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/23 17:40:10 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/25 02:16:21 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../include/minishell.h"
+
+char **remove_empty_var(char **tokens)
+{
+    int count = 0;
+    while (tokens[count])
+        count++;
+
+    char **clean = malloc(sizeof(char *) * (count + 1));
+    int i = 0, j = 0;
+    while (tokens[i])
+    {
+        if (tokens[i][0] != '\0')
+            clean[j++] = ft_strdup(tokens[i]);
+        i++;
+    }
+    clean[j] = NULL;
+    return clean;
+}
+
 
 char **get_args(char *s, t_data *d)
 {
@@ -27,11 +46,15 @@ char **get_args(char *s, t_data *d)
         char *raw_arg = get_one_arg(s, &i, &is_dquote);
         if (!raw_arg)
             break;
-        char *arg = replace_envvar(raw_arg, d, &is_dquote);
-        free(raw_arg);
-        if (!arg)
-            break;
-        argv[k++] = arg;
+            
+        if (raw_arg[0] == '$')
+        {
+            char *arg = replace_envvar(raw_arg, d, &is_dquote);
+            argv[k++] = arg;
+            free (raw_arg);
+        }
+        else
+            argv[k++] = raw_arg;
     }
     argv[k] = NULL;
     return (argv);
@@ -60,7 +83,8 @@ int split_commands(char **argv, t_data *d)
             arg_index++;
         cmd_index++;
     }
-    free_split(argv);
+    if (argv)
+        free_split(argv);
     return (SUCCESS);
 }
 

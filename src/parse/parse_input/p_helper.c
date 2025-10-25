@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 15:32:50 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/22 16:18:41 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/25 02:37:21 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,23 +29,24 @@ static char *get_env_string(t_data *d, char *s)
         arg[j++] = s[i++];
     arg[j] = '\0';
 
-    while (d->envp[j])
+    int env_index = 0;
+    while (d->envp[env_index])
     {
-        if (ft_strncmp(d->envp[j], arg, ft_strlen(arg)) == 0
-        && d->envp[j][ft_strlen(arg)] == '=')
+        if (ft_strncmp(d->envp[env_index], arg, ft_strlen(arg)) == 0
+        && d->envp[env_index][ft_strlen(arg)] == '=')
         {
             return (ft_strdup(ft_get_env(d, arg)));
         }
-        j++;
+        env_index++;
     }
-    return (free(arg), ft_strdup(""));
+    free(arg);
+    return (ft_strdup(""));
 }
 
 char *replace_envvar(char *s, t_data *d, int *is_dquote)
 {
     int i;
     int j;
-    
     char *envvar = ft_itoa(d->exit_status);
     if (handle_error_malloc(envvar) == FAILED)
         return (NULL);
@@ -55,34 +56,38 @@ char *replace_envvar(char *s, t_data *d, int *is_dquote)
 
     i = 0;
     j = 0;
+    int env_len;
+    (void)env_len;
     while (s[i])
     {
         if (s[i] == '$' && s[i + 1] == '?' && *is_dquote == 0)
         {
-            int k = 0;
-            while (envvar[k])
-                arg[j++] = envvar[k++];
+            for (int k = 0; envvar[k]; k++)
+                arg[j++] = envvar[k];
             i += 2;
         }
         else if (s[i] == '$' && *is_dquote == 0)
         {
+            if (s[i + 1] == '\0' || ft_isspace(s[i + 1])) {
+                arg[j++] = s[i++]; 
+                continue;
+            }
             char *env_value = get_env_string(d, s + i);
             if (!env_value)
-                return(NULL);
-            int k = 0;
+                return (free(envvar), NULL);
 
-            while (env_value[k])
-            {
-                arg[j++] = env_value[k];
-                k++;
-            }
-            if (env_value[0] != '\0')
-                i++;
+            i++; 
             while (s[i] && !ft_isspace(s[i]) && s[i] != '$')
-                i++; 
+                i++;
+
+            for (int k = 0; env_value[k]; k++)
+                arg[j++] = env_value[k];
             free(env_value);
         }
-        arg[j++] = s[i++];
+        else
+        {
+            arg[j++] = s[i++];
+        }
     }
     arg[j] = '\0';
     return (free(envvar), arg);

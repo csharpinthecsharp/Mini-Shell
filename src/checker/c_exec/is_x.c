@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 01:07:11 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/24 14:01:02 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/25 01:44:24 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,7 @@ int is_empty(t_data *d, int cmd_index, int arg_index)
     if (d->cmd[cmd_index].arg == NULL ||
         d->cmd[cmd_index].arg[arg_index] == NULL)
     {
-        d->exit_status = 127;
-        print_error("command not found ", "!");
-        return FAILED;
+        return (FAILED);
     }
 
     return (SUCCESS);
