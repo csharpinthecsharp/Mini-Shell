@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 12:39:16 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/25 15:11:34 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/25 18:01:47 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,19 +53,15 @@ static int	loop_in_env(int *index, t_data *d, char *key, char **arg_ptr)
 static int	do_export(char **argv, t_data *d)
 {
 	char	*arg;
-	char	*equal_sign;
-	char	*equal;
 	int		len;
 	char	*key;
 	char	**new_envp;
 	int		index;
 
 	arg = argv[1];
-	equal_sign = ft_strchr(arg, '=');
-	if (error_export(equal_sign, &arg) == FAILED)
+	if (error_export(ft_strchr(arg, '='), &arg) == FAILED)
 		return (FAILED);
-	equal = ft_strchr(arg, '=');
-	len = equal - arg;
+	len = ft_strchr(arg, '=') - arg;
 	key = malloc(len + 1);
 	ft_strlcpy(key, arg, len + 1);
 	if (loop_in_env(&index, d, key, &arg) == SUCCESS)

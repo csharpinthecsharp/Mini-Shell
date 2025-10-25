@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 01:07:11 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/25 15:21:29 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/25 18:03:47 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,31 +66,6 @@ int	check_non_bin(t_cmd *cmd, int type, int *is_stateful, t_data *d)
 		{
 			d->exit_status = 1;
 			return (FAILED);
-		}
-	}
-	return (SUCCESS);
-}
-
-int	check_dir_left(t_cmd *cmd, t_data *d, char *file, int i)
-{
-	if ((cmd->arguments[i].state_redir == LEFT) && file)
-	{
-		if (access(file, F_OK) != 0)
-		{
-			if (i == cmd->nb_redir)
-				return (FAILED);
-			else
-				check_status_error(d, file, "No such file or directory");
-		}
-		if (access(file, R_OK) != 0)
-		{
-			if (errno == EACCES)
-			{
-				if (i == cmd->nb_redir)
-					return (FAILED);
-				else
-					check_status_error(d, file, "Permission denied");
-			}
 		}
 	}
 	return (SUCCESS);

@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 16:22:20 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/25 14:56:12 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/25 18:18:05 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,6 @@ void	handle_heredocs(t_data *d, int *pos)
 void	handle_bin(t_cmd *cmd, t_data *d)
 {
 	char	**paths;
-	char	*tmp_cmd;
-	int		i;
-	char	*path;
-	char	*dir_slash;
 
 	if (!cmd->arg[0])
 		return ;
@@ -41,29 +37,11 @@ void	handle_bin(t_cmd *cmd, t_data *d)
 		execve_error(cmd->arg[0]);
 		return ;
 	}
-	path = ft_get_env(d, "PATH");
-	if (!path)
-		return ;
-	paths = ft_split(path, ':');
+	paths = ft_split(ft_get_env(d, "PATH"), ':');
 	if (!paths)
 		return ;
-	i = 0;
-	while (paths[i])
-	{
-		dir_slash = ft_strjoin(paths[i], "/");
-		tmp_cmd = ft_strjoin(dir_slash, cmd->arg[0]);
-		free(dir_slash);
-		if (tmp_cmd)
-		{
-			execve(tmp_cmd, cmd->arg, d->envp);
-			free(tmp_cmd);
-		}
-		i++;
-	}
+	exec_with_path(paths, cmd, d);
 	execve_error(cmd->arg[0]);
-	i = 0;
-	while (paths[i])
-		free(paths[i++]);
 	free(paths);
 }
 

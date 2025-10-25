@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 00:34:09 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/25 02:37:34 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/25 18:25:42 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,47 +59,46 @@ int	get_arg_length(const char *s, int *i, int *is_dquote)
 	return (*i - start);
 }
 
-int	loop_into_arg(int i, char *s, int k, char *arg, int *j)
+static void	loop_into_arg(const char *s, int end, int *k, char **dst)
 {
 	char	qc;
 
-	if (s[k] == '\'' || s[k] == '"')
+	if (s[*k] == '\'' || s[*k] == '"')
 	{
-		qc = s[k++];
-		while (k < i && s[k] != qc)
-			arg[(*j)++] = s[k++];
-		if (s[k] == qc)
-			k++;
+		qc = s[(*k)++];
+		while (*k < end && s[*k] != qc)
+			*(*dst)++ = s[(*k)++];
+		if (*k < end && s[*k] == qc)
+			(*k)++;
 	}
 	else
 	{
-		if (ft_isspace(s[k]))
-			k++;
+		if (ft_isspace((unsigned char)s[*k]))
+			(*k)++;
 		else
-			arg[(*j)++] = s[k++];
+			*(*dst)++ = s[(*k)++];
 	}
-	return (k);
 }
 
 char	*get_one_arg(char *s, int *i, int *is_dquote)
 {
 	int		start;
-	int		j;
-	int		k;
 	int		len;
 	char	*arg;
+	char	*dst;
+	int		k;
 
 	start = *i;
 	len = get_arg_length(s, i, is_dquote);
 	if (len <= 0)
 		return (NULL);
-	arg = malloc(len + 1);
+	arg = malloc((size_t)len + 1);
 	if (!arg)
 		return (NULL);
-	j = 0;
+	dst = arg;
 	k = start;
 	while (k < *i)
-		k = loop_into_arg(*i, s, k, arg, &j);
-	arg[j] = '\0';
+		loop_into_arg(s, *i, &k, &dst);
+	*dst = '\0';
 	return (arg);
 }

@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/25 15:14:00 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/25 21:31:41 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,18 @@ char	**get_args(char *s, t_data *d)
 			break ;
 		if (ft_strchr(raw_arg, '$'))
 		{
-			arg = replace_envvar(raw_arg, d, &is_dquote);
+			arg = malloc(ft_strlen(raw_arg) + 256);
+			if (!arg)
+			{
+				free(raw_arg);
+				break ;
+			}
+			arg = replace_envvar(raw_arg, d, &is_dquote, arg);
+			if (!arg)
+			{
+				free(raw_arg);
+				break ;
+			}
 			argv[k++] = arg;
 			free(raw_arg);
 		}
@@ -69,6 +80,7 @@ char	**get_args(char *s, t_data *d)
 	argv[k] = NULL;
 	return (argv);
 }
+
 
 int	split_commands(char **argv, t_data *d)
 {

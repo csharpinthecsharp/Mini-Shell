@@ -6,13 +6,13 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/25 15:15:19 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/25 15:26:18 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/25 18:04:23 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../include/minishell.h"
 
-static int	right_helper(char *dir, t_cmd *c, t_data *d, int i)
+static int	checker_dir_perm(char *dir, t_cmd *c, t_data *d, int i)
 {
 	if (!dir || access(dir, F_OK) != 0)
 	{
@@ -43,7 +43,7 @@ int	check_dir_right(t_cmd *c, t_data *d, char *dir, int i)
 			|| c->arguments[i].state_redir == RIGHT_RIGHT)
 		&& c->arguments[i].file)
 	{
-		if (right_helper(dir, c, d, i) == FAILED)
+		if (checker_dir_perm(dir, c, d, i) == FAILED)
 			return (FAILED);
 	}
 	return (SUCCESS);
@@ -64,6 +64,31 @@ static int	check_dir(t_cmd *cmd, t_data *d, char *dir, int i)
 		return (FAILED);
 	}
 	free(dir);
+	return (SUCCESS);
+}
+
+int	check_dir_left(t_cmd *cmd, t_data *d, char *file, int i)
+{
+	if ((cmd->arguments[i].state_redir == LEFT) && file)
+	{
+		if (access(file, F_OK) != 0)
+		{
+			if (i == cmd->nb_redir)
+				return (FAILED);
+			else
+				check_status_error(d, file, "No such file or directory");
+		}
+		if (access(file, R_OK) != 0)
+		{
+			if (errno == EACCES)
+			{
+				if (i == cmd->nb_redir)
+					return (FAILED);
+				else
+					check_status_error(d, file, "Permission denied");
+			}
+		}
+	}
 	return (SUCCESS);
 }
 

@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/25 15:27:16 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/25 21:32:26 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 
 // Buffer & Quote
 # define BUFFER_SIZE 1024
+# define POUVOIR_DU_DESTIN 256
 # define PIPE '|'
 # define QUOTE '\''
 # define BIG_QUOTE '\"'
@@ -126,6 +127,7 @@ int				handle_quote_state(char *input, int *pos, char *quote);
 int				count_arg(char **argv, int i);
 int				handle_error_malloc(char *s);
 void			heredoc_ctrl_c(int sig);
+void			exec_with_path(char **paths, t_cmd *cmd, t_data *d);
 void			exec_built_inpipe(int **pipe, t_data *d, int n_pipe, int *pos);
 void			exec_custom_inpipe(int **pipe, t_data *d, int n_pipe, int *pos);
 void			exec_alone_redir_inpipe(int **pipe, t_data *d, int n_pipe,
@@ -157,7 +159,6 @@ int				start_point_parsing(t_data *d);
 int				get_arg_length(const char *s, int *i, int *is_dquote);
 int				ft_isspace(char arg);
 int				ft_countword(char **spli_args);
-int				loop_into_arg(int i, char *s, int k, char *arg, int *j);
 int				is_valid_identifier(const char *str);
 int				pipe_syntax(char *input);
 int				redirection_syntax(char *input);
@@ -166,7 +167,7 @@ int				check_output_ofeach(t_cmd *cmd, t_data *d);
 // Environment & Path
 char			*get_path(t_data *d);
 char			*get_promptpath(t_data *d);
-char			*replace_envvar(char *s, t_data *d, int *is_dquote);
+char			*replace_envvar(char *s, t_data *d, int *is_dquote, char *arg);
 void			update_data(t_data *d);
 void			init_data(t_data *d);
 
@@ -216,6 +217,7 @@ int				syntax_validation(t_data *d);
 char			**duplicate_envp(char **envp);
 char			*up_shlvl(char *envp_i);
 int				isfulls(char *s);
+int				is_key_exitstatus(char *s, int quote_off);
 void			select_readline_mode(t_data *d);
 void			start_minishell(t_data *d);
 void			prepare_heredoc(t_data *d, int *pos);

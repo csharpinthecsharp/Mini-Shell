@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/25 14:57:38 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/25 18:02:41 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,9 +93,7 @@ int	pre_execution(t_data *d)
 			return (FAILED);
 		type = check_command(d->cmd[i].arg, d);
 		if (put_cmdstate(type, &is_stateful, &d->cmd[i], d) == FAILED)
-		{
 			return (FAILED);
-		}
 		i++;
 	}
 	if (is_stateful == 0)

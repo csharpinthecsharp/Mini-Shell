@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 01:22:52 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/24 14:01:11 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/25 21:34:02 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,4 +41,11 @@ int	isfulls(char *s)
 		return (FAILED);
 	else
 		return (SUCCESS);
+}
+
+int	is_key_exitstatus(char *s, int quote_off)
+{
+	if (s && s[0] == '$' && s[1] == '?' && quote_off == 0)
+		return (SUCCESS);
+	return (FAILED);
 }

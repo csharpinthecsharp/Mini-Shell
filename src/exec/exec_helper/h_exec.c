@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 16:48:56 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/25 14:48:42 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/25 18:18:23 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,4 +67,25 @@ int	pipe_init(int N_pipe, int **var_pipe)
 		i++;
 	}
 	return (SUCCESS);
+}
+
+void	exec_with_path(char **paths, t_cmd *cmd, t_data *d)
+{
+	char	*tmp_cmd;
+	char	*dir_slash;
+	int		i;
+
+	i = 0;
+	while (paths[i])
+	{
+		dir_slash = ft_strjoin(paths[i], "/");
+		tmp_cmd = ft_strjoin(dir_slash, cmd->arg[0]);
+		free(dir_slash);
+		if (tmp_cmd)
+		{
+			execve(tmp_cmd, cmd->arg, d->envp);
+			free(tmp_cmd);
+		}
+		i++;
+	}
 }
