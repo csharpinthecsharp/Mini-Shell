@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/25 13:41:29 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/25 15:22:10 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,7 @@ int				get_arg_length(const char *s, int *i, int *is_dquote);
 int				ft_isspace(char arg);
 int				ft_countword(char **spli_args);
 int				loop_into_arg(int i, char *s, int k, char *arg, int *j);
+int				is_valid_identifier(const char *str);
 int				pipe_syntax(char *input);
 int				redirection_syntax(char *input);
 int				check_output_ofeach(t_cmd *cmd, t_data *d);
@@ -176,8 +177,11 @@ bool			check_alone_redir(char **argv);
 // Redirection & Pipes
 void			alloc_error_pipe(int N_pipe, int **var_pipe);
 void			close_pipe(int **var_pipe, int N_pipe, int state);
+void			set_error(t_data *d, int exit_code, char *error_s, char *tmp);
 char			**fix_redir_arg(t_cmd *cmd);
 int				put_cmdstate(int type, int *is_stateful, t_cmd *cmd, t_data *d);
+int				stat_error_h(t_data *d, char *tmp);
+int				error_h(t_data *d, char *tmp);
 bool			is_alone_redir(char **argv, t_data *d);
 
 // Signals & Terminal
@@ -199,6 +203,10 @@ int				check_in_check_pipe(char *input, char *quote, int *pos);
 // Misc
 int				check_command(char **argv, t_data *d);
 void			print_error(const char *str, const char *arg);
+int				error_export(char *equal_sign, char **arg_ptr);
+void			check_status_error(t_data *d, char *file, char *error_s);
+int			check_dir_right(t_cmd *c, t_data *d, char *dir, int i);
+int			check_dir_left(t_cmd *cmd, t_data *d, char *file, int i);
 int				count_cmds(char ***cmds);
 void			redirect_left(t_data *d, int *pos, int fd_in, int i);
 void			redirect_right_right(t_data *d, int *pos, int fd_out, int i);

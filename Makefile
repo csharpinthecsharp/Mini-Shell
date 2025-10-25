@@ -28,6 +28,7 @@ SRCS	= src/main.c \
 		  src/exec/exec_main/pre_exec.c \
 		  src/exec/exec_main/handle_exec.c \
 		  src/exec/exec_helper/h_pre_exec.c \
+		  src/exec/exec_helper/h_pre_exec_extra.c \
 		  src/exec/exec_helper/h_exec.c \
 		  src/exec/exec_main/execute.c \
 		  src/exec/redirection/r_basic.c \
@@ -37,7 +38,9 @@ SRCS	= src/main.c \
 		  src/utils/free/newline.c \
 		  src/utils/free/in_readline.c \
 		  src/utils/error/send_error.c \
+		  src/utils/error/error_custom.c \
 		  src/checker/c_exec/check_x.c \
+		  src/checker/c_exec/check_x_extra.c \
 		  src/checker/c_exec/is_x.c\
 		  src/checker/c_parse/check_x.c \
 		  src/checker/c_parse/is_x.c

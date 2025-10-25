@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/25 01:43:38 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/25 14:57:38 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static int	allocate_t_arguments(t_cmd *cmd)
 	cmd->nb_redir = nb_redir;
 	if (nb_redir > 0)
 	{
-		cmd->arguments = calloc(nb_redir, sizeof *cmd->arguments);
+		cmd->arguments = ft_calloc(nb_redir, sizeof * cmd->arguments);
 		if (!cmd->arguments)
 			return (FAILED);
 	}
@@ -32,16 +32,19 @@ static int	allocate_t_arguments(t_cmd *cmd)
 static int	fill_arguments(t_data *d, t_cmd *cmd, int cmd_index)
 {
 	int	k;
+	int	j;
 
+	j = 0;
 	if (cmd->nb_redir > 0)
 	{
 		k = 0;
-		for (int j = 0; j < cmd->nb_arg; j++)
+		while (j < cmd->nb_arg)
 		{
 			if (put_redir(d, cmd_index, j, k))
 			{
 				k++;
 			}
+			j++;
 		}
 		cmd->nb_redir = k;
 	}

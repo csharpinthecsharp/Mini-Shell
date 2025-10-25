@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/25 14:02:56 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/25 15:14:00 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,16 @@
 char	**remove_empty_var(char **tokens)
 {
 	int		count;
-	char	**clean;
 	int		i;
-    int j;
+	int		j;
+	char	**clean;
 
 	i = 0;
 	count = 0;
 	while (tokens[count])
 		count++;
 	clean = malloc(sizeof(char *) * (count + 1));
-    j = 0;
+	j = 0;
 	while (tokens[i])
 	{
 		if (tokens[i][0] != '\0')

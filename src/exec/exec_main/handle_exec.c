@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 16:22:20 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/24 17:06:08 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/25 14:56:12 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	handle_bin(t_cmd *cmd, t_data *d)
 	char	**paths;
 	char	*tmp_cmd;
 	int		i;
-	char	*PATH;
+	char	*path;
 	char	*dir_slash;
 
 	if (!cmd->arg[0])
@@ -41,10 +41,10 @@ void	handle_bin(t_cmd *cmd, t_data *d)
 		execve_error(cmd->arg[0]);
 		return ;
 	}
-	PATH = ft_get_env(d, "PATH");
-	if (!PATH)
+	path = ft_get_env(d, "PATH");
+	if (!path)
 		return ;
-	paths = ft_split(PATH, ':');
+	paths = ft_split(path, ':');
 	if (!paths)
 		return ;
 	i = 0;

@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 15:32:50 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/25 14:10:07 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/25 15:08:23 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,10 @@ char	*replace_envvar(char *s, t_data *d, int *is_dquote)
 {
 	int		i;
 	int		j;
+	int		k;
+	int		env_len;
 	char	*envvar;
 	char	*arg;
-	int		env_len;
 	char	*env_value;
 
 	envvar = ft_itoa(d->exit_status);
@@ -65,8 +66,9 @@ char	*replace_envvar(char *s, t_data *d, int *is_dquote)
 	{
 		if (s[i] == '$' && s[i + 1] == '?' && *is_dquote == 0)
 		{
-			for (int k = 0; envvar[k]; k++)
-				arg[j++] = envvar[k];
+			k = 0;
+			while (envvar[k])
+				arg[j++] = envvar[k++];
 			i += 2;
 		}
 		else if (s[i] == '$' && *is_dquote == 0)
@@ -82,8 +84,9 @@ char	*replace_envvar(char *s, t_data *d, int *is_dquote)
 			i++;
 			while (s[i] && !ft_isspace(s[i]) && s[i] != '$')
 				i++;
-			for (int k = 0; env_value[k]; k++)
-				arg[j++] = env_value[k];
+			k = 0;
+			while (env_value[k])
+				arg[j++] = env_value[k++];
 			free(env_value);
 		}
 		else

@@ -6,13 +6,13 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 12:39:16 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/24 14:45:32 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/25 15:11:34 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../../include/minishell.h"
 
-static int	is_valid_identifier(const char *str)
+int	is_valid_identifier(const char *str)
 {
 	int	i;
 
@@ -28,25 +28,6 @@ static int	is_valid_identifier(const char *str)
 		i++;
 	}
 	return (FAILED);
-}
-
-static int	error_export(char *equal_sign, char **arg_ptr)
-{
-	if (!equal_sign)
-	{
-		if (!is_valid_identifier(*arg_ptr))
-		{
-			print_error("not a valid identifier", *arg_ptr);
-			return (FAILED);
-		}
-		*arg_ptr = ft_strjoin(*arg_ptr, "=''");
-	}
-	if ((*arg_ptr[0]) == '=' || !is_valid_identifier(*arg_ptr))
-	{
-		print_error("not a valid identifier", *arg_ptr);
-		return (FAILED);
-	}
-	return (SUCCESS);
 }
 
 static int	loop_in_env(int *index, t_data *d, char *key, char **arg_ptr)
@@ -68,6 +49,7 @@ static int	loop_in_env(int *index, t_data *d, char *key, char **arg_ptr)
 		(*index)++;
 	return (FAILED);
 }
+
 static int	do_export(char **argv, t_data *d)
 {
 	char	*arg;
@@ -97,6 +79,7 @@ static int	do_export(char **argv, t_data *d)
 	d->envp[(index) + 1] = NULL;
 	return (SUCCESS);
 }
+
 int	handle_export(char **argv, int count, t_data *d)
 {
 	int	i;

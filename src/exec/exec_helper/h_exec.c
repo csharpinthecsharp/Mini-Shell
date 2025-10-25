@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 16:48:56 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/24 14:53:06 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/25 14:48:42 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,12 @@ void	wait_for_children(t_data *d, pid_t last_pid)
 	int		status;
 	pid_t	wpid;
 
-	while ((wpid = wait(&status)) > 0)
+	wpid = wait(&status);
+	while (wpid > 0)
+	{
 		handle_child_status(d, wpid, status, last_pid);
+		wpid = wait(&status);
+	}
 }
 
 void	restore_stdin(t_data *d)

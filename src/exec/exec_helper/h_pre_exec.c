@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 16:47:20 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/24 17:05:52 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/25 14:53:11 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ int	is_redir_and_next(char **argv, int i)
 		return (SUCCESS);
 	return (FAILED);
 }
+
 char	**fix_redir_arg(t_cmd *cmd)
 {
 	int		i;
@@ -90,57 +91,6 @@ char	**fix_redir_arg(t_cmd *cmd)
 	dup[arg_j] = NULL;
 	cmd->nb_arg = arg_count;
 	return (dup);
-}
-
-static void	set_error(t_data *d, int exit_code, char *error_s, char *tmp)
-{
-	d->exit_status = exit_code;
-	print_error(error_s, tmp);
-}
-
-static int	stat_error_h(t_data *d, char *tmp)
-{
-	struct stat	st;
-
-	if (stat(tmp, &st) == -1)
-	{
-		if (errno == ENOENT && ft_strchr(tmp, '/') != NULL)
-			set_error(d, 127, "No such file or directory", tmp);
-		else if (errno == EACCES)
-			set_error(d, 126, "Permission denied", tmp);
-		else
-			set_error(d, 127, "command not found", tmp);
-		return (FAILED);
-	}
-	if (S_ISDIR(st.st_mode))
-	{
-		if (ft_strchr(tmp, '/') != NULL)
-			set_error(d, 126, "Is a directory", tmp);
-		else
-			set_error(d, 127, "command not found", tmp);
-		return (FAILED);
-	}
-	return (SUCCESS);
-}
-
-static int	error_h(t_data *d, char *tmp)
-{
-	if (ft_strchr(tmp, '/') == NULL)
-	{
-		set_error(d, 127, "command not found", tmp);
-		return (FAILED);
-	}
-	if (stat_error_h(d, tmp) == FAILED)
-		return (FAILED);
-	if (access(tmp, X_OK) != 0)
-	{
-		if (errno == EACCES)
-			set_error(d, 126, "Permission denied", tmp);
-		else
-			set_error(d, 127, "command not found", tmp);
-		return (FAILED);
-	}
-	return (SUCCESS);
 }
 
 int	put_cmdstate(int type, int *is_stateful, t_cmd *cmd, t_data *d)
