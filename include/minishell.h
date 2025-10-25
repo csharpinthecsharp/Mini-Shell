@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/25 15:22:10 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/25 15:27:16 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,8 +205,8 @@ int				check_command(char **argv, t_data *d);
 void			print_error(const char *str, const char *arg);
 int				error_export(char *equal_sign, char **arg_ptr);
 void			check_status_error(t_data *d, char *file, char *error_s);
-int			check_dir_right(t_cmd *c, t_data *d, char *dir, int i);
-int			check_dir_left(t_cmd *cmd, t_data *d, char *file, int i);
+int				check_dir_right(t_cmd *c, t_data *d, char *dir, int i);
+int				check_dir_left(t_cmd *cmd, t_data *d, char *file, int i);
 int				count_cmds(char ***cmds);
 void			redirect_left(t_data *d, int *pos, int fd_in, int i);
 void			redirect_right_right(t_data *d, int *pos, int fd_out, int i);
