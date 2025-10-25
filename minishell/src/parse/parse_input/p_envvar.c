@@ -6,13 +6,42 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 15:32:50 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/25 21:32:35 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/25 22:00:52 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../include/minishell.h"
 
-static char	*get_env_string(t_data *d, char *s)
+int	get_expanded_size(char *s, t_data *d)
+{
+	int		len;
+	char	*val;
+
+	len = 0;
+	while (*s)
+	{
+		if (*s == '$')
+		{
+			s++;
+			if (*s && !ft_isspace((unsigned char)*s))
+			{
+				val = get_env_string(d, s);
+				if (!val)
+					return (0);
+				while (*s && !ft_isspace((unsigned char)*s) && *s != '$')
+					s++;
+				len += ft_strlen(val);
+				free(val);
+				continue ;
+			}
+		}
+		len++;
+		s++;
+	}
+	return (len);
+}
+
+char	*get_env_string(t_data *d, char *s)
 {
 	int		i;
 	int		j;

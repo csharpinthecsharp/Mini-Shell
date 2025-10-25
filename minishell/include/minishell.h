@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/25 21:32:26 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/25 21:55:24 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,6 +163,8 @@ int				is_valid_identifier(const char *str);
 int				pipe_syntax(char *input);
 int				redirection_syntax(char *input);
 int				check_output_ofeach(t_cmd *cmd, t_data *d);
+int				get_expanded_size(char *s, t_data *d);
+char			*get_env_string(t_data *d, char *s);
 
 // Environment & Path
 char			*get_path(t_data *d);
