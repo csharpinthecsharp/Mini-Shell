@@ -12,114 +12,114 @@
 
 #include "../../../include/minishell.h"
 
-void exec_alone_redir_inpipe(int **pipe, t_data *d, int n_pipe, int *pos)
+void	exec_alone_redir_inpipe(int **pipe, t_data *d, int n_pipe, int *pos)
 {
-    pid_t   pid;
+	pid_t	pid;
 
-    handle_heredocs(d, pos);
-    d->fd_out = 0;
-    d->fd_in = 0;
-    if (d->cmd[*pos].state_cmd == ALONE_REDIR &&
-        (d->nb_cmd > 1 || d->cmd[*pos].nb_redir > 0))
-    {
-        pid = fork();
-        if (pid == 0)
-        {
-            handle_pipe(pipe, pos, n_pipe);
-            handle_redirections(d, pos, &d->fd_out, &d->fd_in);
-            exit(d->exit_status);
-        }
-        else if (pid > 0)
-            d->last_fork_pid = pid;
-        else
-            perror("fork failed");
-    }
+	handle_heredocs(d, pos);
+	d->fd_out = 0;
+	d->fd_in = 0;
+	if (d->cmd[*pos].state_cmd == ALONE_REDIR && (d->nb_cmd > 1
+			|| d->cmd[*pos].nb_redir > 0))
+	{
+		pid = fork();
+		if (pid == 0)
+		{
+			handle_pipe(pipe, pos, n_pipe);
+			handle_redirections(d, pos, &d->fd_out, &d->fd_in);
+			exit(d->exit_status);
+		}
+		else if (pid > 0)
+			d->last_fork_pid = pid;
+		else
+			perror("fork failed");
+	}
 }
 
-void exec_custom_inpipe(int **pipe, t_data *d, int n_pipe, int *pos)
+void	exec_custom_inpipe(int **pipe, t_data *d, int n_pipe, int *pos)
 {
-    pid_t   pid;
+	pid_t	pid;
 
-    handle_heredocs(d, pos);
-    d->fd_out = 0;
-    d->fd_in = 0;
-    if (d->cmd[*pos].state_cmd == CUSTOM)
-    {
-        if (d->nb_cmd > 1 || d->cmd[*pos].nb_redir > 0)
-        {
-            pid = fork();
-            if (pid == 0)
-            {
-                handle_pipe(pipe, pos, n_pipe);
-                handle_redirections(d, pos, &d->fd_out, &d->fd_in);
-                run_custom_cmd(d->cmd[*pos].arg, d);
-                exit(d->exit_status);
-            }
-            else if (pid > 0)
-                d->last_fork_pid = pid;
-            else
-                perror("fork failed");
-        }
-        else
-            run_custom_cmd(d->cmd[*pos].arg, d);
-    }
+	handle_heredocs(d, pos);
+	d->fd_out = 0;
+	d->fd_in = 0;
+	if (d->cmd[*pos].state_cmd == CUSTOM)
+	{
+		if (d->nb_cmd > 1 || d->cmd[*pos].nb_redir > 0)
+		{
+			pid = fork();
+			if (pid == 0)
+			{
+				handle_pipe(pipe, pos, n_pipe);
+				handle_redirections(d, pos, &d->fd_out, &d->fd_in);
+				run_custom_cmd(d->cmd[*pos].arg, d);
+				exit(d->exit_status);
+			}
+			else if (pid > 0)
+				d->last_fork_pid = pid;
+			else
+				perror("fork failed");
+		}
+		else
+			run_custom_cmd(d->cmd[*pos].arg, d);
+	}
 }
 
-void exec_built_inpipe(int **pipe, t_data *d, int n_pipe, int *pos)
+void	exec_built_inpipe(int **pipe, t_data *d, int n_pipe, int *pos)
 {
-    pid_t   pid;
+	pid_t	pid;
 
-    handle_heredocs(d, pos);
-    d->fd_out = 0;
-    d->fd_in = 0;
-    pid = fork();
-    if (pid == 0)
-    {
-        handle_pipe(pipe, pos, n_pipe);
-        handle_redirections(d, pos, &d->fd_out, &d->fd_in);
-        handle_bin(&d->cmd[*pos], d);
-        exit(127);
-    }
-    else if (pid > 0)
-        d->last_fork_pid = pid;
-    else
-        perror("fork failed");
+	handle_heredocs(d, pos);
+	d->fd_out = 0;
+	d->fd_in = 0;
+	pid = fork();
+	if (pid == 0)
+	{
+		handle_pipe(pipe, pos, n_pipe);
+		handle_redirections(d, pos, &d->fd_out, &d->fd_in);
+		handle_bin(&d->cmd[*pos], d);
+		exit(127);
+	}
+	else if (pid > 0)
+		d->last_fork_pid = pid;
+	else
+		perror("fork failed");
 }
 
-void execute_command_by_type(int **pipe, t_data *d, int n_pipe, int *pos)
+void	execute_command_by_type(int **pipe, t_data *d, int n_pipe, int *pos)
 {
-    if (check_output_ofeach(&d->cmd[*pos], d) == FAILED)
-        exit(d->exit_status);
-    if (d->cmd[*pos].state_cmd == CUSTOM)
-        exec_custom_inpipe(pipe, d, n_pipe, pos);
-    else if (d->cmd[*pos].state_cmd == BIN)
-        exec_built_inpipe(pipe, d, n_pipe, pos);
-    else if (d->cmd[*pos].state_cmd == ALONE_REDIR)
-        exec_alone_redir_inpipe(pipe, d, n_pipe, pos);
+	if (check_output_ofeach(&d->cmd[*pos], d) == FAILED)
+		exit(d->exit_status);
+	if (d->cmd[*pos].state_cmd == CUSTOM)
+		exec_custom_inpipe(pipe, d, n_pipe, pos);
+	else if (d->cmd[*pos].state_cmd == BIN)
+		exec_built_inpipe(pipe, d, n_pipe, pos);
+	else if (d->cmd[*pos].state_cmd == ALONE_REDIR)
+		exec_alone_redir_inpipe(pipe, d, n_pipe, pos);
 }
 
-void    start_execution(t_data *d)
+void	start_execution(t_data *d)
 {
-    int     **pipe;
-    int     pos;
-    pid_t   last_pid;
+	int		**pipe;
+	int		pos;
+	pid_t	last_pid;
+	int		pipe_len;
 
-    pos = 0;
-    int pipe_len = d->nb_cmd - 1;
-    pipe = malloc(sizeof(int *) * pipe_len);
-
-    if (!pipe || pipe_init(pipe_len, pipe) == FAILED)
-    {
-        close_pipe(pipe, pipe_len, 0);
-        exit(FAILED);
-    }
-    while (pos < d->nb_cmd)
-    {
-        execute_command_by_type(pipe, d, pipe_len, &pos);
-        last_pid = d->last_fork_pid;
-        pos++;
-    }
-    close_pipe(pipe, pipe_len, 0);
-    wait_for_children(d, last_pid);
-    restore_stdin(d);
+	pos = 0;
+	pipe_len = d->nb_cmd - 1;
+	pipe = malloc(sizeof(int *) * pipe_len);
+	if (!pipe || pipe_init(pipe_len, pipe) == FAILED)
+	{
+		close_pipe(pipe, pipe_len, 0);
+		exit(FAILED);
+	}
+	while (pos < d->nb_cmd)
+	{
+		execute_command_by_type(pipe, d, pipe_len, &pos);
+		last_pid = d->last_fork_pid;
+		pos++;
+	}
+	close_pipe(pipe, pipe_len, 0);
+	wait_for_children(d, last_pid);
+	restore_stdin(d);
 }

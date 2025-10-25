@@ -12,16 +12,15 @@
 
 #include "../../../include/minishell.h"
 
-
-void    free_beforenewline(t_data *d)
+void	free_beforenewline(t_data *d)
 {
-    if (!d)
-        return ;
-    if (d->path)
-        free(d->path);
-    if (d->input)
-        free(d->input);
-    d->input = NULL;
-    d->input_splitted = NULL;
-    d->cmd = NULL;
+	if (!d)
+		return ;
+	if (d->path)
+		free(d->path);
+	if (d->input)
+		free(d->input);
+	d->input = NULL;
+	d->input_splitted = NULL;
+	d->cmd = NULL;
 }

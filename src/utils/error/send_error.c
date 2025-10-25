@@ -29,30 +29,30 @@ void	print_error(const char *str, const char *arg)
 	write(STDERR_FILENO, "\n", 1);
 }
 
-void execve_error(char *cmd)
+void	execve_error(char *cmd)
 {
-    if (errno == ENOENT)
-        print_error("Command or file not found", cmd);
-    else if (errno == EACCES)
-        print_error("Permission denied", cmd);
-    else if (errno == ENOMEM)
-        print_error("Not enough memory", cmd);
-    else if (errno == EFAULT)
-        print_error("Invalid pointer", cmd);
-    else if (errno == EINVAL)
-        print_error("Invalid argument", cmd);
-    else if (errno == ENOTDIR)
-        print_error("A path component is not a directory", cmd);
-    else
-        print_error("Execution failed", cmd);
+	if (errno == ENOENT)
+		print_error("Command or file not found", cmd);
+	else if (errno == EACCES)
+		print_error("Permission denied", cmd);
+	else if (errno == ENOMEM)
+		print_error("Not enough memory", cmd);
+	else if (errno == EFAULT)
+		print_error("Invalid pointer", cmd);
+	else if (errno == EINVAL)
+		print_error("Invalid argument", cmd);
+	else if (errno == ENOTDIR)
+		print_error("A path component is not a directory", cmd);
+	else
+		print_error("Execution failed", cmd);
 }
 
-int handle_error_malloc(char *s)
+int	handle_error_malloc(char *s)
 {
-    if (s == NULL)
-    {
-        perror("malloc failed");
-        return (FAILED);
-    }
-    return (SUCCESS);
+	if (s == NULL)
+	{
+		perror("malloc failed");
+		return (FAILED);
+	}
+	return (SUCCESS);
 }

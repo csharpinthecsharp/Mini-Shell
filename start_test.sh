@@ -36,4 +36,4 @@ cd ..
 rm -rf minishell_tester
 
 echo
-echo -e "${GREEN}Valgrind run complete.${NC}"
+echo -e "${GREEN}minishell tester run complete.${NC}"

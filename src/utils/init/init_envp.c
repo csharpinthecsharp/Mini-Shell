@@ -27,7 +27,7 @@ char	*up_shlvl(char *envp_i)
 		free(new_lvl);
 		return (res);
 	}
-    return (ft_strdup(envp_i));
+	return (ft_strdup(envp_i));
 }
 
 char	**duplicate_envp(char **envp)

@@ -13,17 +13,16 @@
 #include "../../../include/minishell.h"
 #include "../../../include/template.h"
 
-char *get_path(t_data *d)
+char	*get_path(t_data *d)
 {
-    (void)d;
-    char *cwd;
+	char	*cwd;
 
-    cwd = getcwd(NULL, 0);
-    if (!cwd)
-        return (NULL);
-    return cwd;
+	(void)d;
+	cwd = getcwd(NULL, 0);
+	if (!cwd)
+		return (NULL);
+	return (cwd);
 }
-
 
 char	*get_promptpath(t_data *d)
 {

@@ -12,103 +12,102 @@
 
 #include "../../../include/minishell.h"
 
-void handle_heredocs(t_data *d, int *pos)
+void	handle_heredocs(t_data *d, int *pos)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while (i < d->cmd[*pos].nb_redir)
-    {
-        if (d->cmd[*pos].arguments[i].state_redir == LEFT_LEFT)
-            heredoc(d, pos, i);
-        i++;
-    }
+	i = 0;
+	while (i < d->cmd[*pos].nb_redir)
+	{
+		if (d->cmd[*pos].arguments[i].state_redir == LEFT_LEFT)
+			heredoc(d, pos, i);
+		i++;
+	}
 }
 
-void handle_bin(t_cmd *cmd, t_data *d)
+void	handle_bin(t_cmd *cmd, t_data *d)
 {
-    char    **paths;
-    char    *tmp_cmd;
-    int     i;
+	char	**paths;
+	char	*tmp_cmd;
+	int		i;
+	char	*PATH;
+	char	*dir_slash;
 
-    if (!cmd->arg[0])
-        return;
-    if (ft_strchr(cmd->arg[0], '/'))
-    {
-        execve(cmd->arg[0], cmd->arg, d->envp);
-        execve_error(cmd->arg[0]);
-        return ;
-    }
-    char *PATH = ft_get_env(d, "PATH");
-    if (!PATH)
-        return;
-    paths = ft_split(PATH, ':');
-    if (!paths)
-        return;
-    i = 0;
-    while (paths[i])
-    {
-        char *dir_slash = ft_strjoin(paths[i], "/");
-        tmp_cmd = ft_strjoin(dir_slash, cmd->arg[0]);
-        free(dir_slash);
-
-        if (tmp_cmd)
-        {
-            execve(tmp_cmd, cmd->arg, d->envp);
-            free(tmp_cmd);
-        }
-        i++;
-    }
-    execve_error(cmd->arg[0]);
-    i = 0;
-    while (paths[i])
-        free(paths[i++]);
-    free(paths);
+	if (!cmd->arg[0])
+		return ;
+	if (ft_strchr(cmd->arg[0], '/'))
+	{
+		execve(cmd->arg[0], cmd->arg, d->envp);
+		execve_error(cmd->arg[0]);
+		return ;
+	}
+	PATH = ft_get_env(d, "PATH");
+	if (!PATH)
+		return ;
+	paths = ft_split(PATH, ':');
+	if (!paths)
+		return ;
+	i = 0;
+	while (paths[i])
+	{
+		dir_slash = ft_strjoin(paths[i], "/");
+		tmp_cmd = ft_strjoin(dir_slash, cmd->arg[0]);
+		free(dir_slash);
+		if (tmp_cmd)
+		{
+			execve(tmp_cmd, cmd->arg, d->envp);
+			free(tmp_cmd);
+		}
+		i++;
+	}
+	execve_error(cmd->arg[0]);
+	i = 0;
+	while (paths[i])
+		free(paths[i++]);
+	free(paths);
 }
 
-
-void handle_redirections(t_data *d, int *pos, int *fd_out, int *fd_in)
+void	handle_redirections(t_data *d, int *pos, int *fd_out, int *fd_in)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while (i < d->cmd[*pos].nb_redir)
-    {
-        if (d->cmd[*pos].arguments[i].state_redir == RIGHT)
-            redirect_right(d, pos, *fd_out, i);
-        else if (d->cmd[*pos].arguments[i].state_redir == RIGHT_RIGHT)
-            redirect_right_right(d, pos, *fd_out, i);
-        else if (d->cmd[*pos].arguments[i].state_redir == LEFT)
-            redirect_left(d, pos, *fd_in, i);
-        i++;
-    }
+	i = 0;
+	while (i < d->cmd[*pos].nb_redir)
+	{
+		if (d->cmd[*pos].arguments[i].state_redir == RIGHT)
+			redirect_right(d, pos, *fd_out, i);
+		else if (d->cmd[*pos].arguments[i].state_redir == RIGHT_RIGHT)
+			redirect_right_right(d, pos, *fd_out, i);
+		else if (d->cmd[*pos].arguments[i].state_redir == LEFT)
+			redirect_left(d, pos, *fd_in, i);
+		i++;
+	}
 }
 
-void handle_pipe(int **pipe, int *pos, int n_pipe)
+void	handle_pipe(int **pipe, int *pos, int n_pipe)
 {
-    if (n_pipe > 0)
-    {
-        if (*pos > 0)
-            dup2(pipe[*pos - 1][0], STDIN_FILENO);
-        if (*pos < n_pipe)
-            dup2(pipe[*pos][1], STDOUT_FILENO);
-        close_pipe(pipe, n_pipe, 1);
-    }
+	if (n_pipe > 0)
+	{
+		if (*pos > 0)
+			dup2(pipe[*pos - 1][0], STDIN_FILENO);
+		if (*pos < n_pipe)
+			dup2(pipe[*pos][1], STDOUT_FILENO);
+		close_pipe(pipe, n_pipe, 1);
+	}
 }
 
-
-void handle_child_status(t_data *d, pid_t wpid, int status, pid_t last_pid)
+void	handle_child_status(t_data *d, pid_t wpid, int status, pid_t last_pid)
 {
-    if (wpid == last_pid)
-    {
-        if (WIFSIGNALED(status) && WTERMSIG(status) == SIGPIPE)
-        {
-            print_error("Broken pipe", "!");
-            d->exit_status = 1;
-        }
-        else if (WIFEXITED(status))
-            d->exit_status = WEXITSTATUS(status);
-        else if (WIFSIGNALED(status))
-            d->exit_status = 128 + WTERMSIG(status);
-    }
+	if (wpid == last_pid)
+	{
+		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGPIPE)
+		{
+			print_error("Broken pipe", "!");
+			d->exit_status = 1;
+		}
+		else if (WIFEXITED(status))
+			d->exit_status = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			d->exit_status = 128 + WTERMSIG(status);
+	}
 }

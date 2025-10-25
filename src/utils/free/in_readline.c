@@ -12,15 +12,15 @@
 
 #include "../../../include/minishell.h"
 
-void free_split(char **argv)
+void	free_split(char **argv)
 {
-    int i;
-    
-    i = 0;
-    if (argv) 
-    {
-        while (argv[i])
-            free(argv[i++]);
-        free(argv);
-    }
+	int	i;
+
+	i = 0;
+	if (argv)
+	{
+		while (argv[i])
+			free(argv[i++]);
+		free(argv);
+	}
 }
