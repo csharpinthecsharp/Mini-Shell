@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/25 02:16:21 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/25 12:24:32 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ char **get_args(char *s, t_data *d)
         if (!raw_arg)
             break;
             
-        if (raw_arg[0] == '$')
+        if (ft_strchr(raw_arg, '$'))
         {
             char *arg = replace_envvar(raw_arg, d, &is_dquote);
             argv[k++] = arg;
