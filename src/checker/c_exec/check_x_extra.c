@@ -6,13 +6,13 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/25 15:15:19 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/25 15:25:14 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/25 15:26:18 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../include/minishell.h"
 
-static int right_helper(char *dir, t_cmd *c, t_data *d, int i)
+static int	right_helper(char *dir, t_cmd *c, t_data *d, int i)
 {
 	if (!dir || access(dir, F_OK) != 0)
 	{
@@ -36,6 +36,7 @@ static int right_helper(char *dir, t_cmd *c, t_data *d, int i)
 	}
 	return (SUCCESS);
 }
+
 int	check_dir_right(t_cmd *c, t_data *d, char *dir, int i)
 {
 	if ((c->arguments[i].state_redir == RIGHT
