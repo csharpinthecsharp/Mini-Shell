@@ -14,7 +14,7 @@
 
 static int	is_valid_identifier(const char *str)
 {
-	int i;
+	int	i;
 
 	i = 1;
 	while (!str || !str[0])
@@ -30,7 +30,7 @@ static int	is_valid_identifier(const char *str)
 	return (FAILED);
 }
 
-static int error_export(char *equal_sign, char **arg_ptr)
+static int	error_export(char *equal_sign, char **arg_ptr)
 {
 	if (!equal_sign)
 	{
@@ -49,7 +49,7 @@ static int error_export(char *equal_sign, char **arg_ptr)
 	return (SUCCESS);
 }
 
-static int loop_in_env(int *index, t_data *d, char *key, char **arg_ptr)
+static int	loop_in_env(int *index, t_data *d, char *key, char **arg_ptr)
 {
 	(*index) = 0;
 	while (d->envp[*index])
@@ -68,7 +68,7 @@ static int loop_in_env(int *index, t_data *d, char *key, char **arg_ptr)
 		(*index)++;
 	return (FAILED);
 }
-static int do_export(char **argv, t_data *d)
+static int	do_export(char **argv, t_data *d)
 {
 	char	*arg;
 	char	*equal_sign;
@@ -76,8 +76,8 @@ static int do_export(char **argv, t_data *d)
 	int		len;
 	char	*key;
 	char	**new_envp;
-	int index;
-	
+	int		index;
+
 	arg = argv[1];
 	equal_sign = ft_strchr(arg, '=');
 	if (error_export(equal_sign, &arg) == FAILED)
@@ -88,7 +88,8 @@ static int do_export(char **argv, t_data *d)
 	ft_strlcpy(key, arg, len + 1);
 	if (loop_in_env(&index, d, key, &arg) == SUCCESS)
 		return (SUCCESS);
-	new_envp = ft_realloc(d->envp, sizeof(char *) * ((index)), sizeof(char *) * ((index) + 2));
+	new_envp = ft_realloc(d->envp, sizeof(char *) * ((index)), sizeof(char *)
+			* ((index) + 2));
 	if (!new_envp)
 		return (1);
 	d->envp = new_envp;
@@ -98,7 +99,7 @@ static int do_export(char **argv, t_data *d)
 }
 int	handle_export(char **argv, int count, t_data *d)
 {
-	int		i;
+	int	i;
 
 	i = 0;
 	if (count == 1)

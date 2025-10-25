@@ -12,12 +12,12 @@
 
 #include "../../../../include/minishell.h"
 
-static void loop_to_unset(t_data *d, char *argv_tgr_ptr)
+static void	loop_to_unset(t_data *d, char *argv_tgr_ptr)
 {
-	int i;
-	int j;
-	int len;
-	
+	int	i;
+	int	j;
+	int	len;
+
 	i = 0;
 	j = 0;
 	len = 0;

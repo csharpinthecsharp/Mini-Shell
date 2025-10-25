@@ -30,7 +30,6 @@ int	is_numeric(const char *str, int strict)
 	return (FAILED);
 }
 
-
 int	isfulls(char *s)
 {
 	size_t	i;

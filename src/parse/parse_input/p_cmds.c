@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/25 12:24:32 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/25 12:37:46 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char **remove_empty_var(char **tokens)
         i++;
     }
     clean[j] = NULL;
-    return clean;
+    return (clean);
 }
 
 

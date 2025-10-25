@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/05 20:19:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/25 02:25:14 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/25 12:57:36 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 int	start_point_parsing(t_data *d)
 {
+	int i;
+
 	if (d->input == NULL)
 		return (FAILED);
 
@@ -26,10 +28,13 @@ int	start_point_parsing(t_data *d)
 
 	if (split_commands(d->input_splitted, d) == -1)
 		return (FAILED);
-	for (int i = 0; i < d->nb_cmd; i++)
+	i = 0;
+	while (i < d->nb_cmd)
 	{
 		d->cmd[i].arg = remove_empty_var(d->cmd[i].arg);
+		i++;
 	}
+	
 	if (pre_execution(d) == FAILED)
 		return (FAILED);
 	return (SUCCESS);

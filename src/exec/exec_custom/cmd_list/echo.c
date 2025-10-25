@@ -14,14 +14,16 @@
 
 int	handle_echo(char **argv, int count)
 {
-	int found;
+	int	found;
+	int	i;
+
 	found = 0;
 	if (count < 2)
 	{
 		printf("\n");
 		return (SUCCESS);
 	}
-	int i = 1;
+	i = 1;
 	while (i < count)
 	{
 		if (ft_strncmp(argv[i], "-n", 2) == 0)

@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 12:39:38 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/25 01:36:51 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/25 13:13:44 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,12 @@ char	*ft_get_env(t_data *d, char *requested)
 
 int	handle_env(char **argv, int count, t_data *d)
 {
+	int	i;
+
 	(void)argv;
 	if (count == 1)
 	{
-		int i = 0;
+		i = 0;
 		while (d->envp[i])
 		{
 			printf("%s\n", d->envp[i]);
