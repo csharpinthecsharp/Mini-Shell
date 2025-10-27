@@ -1,0 +1,9 @@
+include
+libft
+Makefile
+minishell
+readline.supp
+run_valgrind.sh
+src
+start_test.sh
+test
