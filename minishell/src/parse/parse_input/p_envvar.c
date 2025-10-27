@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 15:32:50 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/25 22:00:52 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/27 17:06:06 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ char	*get_env_string(t_data *d, char *s)
 	char	*arg;
 	int		env_index;
 
-	arg = malloc(sizeof(char) * ft_strlen(s));
+	arg = malloc(sizeof(char) * (ft_strlen(s) + 1));
 	if (handle_error_malloc(arg) == FAILED)
 		return (NULL);
 	i = 0;
