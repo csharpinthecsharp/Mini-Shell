@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/26 15:22:07 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/27 19:23:06 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ char	**get_args(char *s, t_data *d, int *is_dquote, char **argv)
 	int		k;
 	char	*raw_arg;
 	char	*arg;
+	int		size;
 
 	i = 0;
 	k = 0;
@@ -61,19 +62,28 @@ char	**get_args(char *s, t_data *d, int *is_dquote, char **argv)
 		raw_arg = get_one_arg(s, &i, is_dquote);
 		if (!raw_arg)
 			break ;
+
 		if (ft_strchr(raw_arg, '$'))
 		{
-			arg = malloc(ft_strlen(raw_arg) + get_expanded_size(s, d));
+			size = get_expanded_size(raw_arg, d);
+			arg = malloc(size + 1);
+			if (!arg)
+			{
+				free(raw_arg);
+				break ;
+			}
 			arg = replace_envvar(raw_arg, d, is_dquote, arg);
-			if (break_free(arg, raw_arg) == FAILED)
+			if (!arg || break_free(arg, raw_arg) == FAILED)
 				break ;
 			argv[k++] = arg;
 		}
 		else
 			argv[k++] = raw_arg;
 	}
-	return (argv[k] = NULL, argv);
+	argv[k] = NULL;
+	return (argv);
 }
+
 
 int	split_commands(char **argv, t_data *d)
 {

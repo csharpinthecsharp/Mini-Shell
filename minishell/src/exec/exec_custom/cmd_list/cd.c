@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 12:38:38 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/27 16:54:04 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/27 19:10:32 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,40 +15,35 @@
 static int	refresh_path(t_data *d)
 {
 	char	*cwd;
+	char	*pwd;
+	char	*temp;
+	int		i;
+
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
 	{
 		perror("getcwd failed");
 		return (FAILED);
 	}
-	int i = 0;
-	char *temp;
-	char *pwd;
-	
+
+	i = 0;
 	while (d->envp[i])
 	{
 		if (ft_strncmp(d->envp[i], "PWD=", 4) == 0)
 		{
-			int j = 0;
-			temp = strdup(d->envp[i]);
-			while (temp[j] != '=')
-				j++;
-			j++;
-			pwd = ft_strdup(cwd);
-			free(d->envp[i]);
-			d->envp[i] = malloc(sizeof(char *) * ft_strlen(pwd));
-			d->envp[i] = ft_strjoin("PWD=", pwd);
+			temp = d->envp[i];
+			pwd = ft_strjoin("PWD=", cwd);
+			d->envp[i] = pwd;
+			free(temp);
 		}
 		else if (ft_strncmp(d->envp[i], "OLDPWD=", 7) == 0)
 		{
-			int k = 0;
-			temp = strdup(d->envp[i]);
-			while (temp[k] != '=')
-				k++;
-			k++;
-			free(d->envp[i]);
-			d->envp[i] = malloc(sizeof(char *) * ft_strlen(d->path + 9));
-			d->envp[i] = ft_strjoin("OLDPWD=", d->path);
+			temp = d->envp[i];
+			if (d->path)
+				d->envp[i] = ft_strjoin("OLDPWD=", d->path);
+			else
+				d->envp[i] = ft_strdup("OLDPWD=");
+			free(temp);
 		}
 		i++;
 	}
@@ -58,6 +53,7 @@ static int	refresh_path(t_data *d)
 	d->path = cwd;
 	return (SUCCESS);
 }
+
 
 static char	*get_home(t_data *d)
 {

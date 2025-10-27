@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 15:32:50 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/27 18:52:48 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/27 19:20:50 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ char	*get_env_string(t_data *d, char *s)
 	int		i = 0;
 	int		j = 0;
 	char	*arg;
-	int		env_index;
 	char	*env_val;
 
 	arg = malloc(sizeof(char) * (ft_strlen(s) + 1));
@@ -54,26 +53,19 @@ char	*get_env_string(t_data *d, char *s)
 		return (NULL);
 	if (s[i] == '$')
 		i++;
-	while (s[i] && !ft_isspace(s[i]) && s[i] != '$')
+	while (s[i] && !ft_isspace(s[i]) && s[i] != '$' && s[i] != '(' && s[i] != ')')
 		arg[j++] = s[i++];
 	arg[j] = '\0';
-
-	env_index = 0;
-	while (d->envp[env_index])
+	if (j == 0)
 	{
-		if (ft_strncmp(d->envp[env_index], arg, ft_strlen(arg)) == 0
-			&& d->envp[env_index][ft_strlen(arg)] == '=')
-		{
-			env_val = ft_get_env(d, arg);
-			free(arg);
-			if (!env_val)
-				return (ft_strdup(""));
-			return (ft_strdup(env_val));
-		}
-		env_index++;
+		free(arg);
+		return (ft_strdup(""));
 	}
+	env_val = ft_get_env(d, arg);
 	free(arg);
-	return (ft_strdup(""));
+	if (!env_val)
+		return (ft_strdup(""));
+	return (ft_strdup(env_val));
 }
 
 

@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 12:39:38 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/27 17:06:59 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/27 19:11:41 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,20 @@
 char	*ft_get_env(t_data *d, char *requested)
 {
 	int	i;
-	int len;
+	int	len;
+
+	if (!d || !d->envp || !requested)
+		return (NULL);
+
+	len = ft_strlen(requested);
+	if (len == 0)
+		return (NULL);
 
 	i = 0;
-	len = ft_strlen(requested);
 	while (d->envp[i])
 	{
-		if (ft_strncmp(d->envp[i], requested, ft_strlen(requested)) == 0
-			&& d->envp[i][ft_strlen(requested)] == '=')
+		if (ft_strncmp(d->envp[i], requested, len) == 0
+			&& d->envp[i][len] == '=')
 		{
 			return (d->envp[i] + len + 1);
 		}
@@ -30,6 +36,7 @@ char	*ft_get_env(t_data *d, char *requested)
 	}
 	return (NULL);
 }
+
 
 int	handle_env(char **argv, int count, t_data *d)
 {
