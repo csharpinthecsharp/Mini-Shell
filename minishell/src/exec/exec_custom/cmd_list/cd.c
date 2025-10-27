@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lrezette <lrezette@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 12:38:38 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/27 19:10:32 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/27 21:43:11 by lrezette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ static int	refresh_path(t_data *d)
 		perror("getcwd failed");
 		return (FAILED);
 	}
-
 	i = 0;
 	while (d->envp[i])
 	{
@@ -47,13 +46,11 @@ static int	refresh_path(t_data *d)
 		}
 		i++;
 	}
-
 	if (d->path)
 		free(d->path);
 	d->path = cwd;
 	return (SUCCESS);
 }
-
 
 static char	*get_home(t_data *d)
 {

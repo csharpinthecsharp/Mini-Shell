@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lrezette <lrezette@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/27 20:14:03 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/27 20:50:43 by lrezette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@
 /*        DEPENDENCIES        */
 /* ========================== */
 
+# include <stdio.h>
 # include "../libft/libft.h"
 # include <dirent.h>
 # include <errno.h>
@@ -60,7 +61,6 @@
 # include <readline/readline.h>
 # include <signal.h>
 # include <stdbool.h>
-# include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
 # include <sys/stat.h>
@@ -68,6 +68,7 @@
 # include <termcap.h>
 # include <termios.h>
 # include <unistd.h>
+
 
 /* ========================== */
 /*       DATA STRUCTURES      */

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   p_envvar.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lrezette <lrezette@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 15:32:50 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/27 19:20:50 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/27 21:41:33 by lrezette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,13 @@ int	get_expanded_size(char *s, t_data *d)
 
 char	*get_env_string(t_data *d, char *s)
 {
-	int		i = 0;
-	int		j = 0;
+	int		i;
+	int		j;
 	char	*arg;
 	char	*env_val;
 
+	i = 0;
+	j = 0;
 	arg = malloc(sizeof(char) * (ft_strlen(s) + 1));
 	if (!arg)
 		return (NULL);
@@ -67,7 +69,6 @@ char	*get_env_string(t_data *d, char *s)
 		return (ft_strdup(""));
 	return (ft_strdup(env_val));
 }
-
 
 static int	process_dollar(char **ps, t_data *d, char **arg, int *j)
 {

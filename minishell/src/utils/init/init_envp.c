@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_envp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lrezette <lrezette@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 18:59:03 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/27 19:30:18 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/27 21:41:53 by lrezette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,3 @@ char	**duplicate_envp(char **envp)
 	copy[i] = NULL;
 	return (copy);
 }
-

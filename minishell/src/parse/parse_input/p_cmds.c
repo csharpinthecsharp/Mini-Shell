@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   p_cmds.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lrezette <lrezette@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/27 20:17:16 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/27 21:39:59 by lrezette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,18 @@ char	**remove_empty_var(char **tokens)
 	while (tokens[count])
 		count++;
 	clean = malloc(sizeof(char *) * (count + 1));
+	if (!clean)
+		return (NULL);
 	j = 0;
 	while (tokens[i])
 	{
 		if (tokens[i][0] != '\0')
 			clean[j++] = ft_strdup(tokens[i]);
+		free(tokens[i]);
 		i++;
 	}
 	clean[j] = NULL;
+	free(tokens);
 	return (clean);
 }
 
@@ -62,7 +66,6 @@ char	**get_args(char *s, t_data *d, int *is_dquote, char **argv)
 		raw_arg = get_one_arg(s, &i, is_dquote);
 		if (!raw_arg)
 			break ;
-
 		if (ft_strchr(raw_arg, '$'))
 		{
 			size = get_expanded_size(raw_arg, d);
@@ -84,7 +87,7 @@ char	**get_args(char *s, t_data *d, int *is_dquote, char **argv)
 	return (argv);
 }
 
-int		split_commands(char **argv, t_data *d)
+int	split_commands(char **argv, t_data *d)
 {
 	int	arg_index;
 	int	cmd_index;
@@ -113,11 +116,11 @@ int		split_commands(char **argv, t_data *d)
 	return (SUCCESS);
 }
 
-int		split(t_data *d)
+int	split(t_data *d)
 {
 	char	**argv;
 	int		is_dquote;
-	
+
 	argv = malloc(sizeof(char *) * (ft_strlen(d->input) + 1));
 	if (!argv)
 		return (FAILED);

@@ -54,7 +54,8 @@ $(LIBFT):
 	make -C libft
 
 $(NAME): $(LIBFT) $(OBJS)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT) -lreadline
+		$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT) -lreadline
+
 before:
 	@echo "\033[0;32mCompiling..\033[0m"
 banner:

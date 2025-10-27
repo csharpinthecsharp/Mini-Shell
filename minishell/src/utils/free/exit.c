@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lrezette <lrezette@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 00:41:34 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/27 20:26:05 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/27 21:42:20 by lrezette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,7 @@ void	free_cmds(t_data *d)
 	int	k;
 
 	if (!d || !d->cmd)
-		return;
-
+		return ;
 	for (i = 0; i < d->nb_cmd; i++)
 	{
 		if (d->cmd[i].arg)
@@ -45,7 +44,6 @@ void	free_cmds(t_data *d)
 			free(d->cmd[i].arg);
 			d->cmd[i].arg = NULL;
 		}
-
 		if (d->cmd[i].arguments)
 		{
 			k = 0;
@@ -59,7 +57,6 @@ void	free_cmds(t_data *d)
 			d->cmd[i].arguments = NULL;
 		}
 	}
-
 	free(d->cmd);
 	d->cmd = NULL;
 }
@@ -71,7 +68,10 @@ void	free_all(t_data *d)
 	if (d->envp)
 		free_envp(d);
 	if (d->cmd)
+	{
 		free_cmds(d);
+		d->nb_cmd = 0;
+	}
 	free(d->path);
 	free(d->new_path);
 	if (d->fd_in > 2)
