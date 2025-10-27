@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/26 15:22:13 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/27 20:14:03 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,6 @@ typedef struct s_data
 	int			fd_out;
 	int			stdin_back;
 	char		*input;
-	char		**input_splitted;
 	int			error_state;
 	int			curr_alone_r;
 	char		*path;
@@ -111,6 +110,7 @@ typedef struct s_data
 /* ========================== */
 
 // Builtins
+void			free_cmds(t_data *d);
 int				pipe_init(int N_pipe, int **var_pipe);
 int				handle_pwd(char *argv, int count, char *path);
 int				handle_exit(t_data *d, char **argv, int count);
@@ -151,7 +151,7 @@ bool			put_redir(t_data *d, int cmd_index, int arg_index,
 
 // Parsing & Input
 char			*get_directory(const char *path);
-char			**split(t_data *d);
+int				split(t_data *d);
 char			**get_args(char *s, t_data *d, int *is_dquote, char **argv);
 char			*get_one_arg(char *s, int *i, int *is_dquote);
 int				split_commands(char **argv, t_data *d);

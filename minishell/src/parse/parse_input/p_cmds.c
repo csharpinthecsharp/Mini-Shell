@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/27 19:23:06 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/27 20:17:16 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,7 @@ char	**get_args(char *s, t_data *d, int *is_dquote, char **argv)
 	return (argv);
 }
 
-
-int	split_commands(char **argv, t_data *d)
+int		split_commands(char **argv, t_data *d)
 {
 	int	arg_index;
 	int	cmd_index;
@@ -95,7 +94,7 @@ int	split_commands(char **argv, t_data *d)
 	cmd_index = 0;
 	d->cmd = malloc(sizeof(t_cmd) * d->nb_cmd);
 	if (!d->cmd)
-		return (ERROR);
+		return (FAILED);
 	while (cmd_index < d->nb_cmd)
 	{
 		j = 0;
@@ -103,7 +102,7 @@ int	split_commands(char **argv, t_data *d)
 		d->cmd[cmd_index].arg = malloc(sizeof(char *)
 				* (d->cmd[cmd_index].nb_arg + 1));
 		if (!d->cmd[cmd_index].arg)
-			return (ERROR);
+			return (FAILED);
 		while (argv[arg_index] && ft_strncmp(argv[arg_index], "|", 2) != 0)
 			d->cmd[cmd_index].arg[j++] = ft_strdup(argv[arg_index++]);
 		d->cmd[cmd_index].arg[j] = NULL;
@@ -111,20 +110,22 @@ int	split_commands(char **argv, t_data *d)
 			arg_index++;
 		cmd_index++;
 	}
-	return (free_split(argv), SUCCESS);
+	return (SUCCESS);
 }
 
-char	**split(t_data *d)
+int		split(t_data *d)
 {
 	char	**argv;
 	int		is_dquote;
-
+	
 	argv = malloc(sizeof(char *) * (ft_strlen(d->input) + 1));
 	if (!argv)
-		return (NULL);
+		return (FAILED);
 	is_dquote = 0;
 	argv = get_args(d->input, d, &is_dquote, argv);
-	if (!argv)
-		return (NULL);
-	return (argv);
+	d->nb_cmd = count_commands(argv);
+	if (split_commands(argv, d) == FAILED)
+		return (FAILED);
+	free_split(argv);
+	return (SUCCESS);
 }

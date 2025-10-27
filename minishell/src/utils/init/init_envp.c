@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 18:59:03 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/22 23:36:21 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/27 19:30:18 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ char	*up_shlvl(char *envp_i)
 		lvl = ft_atoi(envp_i + 6);
 		lvl++;
 		new_lvl = ft_itoa(lvl);
+		if (!new_lvl)
+			return (ft_strdup(envp_i));
 		res = ft_strjoin("SHLVL=", new_lvl);
 		free(new_lvl);
 		return (res);
@@ -33,28 +35,29 @@ char	*up_shlvl(char *envp_i)
 char	**duplicate_envp(char **envp)
 {
 	int		count;
-	char	**argv;
 	int		i;
+	char	**copy;
 
 	count = 0;
 	while (envp[count])
 		count++;
-	argv = malloc(sizeof(char *) * (count + 1));
-	if (!argv)
+	copy = malloc(sizeof(char *) * (count + 1));
+	if (!copy)
 		return (NULL);
 	i = 0;
 	while (envp[i])
 	{
-		argv[i] = up_shlvl(envp[i]);
-		if (!argv[i])
+		copy[i] = up_shlvl(envp[i]);
+		if (!copy[i])
 		{
 			while (i > 0)
-				free(argv[--i]);
-			free(argv);
+				free(copy[--i]);
+			free(copy);
 			return (NULL);
 		}
 		i++;
 	}
-	argv[i] = NULL;
-	return (argv);
+	copy[i] = NULL;
+	return (copy);
 }
+

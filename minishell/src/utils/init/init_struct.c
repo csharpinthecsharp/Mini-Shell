@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 15:35:24 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/25 13:41:25 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/27 20:07:55 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ void	init_data(t_data *d)
 	d->fd_out = -1;
 	d->stdin_back = -1;
 	d->input = NULL;
-	d->input_splitted = NULL;
 	d->path = NULL;
 	d->new_path = NULL;
 	d->error_state = 0;

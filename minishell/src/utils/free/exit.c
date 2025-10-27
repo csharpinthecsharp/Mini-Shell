@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 00:41:34 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/27 15:05:37 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/27 20:26:05 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,58 +23,45 @@ static void	free_envp(t_data *d)
 		i++;
 	}
 	free(d->envp);
+	d->envp = NULL;
 }
 
-static void	free_splitted(t_data *d)
-{
-	int	i;
-
-	i = 0;
-	while (d->input_splitted[i])
-	{
-		free(d->input_splitted[i]);
-		i++;
-	}
-	free(d->input_splitted);
-}
-
-static void	h_free_cmds(int *i, int *j, int *k, t_data *d)
-{
-	if (d->cmd[*i].arg)
-	{
-		(*j) = 0;
-		while (*j < d->cmd[*i].nb_arg)
-		{
-			free(d->cmd[*i].arg[*j]);
-			(*j)++;
-		}
-		free(d->cmd[*i].arg);
-	}
-	if (d->cmd[*i].arguments)
-	{
-		(*k) = 0;
-		while (*k < d->cmd[*i].nb_redir)
-		{
-			free(d->cmd[*i].arguments[*k].file);
-			(*k)++;
-		}
-		free(d->cmd[*i].arguments);
-	}
-	(*i)++;
-}
-
-static void	free_cmds(t_data *d)
+void	free_cmds(t_data *d)
 {
 	int	i;
 	int	j;
 	int	k;
 
-	if (!d->cmd)
-		return ;
-	i = 0;
-	while (i < d->nb_cmd)
-		h_free_cmds(&i, &j, &k, d);
+	if (!d || !d->cmd)
+		return;
+
+	for (i = 0; i < d->nb_cmd; i++)
+	{
+		if (d->cmd[i].arg)
+		{
+			j = 0;
+			while (d->cmd[i].arg[j])
+				free(d->cmd[i].arg[j++]);
+			free(d->cmd[i].arg);
+			d->cmd[i].arg = NULL;
+		}
+
+		if (d->cmd[i].arguments)
+		{
+			k = 0;
+			while (k < d->cmd[i].nb_redir)
+			{
+				if (d->cmd[i].arguments[k].file)
+					free(d->cmd[i].arguments[k].file);
+				k++;
+			}
+			free(d->cmd[i].arguments);
+			d->cmd[i].arguments = NULL;
+		}
+	}
+
 	free(d->cmd);
+	d->cmd = NULL;
 }
 
 void	free_all(t_data *d)
@@ -83,8 +70,6 @@ void	free_all(t_data *d)
 		free(d->input);
 	if (d->envp)
 		free_envp(d);
-	if (d->input_splitted)
-		free_splitted(d);
 	if (d->cmd)
 		free_cmds(d);
 	free(d->path);
