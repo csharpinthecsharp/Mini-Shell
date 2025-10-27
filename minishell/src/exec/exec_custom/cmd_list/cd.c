@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 12:38:38 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/26 15:22:38 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/27 16:52:29 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,45 @@
 static int	refresh_path(t_data *d)
 {
 	char	*cwd;
-
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
 	{
 		perror("getcwd failed");
 		return (FAILED);
 	}
+	int i = 0;
+	char *temp;
+	char *pwd;
+	
+	while (d->envp[i])
+	{
+		if (ft_strncmp(d->envp[i], "PWD=", 4) == 0)
+		{
+			int j = 0;
+			temp = strdup(d->envp[i]);
+			while (temp[j] != '=')
+				j++;
+			j++;
+			pwd = ft_strdup(cwd);
+			free(d->envp[i]);
+			d->envp[i] = malloc(sizeof(char *) * ft_strlen(pwd));
+			d->envp[i] = ft_strjoin("PWD=", pwd);
+		}
+		else if (ft_strncmp(d->envp[i], "OLDPWD=", 7) == 0)
+		{
+			int k = 0;
+			temp = strdup(d->envp[i]);
+			while (temp[k] != '=')
+				k++;
+			k++;
+			free(d->envp[i]);
+			d->envp[i] = malloc(sizeof(char *) * ft_strlen(d->path + 7));
+			d->envp[i] = ft_strjoin("OLDPWD=", d->path);
+			printf("old envp i = %s\n", d->envp[i]);
+		}
+		i++;
+	}
+
 	if (d->path)
 		free(d->path);
 	d->path = cwd;
