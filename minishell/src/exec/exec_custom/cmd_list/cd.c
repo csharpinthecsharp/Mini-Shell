@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 12:38:38 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/27 16:52:29 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/27 16:54:04 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,8 @@ static int	refresh_path(t_data *d)
 				k++;
 			k++;
 			free(d->envp[i]);
-			d->envp[i] = malloc(sizeof(char *) * ft_strlen(d->path + 7));
+			d->envp[i] = malloc(sizeof(char *) * ft_strlen(d->path + 9));
 			d->envp[i] = ft_strjoin("OLDPWD=", d->path);
-			printf("old envp i = %s\n", d->envp[i]);
 		}
 		i++;
 	}
