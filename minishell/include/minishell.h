@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/31 16:33:33 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/10/31 20:58:33 by astrelci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,6 @@
 /* ========================== */
 /*         MACROS             */
 /* ========================== */
-
-// Buffer & Quote
-# define BUFFER_SIZE 1024
-# define POUVOIR_DU_DESTIN 256
-# define PIPE '|'
-# define QUOTE '\''
-# define BIG_QUOTE '\"'
-# define ENV_VAR '$'
 
 // Status
 # define FAILED 1
@@ -41,7 +33,6 @@
 # define RIGHT 5
 # define LEFT_LEFT 6
 # define RIGHT_RIGHT 7
-# define REDIRECTION 9
 # define ALONE_RR 10
 # define ALONE_LL 11
 # define ALONE_R 12

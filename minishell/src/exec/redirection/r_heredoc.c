@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   r_heredoc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrezette <lrezette@student.42luxembourg    +#+  +:+       +#+        */
+/*   By: ltrillar <ltrillar@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 16:16:18 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/27 20:48:06 by lrezette         ###   ########.fr       */
+/*   Updated: 2025/10/31 22:24:12 by astrelci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ static void	child_heredoc(int *heredoc, char *delimiter, int *stdin)
 			print_error("here-document delimited by end-of-file", "warning");
 			break ;
 		}
-		if (strcmp(res, delimiter) == 0)
+		if (ft_strncmp(res, delimiter, ft_strlen(delimiter) + 1) == 0)
 		{
 			free(res);
 			break ;
