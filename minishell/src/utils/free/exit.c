@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrezette <lrezette@student.42luxembourg    +#+  +:+       +#+        */
+/*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 00:41:34 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/27 21:42:20 by lrezette         ###   ########.fr       */
+/*   Updated: 2025/10/31 16:36:10 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,36 +26,41 @@ static void	free_envp(t_data *d)
 	d->envp = NULL;
 }
 
+static void	free_args(char **args)
+{
+	int	i;
+
+	if (!args)
+		return ;
+	i = 0;
+	while (args[i])
+		free(args[i++]);
+	free(args);
+}
+
+static void	free_redirs(t_cmd *cmd)
+{
+	int	i;
+
+	if (!cmd->arguments)
+		return ;
+	i = -1;
+	while (++i < cmd->nb_redir)
+		free(cmd->arguments[i].file);
+	free(cmd->arguments);
+}
+
 void	free_cmds(t_data *d)
 {
 	int	i;
-	int	j;
-	int	k;
 
 	if (!d || !d->cmd)
 		return ;
-	for (i = 0; i < d->nb_cmd; i++)
+	i = -1;
+	while (++i < d->nb_cmd)
 	{
-		if (d->cmd[i].arg)
-		{
-			j = 0;
-			while (d->cmd[i].arg[j])
-				free(d->cmd[i].arg[j++]);
-			free(d->cmd[i].arg);
-			d->cmd[i].arg = NULL;
-		}
-		if (d->cmd[i].arguments)
-		{
-			k = 0;
-			while (k < d->cmd[i].nb_redir)
-			{
-				if (d->cmd[i].arguments[k].file)
-					free(d->cmd[i].arguments[k].file);
-				k++;
-			}
-			free(d->cmd[i].arguments);
-			d->cmd[i].arguments = NULL;
-		}
+		free_args(d->cmd[i].arg);
+		free_redirs(&d->cmd[i]);
 	}
 	free(d->cmd);
 	d->cmd = NULL;

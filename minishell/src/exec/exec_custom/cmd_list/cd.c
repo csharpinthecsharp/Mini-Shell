@@ -3,51 +3,46 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrezette <lrezette@student.42luxembourg    +#+  +:+       +#+        */
+/*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 12:38:38 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/27 21:43:11 by lrezette         ###   ########.fr       */
+/*   Updated: 2025/10/31 16:30:37 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../../include/minishell.h"
 
+static void	update_env_var(char **env, char *key, char *value)
+{
+	char	*tmp;
+
+	tmp = *env;
+	*env = ft_strjoin(key, value);
+	free(tmp);
+}
+
 static int	refresh_path(t_data *d)
 {
-	char	*cwd;
-	char	*pwd;
-	char	*temp;
 	int		i;
+	char	*cwd;
 
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
+		return (perror("getcwd failed"), FAILED);
+	i = -1;
+	while (d->envp[++i])
 	{
-		perror("getcwd failed");
-		return (FAILED);
-	}
-	i = 0;
-	while (d->envp[i])
-	{
-		if (ft_strncmp(d->envp[i], "PWD=", 4) == 0)
+		if (!ft_strncmp(d->envp[i], "PWD=", 4))
+			update_env_var(&d->envp[i], "PWD=", cwd);
+		else if (!ft_strncmp(d->envp[i], "OLDPWD=", 7))
 		{
-			temp = d->envp[i];
-			pwd = ft_strjoin("PWD=", cwd);
-			d->envp[i] = pwd;
-			free(temp);
-		}
-		else if (ft_strncmp(d->envp[i], "OLDPWD=", 7) == 0)
-		{
-			temp = d->envp[i];
 			if (d->path)
-				d->envp[i] = ft_strjoin("OLDPWD=", d->path);
+				update_env_var(&d->envp[i], "OLDPWD=", d->path);
 			else
-				d->envp[i] = ft_strdup("OLDPWD=");
-			free(temp);
+				update_env_var(&d->envp[i], "OLDPWD=", "");
 		}
-		i++;
 	}
-	if (d->path)
-		free(d->path);
+	free(d->path);
 	d->path = cwd;
 	return (SUCCESS);
 }

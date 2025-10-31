@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   p_envvar.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrezette <lrezette@student.42luxembourg    +#+  +:+       +#+        */
+/*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 15:32:50 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/27 21:41:33 by lrezette         ###   ########.fr       */
+/*   Updated: 2025/10/31 16:24:29 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 
 int	get_expanded_size(char *s, t_data *d)
 {
-	int		len;
-	char	*val;
+	int	len;
 
 	len = 0;
 	while (*s)
@@ -23,20 +22,13 @@ int	get_expanded_size(char *s, t_data *d)
 		if (*s == '$')
 		{
 			s++;
-			if (*s && !ft_isspace((unsigned char)*s))
-			{
-				val = get_env_string(d, s);
-				if (!val)
-					return (0);
-				while (*s && !ft_isspace((unsigned char)*s) && *s != '$')
-					s++;
-				len += ft_strlen(val);
-				free(val);
-				continue ;
-			}
+			h_expand_size(&s, &len, d);
 		}
-		len++;
-		s++;
+		else
+		{
+			len++;
+			s++;
+		}
 	}
 	return (len);
 }
@@ -55,14 +47,12 @@ char	*get_env_string(t_data *d, char *s)
 		return (NULL);
 	if (s[i] == '$')
 		i++;
-	while (s[i] && !ft_isspace(s[i]) && s[i] != '$' && s[i] != '(' && s[i] != ')')
+	while (s[i] && !ft_isspace(s[i]) && s[i] != '$' && s[i] != '('
+		&& s[i] != ')')
 		arg[j++] = s[i++];
 	arg[j] = '\0';
 	if (j == 0)
-	{
-		free(arg);
-		return (ft_strdup(""));
-	}
+		return (free(arg), ft_strdup(""));
 	env_val = ft_get_env(d, arg);
 	free(arg);
 	if (!env_val)

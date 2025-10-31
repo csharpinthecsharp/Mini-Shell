@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   p_cmds.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrezette <lrezette@student.42luxembourg    +#+  +:+       +#+        */
+/*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/27 21:39:59 by lrezette         ###   ########.fr       */
+/*   Updated: 2025/10/31 16:28:36 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ char	**remove_empty_var(char **tokens)
 	return (clean);
 }
 
-static int	break_free(char *arg, char *raw_arg)
+int	break_free(char *arg, char *raw_arg)
 {
 	if (!arg)
 	{
@@ -57,7 +57,6 @@ char	**get_args(char *s, t_data *d, int *is_dquote, char **argv)
 	int		k;
 	char	*raw_arg;
 	char	*arg;
-	int		size;
 
 	i = 0;
 	k = 0;
@@ -67,24 +66,14 @@ char	**get_args(char *s, t_data *d, int *is_dquote, char **argv)
 		if (!raw_arg)
 			break ;
 		if (ft_strchr(raw_arg, '$'))
-		{
-			size = get_expanded_size(raw_arg, d);
-			arg = malloc(size + 1);
-			if (!arg)
-			{
-				free(raw_arg);
-				break ;
-			}
-			arg = replace_envvar(raw_arg, d, is_dquote, arg);
-			if (!arg || break_free(arg, raw_arg) == FAILED)
-				break ;
-			argv[k++] = arg;
-		}
+			arg = expand_arg(raw_arg, d, is_dquote);
 		else
-			argv[k++] = raw_arg;
+			arg = raw_arg;
+		if (!arg)
+			break ;
+		argv[k++] = arg;
 	}
-	argv[k] = NULL;
-	return (argv);
+	return (argv[k] = NULL, argv);
 }
 
 int	split_commands(char **argv, t_data *d)

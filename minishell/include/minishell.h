@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrezette <lrezette@student.42luxembourg    +#+  +:+       +#+        */
+/*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/27 20:50:43 by lrezette         ###   ########.fr       */
+/*   Updated: 2025/10/31 16:33:33 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@
 # include <termcap.h>
 # include <termios.h>
 # include <unistd.h>
-
 
 /* ========================== */
 /*       DATA STRUCTURES      */
@@ -166,12 +165,12 @@ int				redirection_syntax(char *input);
 int				check_output_ofeach(t_cmd *cmd, t_data *d);
 int				get_expanded_size(char *s, t_data *d);
 char			*get_env_string(t_data *d, char *s);
+int				break_free(char *arg, char *raw_arg);
 
 // Environment & Path
 char			*get_path(t_data *d);
 char			*get_promptpath(t_data *d);
 char			*replace_envvar(char *s, t_data *d, int *is_dquote, char *arg);
-void			update_data(t_data *d);
 void			init_data(t_data *d);
 
 int				is_available(char *str, t_data *d);
@@ -179,7 +178,6 @@ void			execve_error(char *cmd);
 bool			check_alone_redir(char **argv);
 
 // Redirection & Pipes
-void			alloc_error_pipe(int N_pipe, int **var_pipe);
 void			close_pipe(int **var_pipe, int N_pipe, int state);
 void			set_error(t_data *d, int exit_code, char *error_s, char *tmp);
 char			**fix_redir_arg(t_cmd *cmd);
@@ -195,9 +193,6 @@ void			handler_ctrl_bs(int sig);
 // Memory & Cleanup
 void			free_all(t_data *d);
 void			free_beforenewline(t_data *d);
-void			alloc_output_file(t_data *d);
-void			alloc_start_execution(t_data *d);
-void			alloc_parse_args(char ***argv, int len);
 char			*ft_get_env(t_data *d, char *requested);
 int				check_non_bin(t_cmd *cmd, int type, int *is_stateful,
 					t_data *d);
@@ -228,5 +223,7 @@ void			heredoc(t_data *d, int *pos, int i);
 void			exit_ctrl_d(t_data *d);
 int				is_empty(t_data *d, int cmd_index, int arg_index);
 char			**remove_empty_var(char **tokens);
+void			h_expand_size(char **s, int *len, t_data *d);
+char			*expand_arg(char *raw_arg, t_data *d, int *is_dquote);
 
 #endif /* MINISHELL_H */
