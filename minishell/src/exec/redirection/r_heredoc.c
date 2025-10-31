@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   r_heredoc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrezette <lrezette@student.42luxembourg    +#+  +:+       +#+        */
+/*   By: ltrillar <ltrillar@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 16:16:18 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/27 20:48:06 by lrezette         ###   ########.fr       */
+/*   Updated: 2025/10/31 20:51:16 by astrelci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

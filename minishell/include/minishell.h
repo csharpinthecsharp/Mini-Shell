@@ -17,14 +17,6 @@
 /*         MACROS             */
 /* ========================== */
 
-// Buffer & Quote
-# define BUFFER_SIZE 1024
-# define POUVOIR_DU_DESTIN 256
-# define PIPE '|'
-# define QUOTE '\''
-# define BIG_QUOTE '\"'
-# define ENV_VAR '$'
-
 // Status
 # define FAILED 1
 # define SUCCESS 0
@@ -41,7 +33,6 @@
 # define RIGHT 5
 # define LEFT_LEFT 6
 # define RIGHT_RIGHT 7
-# define REDIRECTION 9
 # define ALONE_RR 10
 # define ALONE_LL 11
 # define ALONE_R 12

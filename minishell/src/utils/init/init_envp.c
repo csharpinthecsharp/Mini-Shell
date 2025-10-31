@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_envp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrezette <lrezette@student.42luxembourg    +#+  +:+       +#+        */
+/*   By: ltrillar <ltrillar@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 18:59:03 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/27 21:41:53 by lrezette         ###   ########.fr       */
+/*   Updated: 2025/10/31 20:51:13 by astrelci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
