@@ -45,6 +45,7 @@ int	get_arg_length(const char *s, int *i, int *is_dquote)
 		(*i)++;
 	if (!s[*i])
 		return (0);
+	start = *i;
 	if (s[*i] == '|' || s[*i] == '<' || s[*i] == '>')
 	{
 		if (s[*i + 1] == '<' && s[*i] == '<')
@@ -53,7 +54,7 @@ int	get_arg_length(const char *s, int *i, int *is_dquote)
 			(*i) += 2;
 		else
 			(*i) += 1;
-		return (1);
+		return (*i - start);
 	}
 	handle_quote(s, i, is_dquote);
 	return (*i - start);
