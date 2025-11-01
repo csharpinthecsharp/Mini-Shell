@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   r_heredoc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ltrillar <ltrillar@student.42luxembourg    +#+  +:+       +#+        */
+/*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 16:16:18 by ltrillar          #+#    #+#             */
 /*   Updated: 2025/10/31 22:24:12 by astrelci         ###   ########.fr       */
@@ -47,31 +47,15 @@ static void	heredoc_error_handler(int *heredoc, int *stdin)
 
 static void	child_heredoc(int *heredoc, char *delimiter, int *stdin)
 {
-	char	*res;
+	int	status;
 
-	res = NULL;
 	close(heredoc[0]);
 	close(*stdin);
 	signal(SIGINT, heredoc_ctrl_c);
-	while (1)
-	{
-		res = readline("> ");
-		if (!res)
-		{
-			print_error("here-document delimited by end-of-file", "warning");
-			break ;
-		}
-		if (ft_strncmp(res, delimiter, ft_strlen(delimiter) + 1) == 0)
-		{
-			free(res);
-			break ;
-		}
-		ft_putstr_fd(res, heredoc[1]);
-		ft_putstr_fd("\n", heredoc[1]);
-		free(res);
-	}
+	status = heredoc_read_loop(heredoc[1], delimiter);
 	close(heredoc[1]);
-	exit(0);
+	free(delimiter);
+	exit(status);
 }
 
 static void	parent_error_heredoc(int *heredoc, int *stdin, t_data *d, pid_t pid)
@@ -85,9 +69,19 @@ static void	parent_error_heredoc(int *heredoc, int *stdin, t_data *d, pid_t pid)
 	{
 		close(heredoc[0]);
 		close(*stdin);
+		restore_terminal_settings();
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		signal(SIGINT, handler_ctrl_c);
+		d->error_state = 130;
+		return ;
+	}
+	if (WIFEXITED(status) && WEXITSTATUS(status) == 1)
+	{
+		close(heredoc[0]);
+		close(*stdin);
+		signal(SIGINT, handler_ctrl_c);
+		d->error_state = 1;
 		return ;
 	}
 	signal(SIGINT, handler_ctrl_c);
@@ -110,5 +104,8 @@ void	heredoc(t_data *d, int *pos, int i)
 	if (pid == 0)
 		child_heredoc(heredoc, delimiter, &stdin);
 	else
+	{
 		parent_error_heredoc(heredoc, &stdin, d, pid);
+		free(delimiter);
+	}
 }
