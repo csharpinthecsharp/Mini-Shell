@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 20:20:39 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/31 16:32:34 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/11/01 17:25:49 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,19 +48,4 @@ void	h_expand_size(char **s, int *len, t_data *d)
 		*len += ft_strlen(val);
 		free(val);
 	}
-}
-
-char	*expand_arg(char *raw_arg, t_data *d, int *is_dquote)
-{
-	char	*arg;
-	int		size;
-
-	size = get_expanded_size(raw_arg, d);
-	arg = malloc(size + 1);
-	if (!arg)
-		return (NULL);
-	arg = replace_envvar(raw_arg, d, is_dquote, arg);
-	if (!arg || break_free(arg, raw_arg) == FAILED)
-		return (NULL);
-	return (arg);
 }
