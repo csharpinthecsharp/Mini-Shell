@@ -2,7 +2,7 @@ MAKEFLAGS += -s
 
 NAME	= minishell
 CC		= clang
-CFLAGS	= -Wall -Wextra -Werror
+CFLAGS	= -g -Wall -Wextra -Werror
 
 SRCS	= src/main.c \
 		  src/utils/global/utility.c \

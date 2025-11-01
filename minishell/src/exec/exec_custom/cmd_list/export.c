@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 12:39:16 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/25 18:01:47 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/11/01 17:39:56 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,24 +57,33 @@ static int	do_export(char **argv, t_data *d)
 	char	*key;
 	char	**new_envp;
 	int		index;
-
 	arg = argv[1];
 	if (error_export(ft_strchr(arg, '='), &arg) == FAILED)
 		return (FAILED);
 	len = ft_strchr(arg, '=') - arg;
 	key = malloc(len + 1);
+	if (!key)
+		return (FAILED);
 	ft_strlcpy(key, arg, len + 1);
 	if (loop_in_env(&index, d, key, &arg) == SUCCESS)
+	{
+		free(key);
 		return (SUCCESS);
-	new_envp = ft_realloc(d->envp, sizeof(char *) * ((index)), sizeof(char *)
-			* ((index) + 2));
+	}
+	new_envp = ft_realloc(d->envp, sizeof(char *) * (index),
+			sizeof(char *) * (index + 2));
 	if (!new_envp)
-		return (1);
+	{
+		free(key);
+		return (FAILED);
+	}
 	d->envp = new_envp;
 	d->envp[index] = ft_strdup(arg);
-	d->envp[(index) + 1] = NULL;
+	d->envp[index + 1] = NULL;
+	free(key);
 	return (SUCCESS);
 }
+
 
 int	handle_export(char **argv, int count, t_data *d)
 {

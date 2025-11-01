@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 16:22:20 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/25 18:18:05 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/11/01 17:41:33 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,9 @@ void	handle_bin(t_cmd *cmd, t_data *d)
 		return ;
 	exec_with_path(paths, cmd, d);
 	execve_error(cmd->arg[0]);
-	free(paths);
+	free_split(paths);
 }
+
 
 void	handle_redirections(t_data *d, int *pos, int *fd_out, int *fd_in)
 {
