@@ -17,12 +17,16 @@ void	wait_for_children(t_data *d, pid_t last_pid)
 	int		status;
 	pid_t	wpid;
 
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 	wpid = wait(&status);
 	while (wpid > 0)
 	{
 		handle_child_status(d, wpid, status, last_pid);
 		wpid = wait(&status);
 	}
+	signal(SIGINT, handler_ctrl_c);
+	signal(SIGQUIT, handler_ctrl_bs);
 }
 
 void	restore_stdin(t_data *d)

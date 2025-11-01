@@ -87,6 +87,10 @@ void	handle_child_status(t_data *d, pid_t wpid, int status, pid_t last_pid)
 		else if (WIFEXITED(status))
 			d->exit_status = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
+		{
 			d->exit_status = 128 + WTERMSIG(status);
+			if (WTERMSIG(status) == SIGINT)
+				write(STDOUT_FILENO, "\n", 1);
+		}
 	}
 }
