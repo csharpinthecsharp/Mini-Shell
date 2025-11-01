@@ -210,7 +210,7 @@ int				is_key_exitstatus(char *s, int quote_off);
 void			select_readline_mode(t_data *d);
 void			start_minishell(t_data *d);
 void			prepare_heredoc(t_data *d, int *pos);
-void			heredoc(t_data *d, int *pos, int i);
+void			heredoc(t_data *d, int *pos, int i, int is_last);
 int				heredoc_read_loop(int fd_write, char *delimiter);
 void			restore_terminal_settings(void);
 void			exit_ctrl_d(t_data *d);

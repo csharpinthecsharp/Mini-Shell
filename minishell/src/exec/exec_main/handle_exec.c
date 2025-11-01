@@ -15,12 +15,21 @@
 void	handle_heredocs(t_data *d, int *pos)
 {
 	int	i;
+	int	last_heredoc;
 
+	i = 0;
+	last_heredoc = -1;
+	while (i < d->cmd[*pos].nb_redir)
+	{
+		if (d->cmd[*pos].arguments[i].state_redir == LEFT_LEFT)
+			last_heredoc = i;
+		i++;
+	}
 	i = 0;
 	while (i < d->cmd[*pos].nb_redir)
 	{
 		if (d->cmd[*pos].arguments[i].state_redir == LEFT_LEFT)
-			heredoc(d, pos, i);
+			heredoc(d, pos, i, (i == last_heredoc));
 		i++;
 	}
 }
