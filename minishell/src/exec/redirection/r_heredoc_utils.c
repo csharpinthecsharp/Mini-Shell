@@ -1,51 +1,47 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_signal.c                                      :+:      :+:    :+:   */
+/*   r_heredoc_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/06 20:16:28 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/25 12:38:40 by ltrillar         ###   ########.fr       */
+/*   Created: 2025/10/01 15:10:03 by ltrillar          #+#    #+#             */
+/*   Updated: 2025/11/01 11:28:01 by astrelci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "../../../include/minishell.h"
 
-void	handler_ctrl_c(int sig)
-{
-	(void)sig;
-	write(STDOUT_FILENO, "^C\n", 3);
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
-}
-
-void	heredoc_ctrl_c(int sig)
+void	restore_terminal_settings(void)
 {
 	struct termios	term;
 
-	(void)sig;
-	rl_replace_line("", 0);
-	rl_done = 1;
-	rl_on_new_line();
-	write(STDOUT_FILENO, "\n", 1);
 	if (tcgetattr(STDIN_FILENO, &term) != -1)
 	{
 		term.c_lflag |= (ECHO | ICANON);
 		tcsetattr(STDIN_FILENO, TCSANOW, &term);
 	}
-	exit(0);
 }
 
-void	handler_ctrl_bs(int sig)
+int	heredoc_read_loop(int fd_write, char *delimiter)
 {
-	(void)sig;
-}
+	char	*res;
 
-void	prepare_signals(void)
-{
-	rl_catch_signals = 0;
-	signal(SIGINT, handler_ctrl_c);
-	signal(SIGQUIT, handler_ctrl_bs);
+	while (1)
+	{
+		res = readline("> ");
+		if (!res)
+		{
+			print_error("here-document delimited by end-of-file", "warning");
+			return (1);
+		}
+		if (ft_strncmp(res, delimiter, ft_strlen(delimiter) + 1) == 0)
+		{
+			free(res);
+			return (0);
+		}
+		ft_putstr_fd(res, fd_write);
+		ft_putstr_fd("\n", fd_write);
+		free(res);
+	}
 }

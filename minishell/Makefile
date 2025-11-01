@@ -33,6 +33,7 @@ SRCS	= src/main.c \
 		  src/exec/exec_main/execute.c \
 		  src/exec/redirection/r_basic.c \
 		  src/exec/redirection/r_heredoc.c \
+		  src/exec/redirection/r_heredoc_utils.c \
 		  src/signal/init_signal.c \
 		  src/utils/free/exit.c \
 		  src/utils/free/newline.c \
