@@ -45,14 +45,14 @@ static void	heredoc_error_handler(int *heredoc, int *stdin)
 	}
 }
 
-static void	child_heredoc(int *heredoc, char *delimiter, int *stdin)
+static void	child_heredoc(int *heredoc, char *delimiter, int *stdin, t_data *d, int should_expand)
 {
 	int	status;
 
 	close(heredoc[0]);
 	close(*stdin);
 	signal(SIGINT, heredoc_ctrl_c);
-	status = heredoc_read_loop(heredoc[1], delimiter);
+	status = heredoc_read_loop(heredoc[1], delimiter, d, should_expand);
 	close(heredoc[1]);
 	free(delimiter);
 	exit(status);
@@ -102,13 +102,15 @@ void	heredoc(t_data *d, int *pos, int i, int is_last)
 	int		stdin_fd;
 	pid_t	pid;
 	char	*delimiter;
+	int		should_expand;
 
 	delimiter = ft_strdup(d->cmd[*pos].arguments[i].file);
+	should_expand = !d->cmd[*pos].arguments[i].heredoc_quoted;
 	pid = -1;
 	heredoc_error_handler(heredoc, &stdin_fd);
 	pid = heredoc_pid_create(heredoc, &stdin_fd);
 	if (pid == 0)
-		child_heredoc(heredoc, delimiter, &stdin_fd);
+		child_heredoc(heredoc, delimiter, &stdin_fd, d, should_expand);
 	else
 	{
 		parent_error_heredoc(heredoc, &stdin_fd, d, pid, is_last);

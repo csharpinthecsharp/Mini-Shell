@@ -68,6 +68,7 @@ typedef struct s_arguments
 {
 	int			state_redir;
 	char		*file;
+	int			heredoc_quoted;
 }				t_arguments;
 
 typedef struct s_cmd
@@ -211,7 +212,7 @@ void			select_readline_mode(t_data *d);
 void			start_minishell(t_data *d);
 void			prepare_heredoc(t_data *d, int *pos);
 void			heredoc(t_data *d, int *pos, int i, int is_last);
-int				heredoc_read_loop(int fd_write, char *delimiter);
+int				heredoc_read_loop(int fd_write, char *delimiter, t_data *d, int should_expand);
 void			restore_terminal_settings(void);
 void			exit_ctrl_d(t_data *d);
 int				is_empty(t_data *d, int cmd_index, int arg_index);

@@ -50,6 +50,30 @@ void	redirect_left(t_data *d, int *pos, int fd_in, int i)
 	}
 }
 
+static int	is_heredoc_delimiter_quoted(char *input, char *parsed_delimiter)
+{
+	int		i;
+
+	i = 0;
+	while (input[i])
+	{
+		if (input[i] == '<' && input[i + 1] == '<')
+		{
+			i += 2;
+			while (input[i] && ft_isspace(input[i]))
+				i++;
+			// Check if delimiter starts with quote
+			if (input[i] == '\'' || input[i] == '"')
+				return (1);
+			// Check if this is our delimiter
+			if (ft_strncmp(&input[i], parsed_delimiter, ft_strlen(parsed_delimiter)) == 0)
+				return (0);
+		}
+		i++;
+	}
+	return (0);
+}
+
 bool	put_redir(t_data *d, int cmd_index, int arg_index, int redir_index)
 {
 	char	*str;
@@ -72,6 +96,11 @@ bool	put_redir(t_data *d, int cmd_index, int arg_index, int redir_index)
 		d->cmd[cmd_index].arguments[redir_index].state_redir = redir_type;
 		d->cmd[cmd_index].arguments[redir_index].file
 			= ft_strdup(d->cmd[cmd_index].arg[arg_index + 1]);
+		if (redir_type == LEFT_LEFT)
+			d->cmd[cmd_index].arguments[redir_index].heredoc_quoted
+				= is_heredoc_delimiter_quoted(d->input, d->cmd[cmd_index].arg[arg_index + 1]);
+		else
+			d->cmd[cmd_index].arguments[redir_index].heredoc_quoted = 0;
 		return (true);
 	}
 	return (false);

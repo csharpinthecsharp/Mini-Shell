@@ -23,9 +23,11 @@ void	restore_terminal_settings(void)
 	}
 }
 
-int	heredoc_read_loop(int fd_write, char *delimiter)
+int	heredoc_read_loop(int fd_write, char *delimiter, t_data *d, int should_expand)
 {
 	char	*res;
+	char	*expanded;
+	int		is_dquote;
 
 	while (1)
 	{
@@ -40,8 +42,21 @@ int	heredoc_read_loop(int fd_write, char *delimiter)
 			free(res);
 			return (0);
 		}
-		ft_putstr_fd(res, fd_write);
+		if (should_expand && ft_strchr(res, '$'))
+		{
+			is_dquote = 0;
+			expanded = expand_arg(res, d, &is_dquote);
+			if (expanded)
+			{
+				ft_putstr_fd(expanded, fd_write);
+				free(expanded);
+			}
+		}
+		else
+		{
+			ft_putstr_fd(res, fd_write);
+			free(res);
+		}
 		ft_putstr_fd("\n", fd_write);
-		free(res);
 	}
 }
