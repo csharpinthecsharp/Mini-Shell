@@ -16,7 +16,6 @@ void	exec_alone_redir_inpipe(int **pipe, t_data *d, int n_pipe, int *pos)
 {
 	pid_t	pid;
 
-	handle_heredocs(d, pos);
 	d->fd_out = 0;
 	d->fd_in = 0;
 	if (d->cmd[*pos].state_cmd == ALONE_REDIR && (d->nb_cmd > 1
@@ -40,7 +39,6 @@ void	exec_custom_inpipe(int **pipe, t_data *d, int n_pipe, int *pos)
 {
 	pid_t	pid;
 
-	handle_heredocs(d, pos);
 	d->fd_out = 0;
 	d->fd_in = 0;
 	if (d->cmd[*pos].state_cmd == CUSTOM)
@@ -69,7 +67,6 @@ void	exec_built_inpipe(int **pipe, t_data *d, int n_pipe, int *pos)
 {
 	pid_t	pid;
 
-	handle_heredocs(d, pos);
 	d->fd_out = 0;
 	d->fd_in = 0;
 	pid = fork();
@@ -90,7 +87,6 @@ void	exec_missing_bin(int **pipe, t_data *d, int n_pipe, int *pos)
 {
 	pid_t	pid;
 
-	handle_heredocs(d, pos);
 	d->fd_out = 0;
 	d->fd_in = 0;
 	pid = fork();
@@ -108,6 +104,7 @@ void	exec_missing_bin(int **pipe, t_data *d, int n_pipe, int *pos)
 
 void	execute_command_by_type(int **pipe, t_data *d, int n_pipe, int *pos)
 {
+	handle_heredocs(d, pos);
 	if (check_output_ofeach(&d->cmd[*pos], d) == FAILED)
 		exit(d->exit_status);
 	if (d->cmd[*pos].state_cmd == CUSTOM)
