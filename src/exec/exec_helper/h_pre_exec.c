@@ -102,6 +102,8 @@ int	put_cmdstate(int type, int *is_stateful, t_cmd *cmd, t_data *d)
 	else if (type == BIN)
 	{
 		tmp = ft_strdup(cmd->arg[0]);
+		if (!tmp)
+			return (FAILED);
 		if (is_available(tmp, d) == SUCCESS)
 		{
 			cmd->state_cmd = BIN;
@@ -111,9 +113,12 @@ int	put_cmdstate(int type, int *is_stateful, t_cmd *cmd, t_data *d)
 		{
 			if (error_h(d, tmp) == FAILED)
 			{
+				cmd->state_cmd = MISSING_BIN;
 				free(tmp);
-				return (FAILED);
+				return (SUCCESS);
 			}
+			cmd->state_cmd = BIN;
+			free(tmp);
 		}
 	}
 	return (SUCCESS);

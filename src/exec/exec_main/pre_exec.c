@@ -79,24 +79,47 @@ int	pre_execution(t_data *d)
 	int	i;
 	int	type;
 
+	d->defer_errors = 1;
 	is_stateful = 0;
 	i = 0;
 	while (i < d->nb_cmd)
 	{
 		if (allocate_t_arguments(&d->cmd[i]) == FAILED)
+		{
+			d->defer_errors = 0;
+			flush_deferred_errors(d);
 			return (ERROR);
+		}
 		if (fill_arguments(d, &d->cmd[i], i) == FAILED)
+		{
+			d->defer_errors = 0;
+			flush_deferred_errors(d);
 			return (ERROR);
+		}
 		if (cut_redirection_command(&d->cmd[i]) == FAILED)
+		{
+			d->defer_errors = 0;
+			flush_deferred_errors(d);
 			return (ERROR);
+		}
 		if (is_empty(d, i, 0) == FAILED)
+		{
+			d->defer_errors = 0;
+			flush_deferred_errors(d);
 			return (FAILED);
+		}
 		type = check_command(d->cmd[i].arg, d);
 		if (put_cmdstate(type, &is_stateful, &d->cmd[i], d) == FAILED)
+		{
+			d->defer_errors = 0;
+			flush_deferred_errors(d);
 			return (FAILED);
+		}
 		i++;
 	}
+	d->defer_errors = 0;
 	if (is_stateful == 0)
 		start_execution(d);
+	flush_deferred_errors(d);
 	return (SUCCESS);
 }

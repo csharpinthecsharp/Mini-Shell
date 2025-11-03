@@ -33,6 +33,7 @@
 # define RIGHT 5
 # define LEFT_LEFT 6
 # define RIGHT_RIGHT 7
+# define MISSING_BIN 8
 # define ALONE_RR 10
 # define ALONE_LL 11
 # define ALONE_R 12
@@ -71,6 +72,14 @@ typedef struct s_arguments
 	int			heredoc_quoted;
 }				t_arguments;
 
+typedef struct s_error
+{
+	char			*message;
+	char			*argument;
+	int				exit_code;
+	struct s_error	*next;
+}					t_error;
+
 typedef struct s_cmd
 {
 	char		**arg;
@@ -95,6 +104,8 @@ typedef struct s_data
 	int			last_fork_pid;
 	int			exit_status;
 	char		*new_path;
+	int			defer_errors;
+	t_error		*errors;
 }				t_data;
 
 /* ========================== */
@@ -219,5 +230,9 @@ int				is_empty(t_data *d, int cmd_index, int arg_index);
 char			**remove_empty_var(char **tokens);
 void			h_expand_size(char **s, int *len, t_data *d);
 char			*expand_arg(char *raw_arg, t_data *d, int *is_dquote);
+void			add_deferred_error(t_data *d, int exit_code,
+					const char *message, const char *argument);
+void			flush_deferred_errors(t_data *d);
+void			clear_deferred_errors(t_data *d);
 
 #endif /* MINISHELL_H */

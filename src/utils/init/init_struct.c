@@ -27,4 +27,6 @@ void	init_data(t_data *d)
 	d->exit_status = 0;
 	d->envp = NULL;
 	d->last_fork_pid = -1;
+	d->defer_errors = 0;
+	d->errors = NULL;
 }
