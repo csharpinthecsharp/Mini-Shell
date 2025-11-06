@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 20:20:39 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/11/01 17:25:49 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/11/06 17:05:32 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,16 @@ void	h_expand_size(char **s, int *len, t_data *d)
 		*len += ft_strlen(val);
 		free(val);
 	}
+}
+
+int	expand_exit_status(t_data *d, int *len)
+{
+	char	*exit_status;
+
+	exit_status = ft_itoa(d->exit_status);
+	if (!exit_status)
+		return (ERROR);
+	(*len) += ft_strlen(exit_status);
+	free(exit_status);
+	return (SUCCESS);
 }

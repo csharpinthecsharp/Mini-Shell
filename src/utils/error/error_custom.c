@@ -33,6 +33,9 @@ int	error_export(char *equal_sign, char **arg_ptr)
 
 void	check_status_error(t_data *d, char *file, char *error_s)
 {
+	if (!d)
+		return ;
+	d->exit_status = 1;
 	if (isatty(STDIN_FILENO))
 		print_error(error_s, file);
 	else if (d->error_state == 0 && !isatty(STDIN_FILENO))

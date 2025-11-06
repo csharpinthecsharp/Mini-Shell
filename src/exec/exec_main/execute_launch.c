@@ -29,6 +29,7 @@ void	start_execution(t_data *d)
 	}
 	while (pos < d->nb_cmd)
 	{
+		d->error_state = 0;
 		execute_command_by_type(pipe, d, pipe_len, &pos);
 		last_pid = d->last_fork_pid;
 		pos++;
