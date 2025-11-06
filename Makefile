@@ -26,12 +26,16 @@ SRCS	= src/main.c \
 		  src/exec/exec_custom/cmd_list/unset.c \
 		  src/parse/handle_input.c \
 		  src/exec/exec_main/pre_exec.c \
+		  src/exec/exec_main/pre_exec_prepare.c \
 		  src/exec/exec_main/handle_exec.c \
 		  src/exec/exec_helper/h_pre_exec.c \
+		  src/exec/exec_helper/h_pre_exec_errors.c \
 		  src/exec/exec_helper/h_pre_exec_extra.c \
 		  src/exec/exec_helper/h_exec.c \
 		  src/exec/exec_main/execute.c \
+		  src/exec/exec_main/execute_launch.c \
 		  src/exec/redirection/r_basic.c \
+		  src/exec/redirection/r_basic_utils.c \
 		  src/exec/redirection/r_heredoc.c \
 		  src/exec/redirection/r_heredoc_utils.c \
 		  src/signal/init_signal.c \

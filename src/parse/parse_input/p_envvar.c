@@ -6,29 +6,45 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 15:32:50 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/31 16:24:29 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/11/06 16:36:42 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../include/minishell.h"
 
-int	get_expanded_size(char *s, t_data *d)
+int expand_exit_status(t_data *d, int *len)
 {
-	int	len;
+	char	*exit_status;
+	
+	exit_status = ft_itoa(d->exit_status);
+	if (!exit_status)
+		return (ERROR);
+	(*len) += ft_strlen(exit_status);
+	free(exit_status);
+	return (SUCCESS);
+}
+int	get_expanded_size(char *s, t_data *d, int is_dquote)
+{
+	int		len;
 
 	len = 0;
 	while (*s)
 	{
-		if (*s == '$')
+		if (is_key_exitstatus(s, is_dquote) == SUCCESS)
+		{
+			if (expand_exit_status(d, &len) == ERROR)
+				return (ERROR);
+			s += 2;
+			continue;
+		}
+		if (*s == '$' && is_dquote == 0)
 		{
 			s++;
 			h_expand_size(&s, &len, d);
+			continue;
 		}
-		else
-		{
-			len++;
-			s++;
-		}
+		len++;
+		s++;
 	}
 	return (len);
 }

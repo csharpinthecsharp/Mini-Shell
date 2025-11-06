@@ -52,3 +52,23 @@ char	*get_promptpath(t_data *d)
 	prompt = ft_strjoin(trimmed, TEMPLATE_PROMPT_END);
 	return (free(trimmed), prompt);
 }
+
+char	*get_directory(const char *path)
+{
+	int		len;
+	int		i;
+	char	*dir;
+
+	len = ft_strlen(path);
+	i = len - 1;
+	while (i >= 0 && path[i] != '/')
+		i--;
+	if (i < 0)
+		return (strdup("."));
+	dir = malloc(i + 1);
+	if (!dir)
+		return (NULL);
+	strncpy(dir, path, i);
+	dir[i] = '\0';
+	return (dir);
+}

@@ -12,26 +12,6 @@
 
 #include "../../../include/minishell.h"
 
-char	*get_directory(const char *path)
-{
-	int		len;
-	int		i;
-	char	*dir;
-
-	len = ft_strlen(path);
-	i = len - 1;
-	while (i >= 0 && path[i] != '/')
-		i--;
-	if (i < 0)
-		return (strdup("."));
-	dir = malloc(i + 1);
-	if (!dir)
-		return (NULL);
-	strncpy(dir, path, i);
-	dir[i] = '\0';
-	return (dir);
-}
-
 int	count_redir_arg(t_cmd *cmd)
 {
 	int	i;
@@ -93,33 +73,34 @@ char	**fix_redir_arg(t_cmd *cmd)
 	return (dup);
 }
 
-int	put_cmdstate(int type, int *is_stateful, t_cmd *cmd, t_data *d)
+static int	handle_bin_state(t_cmd *cmd, t_data *d)
 {
 	char	*tmp;
+	int		is_available_result;
 
+	tmp = ft_strdup(cmd->arg[0]);
+	if (!tmp)
+		return (FAILED);
+	is_available_result = is_available(tmp, d);
+	if (is_available_result == SUCCESS)
+		cmd->state_cmd = BIN;
+	else if (error_h(d, tmp) == FAILED)
+	{
+		cmd->state_cmd = MISSING_BIN;
+		free(tmp);
+		return (SUCCESS);
+	}
+	else
+		cmd->state_cmd = BIN;
+	free(tmp);
+	return (SUCCESS);
+}
+
+int	put_cmdstate(int type, int *is_stateful, t_cmd *cmd, t_data *d)
+{
 	if (check_non_bin(cmd, type, is_stateful, d) == FAILED)
 		return (FAILED);
-	else if (type == BIN)
-	{
-		tmp = ft_strdup(cmd->arg[0]);
-		if (!tmp)
-			return (FAILED);
-		if (is_available(tmp, d) == SUCCESS)
-		{
-			cmd->state_cmd = BIN;
-			free(tmp);
-		}
-		else
-		{
-			if (error_h(d, tmp) == FAILED)
-			{
-				cmd->state_cmd = MISSING_BIN;
-				free(tmp);
-				return (SUCCESS);
-			}
-			cmd->state_cmd = BIN;
-			free(tmp);
-		}
-	}
-	return (SUCCESS);
+	if (type != BIN)
+		return (SUCCESS);
+	return (handle_bin_state(cmd, d));
 }

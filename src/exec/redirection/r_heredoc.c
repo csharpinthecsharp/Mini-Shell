@@ -12,108 +12,90 @@
 
 #include "../../../include/minishell.h"
 
-static pid_t	heredoc_pid_create(int *heredoc, int *stdin)
+static void	init_heredoc_ctx(t_heredoc_ctx *ctx, t_data *d, int *pos,
+		int index)
 {
-	int	pid;
-
-	pid = fork();
-	if (pid == -1)
-	{
-		perror("fork");
-		close(heredoc[0]);
-		close(heredoc[1]);
-		close(*stdin);
-		exit(EXIT_FAILURE);
-	}
-	return (pid);
-}
-
-static void	heredoc_error_handler(int *heredoc, int *stdin)
-{
-	if (pipe(heredoc) == -1)
+	ctx->d = d;
+	ctx->delimiter = ft_strdup(d->cmd[*pos].arguments[index].file);
+	ctx->should_expand = !d->cmd[*pos].arguments[index].heredoc_quoted;
+	ctx->fd[0] = -1;
+	ctx->fd[1] = -1;
+	ctx->stdin_backup = -1;
+	if (pipe(ctx->fd) == -1)
 	{
 		perror("pipe");
 		exit(EXIT_FAILURE);
 	}
-	*stdin = dup(STDIN_FILENO);
-	if (*stdin == -1)
-	{
-		perror("dup");
-		close(heredoc[0]);
-		close(heredoc[1]);
+	ctx->stdin_backup = dup(STDIN_FILENO);
+	if (ctx->stdin_backup != -1)
 		return ;
-	}
+	perror("dup");
+	if (ctx->fd[0] >= 0)
+		close(ctx->fd[0]);
+	if (ctx->fd[1] >= 0)
+		close(ctx->fd[1]);
+	ctx->fd[0] = -1;
+	ctx->fd[1] = -1;
 }
 
-static void	child_heredoc(int *heredoc, char *delimiter, int *stdin, t_data *d, int should_expand)
+static void	child_heredoc(t_heredoc_ctx *ctx)
 {
 	int	status;
 
-	close(heredoc[0]);
-	close(*stdin);
+	if (ctx->fd[0] >= 0)
+		close(ctx->fd[0]);
+	if (ctx->stdin_backup >= 0)
+		close(ctx->stdin_backup);
 	signal(SIGINT, heredoc_ctrl_c);
-	status = heredoc_read_loop(heredoc[1], delimiter, d, should_expand);
-	close(heredoc[1]);
-	free(delimiter);
+	status = heredoc_read_loop(ctx->fd[1], ctx->delimiter, ctx->d,
+			ctx->should_expand);
+	if (ctx->fd[1] >= 0)
+		close(ctx->fd[1]);
+	free(ctx->delimiter);
 	exit(status);
 }
 
-static void	parent_error_heredoc(int *heredoc, int *stdin, t_data *d,
-								pid_t pid, int is_last)
+static void	parent_handle(t_heredoc_ctx *ctx, pid_t pid, int is_last)
 {
 	int	status;
+	int	interrupted;
 
-	close(heredoc[1]);
+	if (ctx->fd[1] >= 0)
+		close(ctx->fd[1]);
 	signal(SIGINT, SIG_IGN);
 	waitpid(pid, &status, 0);
-	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
-	{
-		close(heredoc[0]);
-		close(*stdin);
-		restore_terminal_settings();
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		signal(SIGINT, handler_ctrl_c);
-		d->error_state = 130;
+	interrupted = (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT);
+	if (heredoc_parent_should_abort(ctx, status, interrupted))
 		return ;
-	}
-	if (WIFEXITED(status) && WEXITSTATUS(status) == 1)
-	{
-		close(heredoc[0]);
-		close(*stdin);
-		signal(SIGINT, handler_ctrl_c);
-		d->error_state = 1;
-		return ;
-	}
 	signal(SIGINT, handler_ctrl_c);
-	if (is_last)
-	{
-		dup2(heredoc[0], STDIN_FILENO);
-		d->stdin_back = *stdin;
-	}
-	else
-		close(*stdin);
-	close(heredoc[0]);
+	if (is_last && ctx->fd[0] >= 0 && dup2(ctx->fd[0], STDIN_FILENO) != -1)
+		ctx->d->stdin_back = ctx->stdin_backup;
+	else if (ctx->stdin_backup >= 0)
+		close(ctx->stdin_backup);
+	if (ctx->fd[0] >= 0)
+		close(ctx->fd[0]);
 }
 
 void	heredoc(t_data *d, int *pos, int i, int is_last)
 {
-	int		heredoc[2];
-	int		stdin_fd;
-	pid_t	pid;
-	char	*delimiter;
-	int		should_expand;
+	t_heredoc_ctx	ctx;
+	pid_t			pid;
 
-	delimiter = ft_strdup(d->cmd[*pos].arguments[i].file);
-	should_expand = !d->cmd[*pos].arguments[i].heredoc_quoted;
-	pid = -1;
-	heredoc_error_handler(heredoc, &stdin_fd);
-	pid = heredoc_pid_create(heredoc, &stdin_fd);
-	if (pid == 0)
-		child_heredoc(heredoc, delimiter, &stdin_fd, d, should_expand);
-	else
+	init_heredoc_ctx(&ctx, d, pos, i);
+	pid = fork();
+	if (pid == -1)
 	{
-		parent_error_heredoc(heredoc, &stdin_fd, d, pid, is_last);
-		free(delimiter);
+		perror("fork");
+		if (ctx.fd[0] >= 0)
+			close(ctx.fd[0]);
+		if (ctx.fd[1] >= 0)
+			close(ctx.fd[1]);
+		if (ctx.stdin_backup >= 0)
+			close(ctx.stdin_backup);
+		exit(EXIT_FAILURE);
 	}
+	if (pid == 0)
+		child_heredoc(&ctx);
+	parent_handle(&ctx, pid, is_last);
+	free(ctx.delimiter);
 }
