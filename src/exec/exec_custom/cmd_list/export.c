@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 12:39:16 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/11/01 17:39:56 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/11/06 15:14:01 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	is_valid_identifier(const char *str)
 	return (FAILED);
 }
 
-static int	loop_in_env(int *index, t_data *d, char *key, char **arg_ptr)
+static int	loop_in_env(int *index, t_data *d, const char *key, char **arg_ptr)
 {
 	(*index) = 0;
 	while (d->envp[*index])
@@ -50,13 +50,25 @@ static int	loop_in_env(int *index, t_data *d, char *key, char **arg_ptr)
 	return (FAILED);
 }
 
+static int	realloc_envp(t_data *d, int index)
+{
+	char	**tmp;
+
+	tmp = ft_realloc(d->envp, sizeof(char *) * (index + 1), sizeof(char *)
+			* (index + 2));
+	if (!tmp)
+		return (FAILED);
+	d->envp = tmp;
+	return (SUCCESS);
+}
+
 static int	do_export(char **argv, t_data *d)
 {
 	char	*arg;
 	int		len;
 	char	*key;
-	char	**new_envp;
 	int		index;
+
 	arg = argv[1];
 	if (error_export(ft_strchr(arg, '='), &arg) == FAILED)
 		return (FAILED);
@@ -66,24 +78,13 @@ static int	do_export(char **argv, t_data *d)
 		return (FAILED);
 	ft_strlcpy(key, arg, len + 1);
 	if (loop_in_env(&index, d, key, &arg) == SUCCESS)
-	{
-		free(key);
-		return (SUCCESS);
-	}
-	new_envp = ft_realloc(d->envp, sizeof(char *) * (index),
-			sizeof(char *) * (index + 2));
-	if (!new_envp)
-	{
-		free(key);
-		return (FAILED);
-	}
-	d->envp = new_envp;
+		return (free(key), SUCCESS);
+	if (realloc_envp(d, index) == FAILED)
+		return (free(key), FAILED);
 	d->envp[index] = ft_strdup(arg);
 	d->envp[index + 1] = NULL;
-	free(key);
-	return (SUCCESS);
+	return (free(key), SUCCESS);
 }
-
 
 int	handle_export(char **argv, int count, t_data *d)
 {

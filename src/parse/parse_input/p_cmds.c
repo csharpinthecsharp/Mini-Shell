@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:20:05 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/11/01 17:26:01 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/11/06 16:36:32 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,18 +39,6 @@ char	**remove_empty_var(char **tokens)
 	return (clean);
 }
 
-int	break_free(char *arg, char *raw_arg)
-{
-	if (!arg)
-	{
-		free(raw_arg);
-		return (FAILED);
-	}
-	else
-		free(raw_arg);
-	return (SUCCESS);
-}
-
 char	**get_args(char *s, t_data *d, int *is_dquote, char **argv)
 {
 	int		i;
@@ -81,13 +69,25 @@ char	*expand_arg(char *raw_arg, t_data *d, int *is_dquote)
 	char	*arg;
 	int		size;
 
-	size = get_expanded_size(raw_arg, d);
+	size = get_expanded_size(raw_arg, d, *is_dquote);
+	if (size < 0)
+	{
+		free(raw_arg);
+		return (NULL);
+	}
 	arg = malloc(size + 3);
 	if (!arg)
+	{
+		free(raw_arg);
 		return (NULL);
+	}
 	arg = replace_envvar(raw_arg, d, is_dquote, arg);
-	if (!arg || break_free(arg, raw_arg) == FAILED)
+	if (!arg)
+	{
+		free(raw_arg);
 		return (NULL);
+	}
+	free(raw_arg);
 	return (arg);
 }
 

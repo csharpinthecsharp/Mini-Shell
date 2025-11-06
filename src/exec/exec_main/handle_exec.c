@@ -54,7 +54,6 @@ void	handle_bin(t_cmd *cmd, t_data *d)
 	free_split(paths);
 }
 
-
 void	handle_redirections(t_data *d, int *pos, int *fd_out, int *fd_in)
 {
 	int	i;

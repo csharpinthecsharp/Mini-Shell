@@ -59,6 +59,7 @@ int	check_non_bin(t_cmd *cmd, int type, int *is_stateful, t_data *d)
 		cmd->state_cmd = ALONE_REDIR;
 	else if (type == STATEFUL)
 	{
+		cmd->state_cmd = STATEFUL;
 		*is_stateful = 1;
 		if (d->nb_cmd == 1)
 			run_custom_cmd(&cmd->arg[0], d);

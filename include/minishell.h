@@ -108,6 +108,15 @@ typedef struct s_data
 	t_error		*errors;
 }				t_data;
 
+typedef struct s_heredoc_ctx
+{
+	int		fd[2];
+	int		stdin_backup;
+	char	*delimiter;
+	int		should_expand;
+	t_data	*d;
+}				t_heredoc_ctx;
+
 /* ========================== */
 /*      FUNCTION PROTOTYPES   */
 /* ========================== */
@@ -124,6 +133,7 @@ int				handle_unset(char **argv, int count, t_data *d);
 int				handle_env(char **argv, int count, t_data *d);
 int				count_redir(char **argv);
 int				count_commands(char **argv);
+int				pre_exec_prepare(t_data *d, int i);
 int				pre_execution(t_data *d);
 int				run_custom_cmd(char **argv, t_data *d);
 int				handle_quote_state(char *input, int *pos, char *quote);
@@ -166,7 +176,7 @@ int				is_valid_identifier(const char *str);
 int				pipe_syntax(char *input);
 int				redirection_syntax(char *input);
 int				check_output_ofeach(t_cmd *cmd, t_data *d);
-int				get_expanded_size(char *s, t_data *d);
+int				get_expanded_size(char *s, t_data *d, int is_dquote);
 char			*get_env_string(t_data *d, char *s);
 int				break_free(char *arg, char *raw_arg);
 
@@ -223,7 +233,12 @@ void			select_readline_mode(t_data *d);
 void			start_minishell(t_data *d);
 void			prepare_heredoc(t_data *d, int *pos);
 void			heredoc(t_data *d, int *pos, int i, int is_last);
-int				heredoc_read_loop(int fd_write, char *delimiter, t_data *d, int should_expand);
+int				heredoc_read_loop(int fd_write, char *delimiter,
+					t_data *d, int should_expand);
+int				heredoc_parent_should_abort(t_heredoc_ctx *ctx, int status,
+					int interrupted);
+void			heredoc_cleanup_on_failure(t_heredoc_ctx *ctx, int error_state,
+					int reset_terminal);
 void			restore_terminal_settings(void);
 void			exit_ctrl_d(t_data *d);
 int				is_empty(t_data *d, int cmd_index, int arg_index);

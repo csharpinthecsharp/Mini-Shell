@@ -6,70 +6,26 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:25:36 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/27 15:10:21 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/11/06 15:33:30 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../include/minishell.h"
 
-static int	allocate_t_arguments(t_cmd *cmd)
+static int	pre_exec_error(t_data *d, int status)
 {
-	int	nb_redir;
-
-	nb_redir = count_redir(cmd->arg);
-	cmd->nb_redir = nb_redir;
-	if (nb_redir > 0)
-	{
-		cmd->arguments = ft_calloc(nb_redir, sizeof * cmd->arguments);
-		if (!cmd->arguments)
-			return (FAILED);
-	}
-	else
-		cmd->arguments = NULL;
-	return (SUCCESS);
+	d->defer_errors = 0;
+	flush_deferred_errors(d);
+	return (status);
 }
 
-static int	fill_arguments(t_data *d, t_cmd *cmd, int cmd_index)
+static int	pre_exec_state(t_data *d, int i, int *is_stateful)
 {
-	int	k;
-	int	j;
+	int	type;
 
-	j = 0;
-	if (cmd->nb_redir > 0)
-	{
-		k = 0;
-		while (j < cmd->nb_arg)
-		{
-			if (put_redir(d, cmd_index, j, k))
-			{
-				k++;
-			}
-			j++;
-		}
-		cmd->nb_redir = k;
-	}
-	return (SUCCESS);
-}
-
-static int	cut_redirection_command(t_cmd *cmd)
-{
-	char	**old;
-	char	**clean;
-	int		i;
-
-	if (cmd->nb_redir > 0)
-	{
-		old = cmd->arg;
-		clean = fix_redir_arg(cmd);
-		i = 0;
-		while (old[i])
-		{
-			free(old[i]);
-			i++;
-		}
-		free(old);
-		cmd->arg = clean;
-	}
+	type = check_command(d->cmd[i].arg, d);
+	if (put_cmdstate(type, is_stateful, &d->cmd[i], d) == FAILED)
+		return (pre_exec_error(d, FAILED));
 	return (SUCCESS);
 }
 
@@ -77,44 +33,22 @@ int	pre_execution(t_data *d)
 {
 	int	is_stateful;
 	int	i;
-	int	type;
+	int	res;
 
+	res = 0;
 	d->defer_errors = 1;
 	is_stateful = 0;
 	i = 0;
 	while (i < d->nb_cmd)
 	{
-		if (allocate_t_arguments(&d->cmd[i]) == FAILED)
-		{
-			d->defer_errors = 0;
-			flush_deferred_errors(d);
+		res = pre_exec_prepare(d, i);
+		if (res == ERROR)
 			return (ERROR);
-		}
-		if (fill_arguments(d, &d->cmd[i], i) == FAILED)
-		{
-			d->defer_errors = 0;
-			flush_deferred_errors(d);
-			return (ERROR);
-		}
-		if (cut_redirection_command(&d->cmd[i]) == FAILED)
-		{
-			d->defer_errors = 0;
-			flush_deferred_errors(d);
-			return (ERROR);
-		}
-		if (is_empty(d, i, 0) == FAILED)
-		{
-			d->defer_errors = 0;
-			flush_deferred_errors(d);
+		else if (res == FAILED)
 			return (FAILED);
-		}
-		type = check_command(d->cmd[i].arg, d);
-		if (put_cmdstate(type, &is_stateful, &d->cmd[i], d) == FAILED)
-		{
-			d->defer_errors = 0;
-			flush_deferred_errors(d);
+		res = pre_exec_state(d, i, &is_stateful);
+		if (res == ERROR || res == FAILED)
 			return (FAILED);
-		}
 		i++;
 	}
 	d->defer_errors = 0;
