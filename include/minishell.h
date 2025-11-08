@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/11/08 12:13:15 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/11/08 12:52:44 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ typedef struct s_heredoc_ctx
 // Builtins
 void				free_cmds(t_data *d);
 int					pipe_init(int N_pipe, int **var_pipe);
-int					handle_pwd(char *argv, int count, char *path);
+int					handle_pwd(char *argv, int count, char *path, t_data *d);
 int					handle_exit(t_data *d, char **argv, int count);
 int					handle_echo(char **argv, int count);
 int					handle_export(char **argv, int count, t_data *d);

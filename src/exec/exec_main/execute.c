@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 16:22:20 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/11/06 14:55:47 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/11/08 12:22:58 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,8 @@ void	exec_missing_bin(int **pipe, t_data *d, int n_pipe, int *pos)
 void	execute_command_by_type(int **pipe, t_data *d, int n_pipe, int *pos)
 {
 	handle_heredocs(d, pos);
+	if (d->error_state != 0)
+		return ;
 	if (check_output_ofeach(&d->cmd[*pos], d) == FAILED)
 		exit(d->exit_status);
 	if (d->cmd[*pos].state_cmd == CUSTOM)
