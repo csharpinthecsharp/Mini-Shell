@@ -12,11 +12,13 @@
 
 #include "../../../include/minishell.h"
 
-void	restore_terminal_settings(void)
+void	restore_terminal_settings(t_data *d)
 {
 	struct termios	term;
 
-	if (tcgetattr(STDIN_FILENO, &term) != -1)
+	if (d && d->term_saved)
+		tcsetattr(STDIN_FILENO, TCSANOW, &d->original_term);
+	else if (tcgetattr(STDIN_FILENO, &term) != -1)
 	{
 		term.c_lflag |= (ECHO | ICANON);
 		tcsetattr(STDIN_FILENO, TCSANOW, &term);
@@ -32,7 +34,7 @@ void	heredoc_cleanup_on_failure(t_heredoc_ctx *ctx, int error_state,
 		close(ctx->stdin_backup);
 	if (reset_terminal)
 	{
-		restore_terminal_settings();
+		restore_terminal_settings(ctx->d);
 		rl_on_new_line();
 		rl_replace_line("", 0);
 	}

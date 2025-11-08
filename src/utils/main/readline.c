@@ -42,6 +42,8 @@ void	exit_ctrl_d(t_data *d)
 {
 	if (!d->input)
 	{
+		if (d->term_saved)
+			tcsetattr(STDIN_FILENO, TCSANOW, &d->original_term);
 		printf("exit\n");
 		free_all(d);
 		exit(d->exit_status);

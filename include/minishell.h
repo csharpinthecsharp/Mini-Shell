@@ -106,6 +106,8 @@ typedef struct s_data
 	char			*new_path;
 	int				defer_errors;
 	t_error			*errors;
+	struct termios	original_term;
+	int				term_saved;
 }					t_data;
 
 typedef struct s_heredoc_ctx
@@ -185,10 +187,9 @@ int					break_free(char *arg, char *raw_arg);
 // Environment & Path
 char				*get_path(t_data *d);
 char				*get_promptpath(t_data *d);
-char				*replace_envvar(char *s, t_data *d, int *is_dquote,
-						char *arg);
+char				*replace_envvar(char *s, t_data *d, int *is_dquote, char *arg);
+int	                handle_expansion(char *s, t_data *d, char **arg, int *indices);
 void				init_data(t_data *d);
-
 int					is_available(char *str, t_data *d);
 void				execve_error(char *cmd);
 bool				check_alone_redir(char **argv);
@@ -245,7 +246,7 @@ int					heredoc_parent_should_abort(t_heredoc_ctx *ctx, int status,
 						int interrupted);
 void				heredoc_cleanup_on_failure(t_heredoc_ctx *ctx,
 						int error_state, int reset_terminal);
-void				restore_terminal_settings(void);
+void				restore_terminal_settings(t_data *d);
 void				exit_ctrl_d(t_data *d);
 int					is_empty(t_data *d, int cmd_index, int arg_index);
 char				**remove_empty_var(char **tokens);
