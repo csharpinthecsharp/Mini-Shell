@@ -68,6 +68,8 @@ void	free_cmds(t_data *d)
 
 void	free_all(t_data *d)
 {
+	if (d->term_saved)
+		tcsetattr(STDIN_FILENO, TCSANOW, &d->original_term);
 	if (d->input)
 		free(d->input);
 	if (d->envp)

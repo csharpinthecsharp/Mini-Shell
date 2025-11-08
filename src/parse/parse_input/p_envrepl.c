@@ -1,35 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_struct.c                                      :+:      :+:    :+:   */
+/*   p_envrepl.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/02 15:35:24 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/10/27 20:07:55 by ltrillar         ###   ########.fr       */
+/*   Created: 2025/10/15 15:32:50 by ltrillar          #+#    #+#             */
+/*   Updated: 2025/11/08 11:39:12 by astrelci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../include/minishell.h"
 
-void	init_data(t_data *d)
+char	*replace_envvar(char *s, t_data *d, int *is_dquote, char *arg)
 {
-	d->nb_cmd = 0;
-	d->cmd = NULL;
-	d->fd_in = -1;
-	d->fd_out = -1;
-	d->stdin_back = -1;
-	d->input = NULL;
-	d->path = NULL;
-	d->new_path = NULL;
-	d->error_state = 0;
-	d->curr_alone_r = 0;
-	d->exit_status = 0;
-	d->envp = NULL;
-	d->last_fork_pid = -1;
-	d->defer_errors = 0;
-	d->errors = NULL;
-	d->term_saved = 0;
-	if (tcgetattr(STDIN_FILENO, &d->original_term) == 0)
-		d->term_saved = 1;
+	int	indices[3];
+
+	if (!s)
+		return (ft_strdup(""));
+	indices[0] = 0;
+	indices[1] = 0;
+	indices[2] = *is_dquote;
+	while (s[indices[0]])
+		if (handle_expansion(s, d, &arg, indices) == FAILED)
+			return (free(arg), NULL);
+	return (arg[indices[1]] = '\0', arg);
 }

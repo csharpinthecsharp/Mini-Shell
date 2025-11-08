@@ -13,6 +13,7 @@ SRCS	= src/main.c \
 		  src/parse/parse_validate/v_input.c \
 		  src/parse/parse_validate/v_start.c \
 		  src/parse/parse_input/p_args.c \
+		  src/parse/parse_input/p_envrepl.c \
 		  src/utils/init/init_struct.c \
 		  src/utils/init/init_envp.c \
 		  src/utils/main/readline.c \

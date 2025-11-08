@@ -108,30 +108,23 @@ static int	repl_exitstatus(t_data *d, int *i, char **arg, int *j)
 	return (SUCCESS);
 }
 
-char	*replace_envvar(char *s, t_data *d, int *is_dquote, char *arg)
+int	handle_expansion(char *s, t_data *d, char **arg, int *indices)
 {
-	int		i;
-	int		j;
 	char	*ptr;
 
-	if (!s)
-		return (ft_strdup(""));
-	i = 0;
-	j = 0;
-	while (s[i])
+	if (is_key_exitstatus(s + indices[0], indices[2]) == SUCCESS)
 	{
-		if ((is_key_exitstatus(s + i, *is_dquote) == SUCCESS)
-			&& (repl_exitstatus(d, &i, &arg, &j) == FAILED))
-			return (free(arg), NULL);
-		else if (s[i] == '$' && *is_dquote == 0)
-		{
-			ptr = s + i;
-			if (process_dollar(&ptr, d, &arg, &j) == FAILED)
-				return (free(arg), NULL);
-			i = (int)(ptr - s);
-		}
-		else
-			arg[j++] = s[i++];
+		if (repl_exitstatus(d, &indices[0], arg, &indices[1]) == FAILED)
+			return (FAILED);
 	}
-	return (arg[j] = '\0', arg);
+	else if (s[indices[0]] == '$' && indices[2] == 0)
+	{
+		ptr = s + indices[0];
+		if (process_dollar(&ptr, d, arg, &indices[1]) == FAILED)
+			return (FAILED);
+		indices[0] = (int)(ptr - s);
+	}
+	else
+		(*arg)[indices[1]++] = s[indices[0]++];
+	return (SUCCESS);
 }
