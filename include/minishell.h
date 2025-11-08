@@ -6,7 +6,7 @@
 /*   By: ltrillar <ltrillar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:37:12 by ltrillar          #+#    #+#             */
-/*   Updated: 2025/11/06 17:05:08 by ltrillar         ###   ########.fr       */
+/*   Updated: 2025/11/08 12:13:15 by ltrillar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,8 +187,10 @@ int					break_free(char *arg, char *raw_arg);
 // Environment & Path
 char				*get_path(t_data *d);
 char				*get_promptpath(t_data *d);
-char				*replace_envvar(char *s, t_data *d, int *is_dquote, char *arg);
-int	                handle_expansion(char *s, t_data *d, char **arg, int *indices);
+char				*replace_envvar(char *s, t_data *d, int *is_dquote,
+						char *arg);
+int					handle_expansion(char *s, t_data *d, char **arg,
+						int *indices);
 void				init_data(t_data *d);
 int					is_available(char *str, t_data *d);
 void				execve_error(char *cmd);
