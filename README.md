@@ -19,8 +19,8 @@ It allows executing commands, managing environment variables, and reproduces som
   - `pwd`
   - `exit`
   - handling of `env`, `export`, `unset`  
-- Environment variables management (`PWD`, `OLDPWD`, `PATH`)  
-- Redirections and pipes (`>`, `<`, `|`)  
+- Environment variables management (`PWD`, `OLDPWD`, `PATH`, `SHLVL`)  
+- Redirections and pipes (`>`, `<`, `<<`, `>>`, `|`)  
 - Error handling with clear messages  
 
 ---
